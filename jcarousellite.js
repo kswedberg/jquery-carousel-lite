@@ -125,7 +125,7 @@ $.fn.jCarouselLite = function(options) {
       })
       .bind('resumeCarousel', function() {
         advancer();
-        div.data('paused', true);
+        div.data('paused', false);
       });
       if (o.pause) {
         div.mouseenter(function() {
