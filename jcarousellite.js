@@ -1,4 +1,4 @@
-;(function($) {
+(function($) {
 /**
  * jCarouselLite - jQuery plugin to navigate images/any content in a carousel style widget.
  * @requires jQuery v1.2 or above
@@ -119,13 +119,13 @@ $.fn.jCarouselLite = function(options) {
       advancer();
       
       $(document)
-      .bind('pauseCarousel', function() {
+      .bind('pauseCarousel', function(event) {
         clearTimeout(setAutoAdvance);
-        div.data('paused', true);
+        $(event.target).data('paused', true);
       })
-      .bind('resumeCarousel', function() {
+      .bind('resumeCarousel', function(event) {
         advancer();
-        div.data('paused', false);
+        $(event.target).data('paused', false);
       });
       if (o.pause) {
         div.mouseenter(function() {
@@ -178,7 +178,7 @@ $.fn.jCarouselLite = function(options) {
         });
         // Disable buttons when the carousel reaches the last/first, and enable when not
         if (!o.circular) {
-          $(o.btnPrev + "," + o.btnNext).removeClass("disabled");
+          $(o.btnPrev).add(o.btnNext).removeClass("disabled");
           $( (curr-o.scroll<0 && o.btnPrev)
              ||
              (curr+o.scroll > itemLength-v && o.btnNext)
