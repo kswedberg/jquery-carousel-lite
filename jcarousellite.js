@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.3.1
  *
- * Date: Mon Dec 6 09:10:46 2010 -0500
+ * Date: Mon Dec 6 19:36:31 2010 -0500
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -182,6 +182,28 @@ $.fn.jCarouselLite = function(options) {
       }
       return false;
     } // end if !running
+
+    div.bind('endCarousel.jc', function() {
+      if (self.setAutoAdvance) {
+        clearTimeout(self.setAutoAdvance);
+      }
+      if (o.btnPrev) {
+        o[$btnPrev].addClass(o.btnDisabledClass).unbind('.jc');
+      }
+      if (o.btnNext) {
+        o[$btnNext].addClass(o.btnDisabledClass).unbind('.jc');
+      }
+      if (o.btnGo) {
+        $.each(o.btnGo, function(i, val) {
+          $(val).unbind('.jc');
+        });
+      }
+      if (self.setAutoAdvance) {
+        self.setAutoAdvance = null;
+      }
+      div.removeData('pausejc');
+      div.unbind('.jc');
+    });
   });
 };
 $.fn.jCarouselLite.defaults = {
