@@ -95,12 +95,11 @@ $.fn.jCarouselLite = function(options) {
 
     if (o.auto) {
       // CHANGED: Added pause on hover (Karl Swedberg)
-      var setAutoAdvance,
-          advanceCounter = 0,
+      var advanceCounter = 0,
           autoStop = iterations(tl,o);
 
       var advancer = function() {
-        setAutoAdvance = setTimeout(function() {
+        self.setAutoAdvance = setTimeout(function() {
 
           if (!autoStop || autoStop > advanceCounter) {
             go(curr+o.scroll);
@@ -112,7 +111,7 @@ $.fn.jCarouselLite = function(options) {
 
       advancer();
 
-      $(document)
+      div
       .bind('pauseCarousel.jc', function(event) {
         clearTimeout(self.setAutoAdvance);
         div.data('pausedjc', true);
