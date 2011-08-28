@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta charset="UTF-8">
   <title>demo</title>
 <style type="text/css">
 body {
@@ -16,6 +16,7 @@ body {
 .slideshow {
   width: 800px;
   overflow: hidden;
+  padding: 0 20px;
   margin-bottom: 20px;
   border: 5px solid #999;
 }
@@ -41,8 +42,13 @@ height: 150px;
         auto: 2500,
         visible: 2,
         speed: 300,
-        pause: true
-
+        pause: true,
+        btnPrev: function() {
+          return $(this).find('.prev');
+        },
+        btnNext: function() {
+          return $(this).find('.next');
+        }
       });
 
     });
@@ -55,25 +61,25 @@ height: 150px;
     <ul class="slides">
 
       <li class="slide">
-        <div class="img-wrapper">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        <div class="img-wrapper">1 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </div>
       </li>
 
       <li class="slide">
-        <div class="img-wrapper">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <div class="img-wrapper">2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
           <span class="description"><span>Green Roof</span></span>
         </div>
       </li>
 
 
       <li class="slide">
-        <div class="img-wrapper"> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <div class="img-wrapper">3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
           <span class="description"><span>Zeeland</span></span>
         </div>
       </li>
 
       <li class="slide">
-        <div class="img-wrapper">
+        <div class="img-wrapper">4
           In culpa qui officia deserunt mollit anim id est laborum.
           <span class="description"><span>CityFlats Hotel</span></span>
 
@@ -81,11 +87,13 @@ height: 150px;
       </li>
 
       <li class="slide">
-        <div class="img-wrapper">                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <div class="img-wrapper">5                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
       </li>
 
     </ul>
+    <a href="#" class="prev">&lt;</a>
+    <a href="#" class="next">&gt;</a>
   </div>
 
   <div class="slideshow">
@@ -124,6 +132,9 @@ height: 150px;
       </li>
 
     </ul>
+    <a href="#" class="prev">&lt;</a>
+    <a href="#" class="next">&gt;</a>
+
   </div>
 
 </div>

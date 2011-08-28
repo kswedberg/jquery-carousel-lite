@@ -1,7 +1,7 @@
 /*!
- * jQuery jCarousellite Plugin v1.3.1
+ * jQuery jCarousellite Plugin v1.4
  *
- * Date: Mon Dec 6 19:36:31 2010 -0500
+ * Date: Sun Aug 28 12:14:39 2011 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -17,13 +17,13 @@
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.3.1'
+  version: '1.4'
 };
 
 $.fn.jCarouselLite = function(options) {
   var o = $.extend({}, $.fn.jCarouselLite.defaults, options);
 
-  return this.each(function() {
+  this.each(function() {
 
     var running = false,
         animCss=o.vertical?"top":"left",
@@ -65,14 +65,14 @@ $.fn.jCarouselLite = function(options) {
         o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
 
         o['$' + btn].bind('click.jc', function() {
-          var step = index == 0 ? curr-o.scroll : curr+o.scroll;
+          var step = index === 0 ? curr-o.scroll : curr+o.scroll;
           return go( step );
         });
       }
     });
 
     if (!o.circular) {
-      if (o.btnPrev && start == 0) {
+      if (o.btnPrev && start === 0) {
         o.$btnPrev.addClass(o.btnDisabledClass);
       }
       if ( o.btnNext && start + o.visible >= itemLength ) {
@@ -123,9 +123,9 @@ $.fn.jCarouselLite = function(options) {
 
       if (o.pause) {
         div.bind('mouseenter.jc', function() {
-          div.trigger('pauseCarousel');
+          div.trigger('pauseCarousel.jc');
         }).bind('mouseleave.jc', function() {
-          div.trigger('resumeCarousel');
+          div.trigger('resumeCarousel.jc');
         });
       }
     }
@@ -140,16 +140,18 @@ $.fn.jCarouselLite = function(options) {
         if (o.beforeStart) {
           o.beforeStart.call(this, vis());
         }
-        if (o.circular) {             // If circular we are in first or last, then goto the other end
-          if (to<=start-v-1) {           // If first, then goto last
-            ul.css(animCss, -((itemLength-(v*2))*liSize)+"px");
+        // If circular we are in first or last, then goto the other end
+        if (o.circular) {
+          // If first, then goto last
+          if (to <= start - v - 1) {
+            ul.css( animCss, -( (itemLength - (v*2) ) * liSize ) + "px" );
             // If "scroll" > 1, then the "to" might not be equal to the condition; it can be lesser depending on the number of elements.
-            curr = to==start-v-1 ? itemLength-(v*2)-1 : itemLength-(v*2)-o.scroll;
+            curr = to == start - v - 1 ? itemLength-(v*2) - 1 : itemLength-(v*2)-o.scroll;
           } else if (to>=itemLength-v+1) { // If last, then goto first
             ul.css(animCss, -( (v) * liSize ) + "px" );
 
             // If "scroll" > 1, then the "to" might not be equal to the condition; it can be greater depending on the number of elements.
-            curr = to==itemLength-v+1 ? v+1 : v+o.scroll;
+            curr = (to == itemLength - v + 1) ? v + 1 : v + o.scroll;
           } else {
             curr = to;
           }
@@ -179,11 +181,20 @@ $.fn.jCarouselLite = function(options) {
           running = false;
         });
 
-      }
+      } // end if !running
       return false;
-    } // end if !running
+    } // end go function
 
-    div.bind('endCarousel.jc', function() {
+    div
+    .bind('go.jc', function(e, to) {
+      to = to || ['+=1'];
+      var todir = typeof to == 'string' && /(\+=|-=)(\d+)/.exec(to);
+      if ( todir ) {
+        to = todir[1] == '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
+      }
+      go(to);
+    })
+    .bind('endCarousel.jc', function() {
       if (self.setAutoAdvance) {
         clearTimeout(self.setAutoAdvance);
       }
@@ -205,6 +216,8 @@ $.fn.jCarouselLite = function(options) {
       div.unbind('.jc');
     });
   });
+
+  return this;
 };
 $.fn.jCarouselLite.defaults = {
   btnPrev: null,
