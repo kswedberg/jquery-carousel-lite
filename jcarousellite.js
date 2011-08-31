@@ -187,10 +187,16 @@ $.fn.jCarouselLite = function(options) {
 
     div
     .bind('go.jc', function(e, to) {
-      to = to || ['+=1'];
+      if (typeof to == 'undefined') {
+        to = '+=1';
+      }
+
       var todir = typeof to == 'string' && /(\+=|-=)(\d+)/.exec(to);
+
       if ( todir ) {
         to = todir[1] == '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
+      } else {
+        to += start;
       }
       go(to);
     })
