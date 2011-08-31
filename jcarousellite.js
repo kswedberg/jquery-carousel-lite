@@ -25,10 +25,11 @@ $.fn.jCarouselLite = function(options) {
 
   this.each(function() {
 
-    var running = false,
-        animCss=o.vertical?"top":"left",
+    var sizes = {},
+        running = false,
+        animCss = o.vertical ? "top": "left",
         aniProps = {},
-        sizeCss=o.vertical?"height":"width",
+        sizeProp = o.vertical ? "height": "width",
         self = this,
         div = $(this),
         ul = div.find('ul').eq(0),
@@ -47,17 +48,29 @@ $.fn.jCarouselLite = function(options) {
         curr = start;
     div.css("visibility", "visible");
 
-    li.css({overflow: o.vertical ? "hidden" : 'visible', 'float': o.vertical ? "none" : "left"});
-    ul.css({margin: "0", padding: "0", position: "relative", listStyleType: "none", zIndex: 1});
-    div.css({overflow: "hidden", position: "relative", zIndex: 2, left: "0px"});
-    var liSize = o.vertical ? height(li) : width(li);   // Full li size(incl margin)-Used for animation
-    var ulSize = liSize * itemLength;                   // size of full ul(total length, not just for the visible items)
-    var divSize = liSize * v;                           // size of entire div(total length for just the visible items)
+    if (o.autoCSS) {
+      li.css({overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'});
+      ul.css({margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1});
+      div.css({visibility: 'visible', overflow: 'hidden', position: 'relative', zIndex: 2, left: '0px'});
+    }
 
-    li.css({width: li.width(), height: li.height()});
-    ul.css(sizeCss, ulSize+"px").css(animCss, -(curr*liSize));
+    // Full li size(incl margin)-Used for animation
+    var liSize = o.vertical ? height(li) : width(li);
 
-    div.css(sizeCss, divSize+"px");                     // Width of the DIV. length of visible images
+    // size of full ul(total length, not just for the visible items)
+    var ulSize = liSize * itemLength;
+
+    // size of entire div(total length for just the visible items)
+    var divSize = liSize * v;
+
+    if (o.autoCSS) {
+      sizes[sizeProp] = divSize + 'px';
+      div.css(sizes);
+      li.css({width: li.width(), height: li.height()});
+    }
+    sizes[sizeProp] = ulSize + 'px';
+    sizes[animCss] = -(curr*liSize);
+    ul.css(sizes);
 
     // CHANGED: bind click handlers to prev and next buttons, if set (Karl Swedberg)
     $.each([ 'btnPrev', 'btnNext' ], function(index, btn) {
@@ -226,6 +239,7 @@ $.fn.jCarouselLite = function(options) {
   return this;
 };
 $.fn.jCarouselLite.defaults = {
+  autoCSS: true,
   btnPrev: null,
   btnNext: null,
   btnDisabledClass: 'disabled',
