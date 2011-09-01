@@ -242,18 +242,17 @@ example
 $(".carousel").jCarouselLite({
   btnNext: ".next",
   btnPrev: ".prev",
-  beforeStart: function(a) {
+  beforeStart: function(a, direction) {
     alert("Before animation starts:" + a);
   },
-  afterEnd: function(a) {
+  afterEnd: function(a, , direction) {
     alert("After animation ends:" + a);
   }
 });
 ```
 
 If you want to do some logic before the slide starts and after the slide ends, you can
-register these 2 callbacks. The functions will be passed an argument that represents an array of elements that
-are visible at the time of callback.
+register these 2 callbacks. The functions will be passed two arguments. The first represents an array of elements that are visible at the time of callback. The second is a Boolean indicating whether the direction is forward (`true`) or backward (`false`);
 
 ## Events
 
@@ -274,7 +273,7 @@ Pauses an autoscrolling carousel until `resumeCarousel` is triggered. Note: if t
 example
 
 ```javascript
-$(".carousel").trigger("pauseCarousel")
+$(".carousel").trigger("resumeCarousel")
 ```
 
 Resumes an autoscrolling carousel after having been paused.

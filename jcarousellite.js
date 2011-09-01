@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.4
  *
- * Date: Sun Aug 28 12:14:39 2011 EDT
+ * Date: Wed Aug 31 23:04:45 2011 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -148,53 +148,51 @@ $.fn.jCarouselLite = function(options) {
     }
 
     function go(to) {
-      if (!running) {
+      if (running) { return false; }
+      var direction = to > curr;
+      if (o.beforeStart) {
+        o.beforeStart.call(this, vis(), direction);
+      }
+      // If circular we are in first or last, then goto the other end
+      if (o.circular) {
+        // If first, then goto last
+        if (to <= start - v - 1) {
+          ul.css( animCss, -( (itemLength - (v*2) ) * liSize ) + "px" );
+          // If "scroll" > 1, then the "to" might not be equal to the condition; it can be lesser depending on the number of elements.
+          curr = to == start - v - 1 ? itemLength-(v*2) - 1 : itemLength-(v*2)-o.scroll;
+        } else if (to>=itemLength-v+1) { // If last, then goto first
+          ul.css(animCss, -( v * liSize ) + "px" );
 
-        if (o.beforeStart) {
-          o.beforeStart.call(this, vis());
-        }
-        // If circular we are in first or last, then goto the other end
-        if (o.circular) {
-          // If first, then goto last
-          if (to <= start - v - 1) {
-            ul.css( animCss, -( (itemLength - (v*2) ) * liSize ) + "px" );
-            // If "scroll" > 1, then the "to" might not be equal to the condition; it can be lesser depending on the number of elements.
-            curr = to == start - v - 1 ? itemLength-(v*2) - 1 : itemLength-(v*2)-o.scroll;
-          } else if (to>=itemLength-v+1) { // If last, then goto first
-            ul.css(animCss, -( (v) * liSize ) + "px" );
-
-            // If "scroll" > 1, then the "to" might not be equal to the condition; it can be greater depending on the number of elements.
-            curr = (to == itemLength - v + 1) ? v + 1 : v + o.scroll;
-          } else {
-            curr = to;
-          }
-
-        // If non-circular and to points beyond first or last, we change to first or last.
+          // If "scroll" > 1, then the "to" might not be equal to the condition; it can be greater depending on the number of elements.
+          curr = (to == itemLength - v + 1) ? v + 1 : v + o.scroll;
         } else {
-          // Disable buttons when the carousel reaches the last/first, and enable when not
-          o.$btnPrev.toggleClass(o.btnDisabledClass, o.btnPrev && to <= 0);
-          o.$btnNext.toggleClass(o.btnDisabledClass, o.btnNext && to > itemLength-v);
-
-          if (to<0) {
-            curr = 0;
-          } else if  (to>itemLength-v) {
-            curr = itemLength-v;
-          } else {
-            curr = to;
-          }
+          curr = to;
         }
 
-        running = true;
-        aniProps[animCss] = -(curr*liSize);
+      // If non-circular and to points beyond first or last, we change to first or last.
+      } else {
+        // Disable buttons when the carousel reaches the last/first, and enable when not
+        o.$btnPrev.toggleClass(o.btnDisabledClass, o.btnPrev && to <= 0);
+        o.$btnNext.toggleClass(o.btnDisabledClass, o.btnNext && to > itemLength-v);
 
-        ul.animate(aniProps, o.speed, o.easing, function() {
-          if (o.afterEnd) {
-            o.afterEnd.call(this, vis());
-          }
-          running = false;
-        });
+        if (to<0) {
+          curr = 0;
+        } else if  (to>itemLength-v) {
+          curr = itemLength-v;
+        } else {
+          curr = to;
+        }
+      }
 
-      } // end if !running
+      running = true;
+      aniProps[animCss] = -(curr*liSize);
+
+      ul.animate(aniProps, o.speed, o.easing, function() {
+        if (o.afterEnd) {
+          o.afterEnd.call(this, vis(), direction);
+        }
+        running = false;
+      });
       return false;
     } // end go function
 
