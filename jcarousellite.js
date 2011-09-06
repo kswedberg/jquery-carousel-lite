@@ -1,7 +1,7 @@
 /*!
- * jQuery jCarousellite Plugin v1.4
+ * jQuery jCarousellite Plugin v1.5
  *
- * Date: Wed Aug 31 23:04:45 2011 EDT
+ * Date: Tue Sep 06 13:30:06 2011 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -17,7 +17,7 @@
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.4'
+  version: '1.5'
 };
 
 $.fn.jCarouselLite = function(options) {
@@ -46,6 +46,7 @@ $.fn.jCarouselLite = function(options) {
     var li = ul.children('li'),
         itemLength = li.length,
         curr = start;
+
     div.css("visibility", "visible");
 
     if (o.autoCSS) {
@@ -72,7 +73,22 @@ $.fn.jCarouselLite = function(options) {
     sizes[animCss] = -(curr*liSize);
     ul.css(sizes);
 
-    // CHANGED: bind click handlers to prev and next buttons, if set (Karl Swedberg)
+    // set up timed advancer
+    var advanceCounter = 0,
+        autoStop = iterations(tl,o);
+
+    var advancer = function() {
+      self.setAutoAdvance = setTimeout(function() {
+
+        if (!autoStop || autoStop > advanceCounter) {
+          go(curr+o.scroll);
+          advanceCounter++;
+          advancer();
+        }
+      }, o.timeout+o.speed);
+    };
+
+    // bind click handlers to prev and next buttons, if set
     $.each([ 'btnPrev', 'btnNext' ], function(index, btn) {
       if ( o[btn] ) {
         o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
@@ -88,10 +104,12 @@ $.fn.jCarouselLite = function(options) {
       if (o.btnPrev && start === 0) {
         o.$btnPrev.addClass(o.btnDisabledClass);
       }
+
       if ( o.btnNext && start + o.visible >= itemLength ) {
         o.$btnNext.addClass(o.btnDisabledClass);
       }
     }
+
     if (o.btnGo) {
       $.each(o.btnGo, function(i, val) {
         $(val).bind('click.jc', function() {
@@ -99,48 +117,22 @@ $.fn.jCarouselLite = function(options) {
         });
       });
     }
-
     if (o.mouseWheel && div.mousewheel) {
       div.bind('mousewheel.jc', function(e, d) {
-        return d>0 ? go(curr-o.scroll) : go(curr+o.scroll);
+        return d > 0 ? go(curr-o.scroll) : go(curr+o.scroll);
+      });
+    }
+
+    if (o.pause) {
+      div.bind('mouseenter.jc', function() {
+        div.trigger('pauseCarousel.jc');
+      }).bind('mouseleave.jc', function() {
+        div.trigger('resumeCarousel.jc');
       });
     }
 
     if (o.auto) {
-      // CHANGED: Added pause on hover (Karl Swedberg)
-      var advanceCounter = 0,
-          autoStop = iterations(tl,o);
-
-      var advancer = function() {
-        self.setAutoAdvance = setTimeout(function() {
-
-          if (!autoStop || autoStop > advanceCounter) {
-            go(curr+o.scroll);
-            advanceCounter++;
-            advancer();
-          }
-        }, o.timeout+o.speed);
-      };
-
       advancer();
-
-      div
-      .bind('pauseCarousel.jc', function(event) {
-        clearTimeout(self.setAutoAdvance);
-        div.data('pausedjc', true);
-      })
-      .bind('resumeCarousel.jc', function(event) {
-        advancer();
-        div.removeData('pausedjc');
-      });
-
-      if (o.pause) {
-        div.bind('mouseenter.jc', function() {
-          div.trigger('pauseCarousel.jc');
-        }).bind('mouseleave.jc', function() {
-          div.trigger('resumeCarousel.jc');
-        });
-      }
     }
 
     function vis() {
@@ -196,6 +188,7 @@ $.fn.jCarouselLite = function(options) {
       return false;
     } // end go function
 
+    // bind custom events so they can be triggered by user
     div
     .bind('go.jc', function(e, to) {
       if (typeof to == 'undefined') {
@@ -211,6 +204,33 @@ $.fn.jCarouselLite = function(options) {
       }
       go(to);
     })
+    .bind('startCarousel.jc', function(event) {
+      clearTimeout(self.setAutoAdvance);
+      div.trigger('go', '+=' + o.scroll);
+      advancer();
+      div.removeData('pausedjc').removeData('stoppedjc');
+    })
+    .bind('resumeCarousel.jc', function(event, forceRun) {
+      clearTimeout(self.setAutoAdvance);
+      var stopped = div.data('stoppedjc');
+      if ( forceRun || !stopped ) {
+        advancer();
+        div.removeData('pausedjc');
+        if (stopped) {
+          div.removeData('stoppedjc');
+        }
+      }
+    })
+
+    .bind('pauseCarousel.jc', function(event) {
+      clearTimeout(self.setAutoAdvance);
+      div.data('pausedjc', true);
+    })
+    .bind('stopCarousel.jc', function(event) {
+      clearTimeout(self.setAutoAdvance);
+      div.data('stoppedjc', true);
+    })
+
     .bind('endCarousel.jc', function() {
       if (self.setAutoAdvance) {
         clearTimeout(self.setAutoAdvance);
@@ -229,7 +249,7 @@ $.fn.jCarouselLite = function(options) {
       if (self.setAutoAdvance) {
         self.setAutoAdvance = null;
       }
-      div.removeData('pausejc');
+      div.removeData('pausedjc').removeData('stoppedjc');
       div.unbind('.jc');
     });
   });
