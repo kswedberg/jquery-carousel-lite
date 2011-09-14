@@ -37,6 +37,7 @@ $.fn.jCarouselLite = function(options) {
         tl = tLi.length,
         v = o.visible,
         start = Math.min(o.start, tl-1);
+        mainDirection = 1;
 
     if (o.circular) {
         ul.prepend(tLi.slice(tl-v-1+1).clone(true))
@@ -81,7 +82,7 @@ $.fn.jCarouselLite = function(options) {
       self.setAutoAdvance = setTimeout(function() {
 
         if (!autoStop || autoStop > advanceCounter) {
-          go(curr+o.scroll);
+          go(curr+mainDirection*o.scroll);
           advanceCounter++;
           advancer();
         }
@@ -95,6 +96,10 @@ $.fn.jCarouselLite = function(options) {
 
         o['$' + btn].bind('click.jc', function() {
           var step = index === 0 ? curr-o.scroll : curr+o.scroll;
+          if(o.direction) {
+            if(index) mainDirection=1;
+            else mainDirection=-1;
+          }
           return go( step );
         });
       }
@@ -270,6 +275,7 @@ $.fn.jCarouselLite.defaults = {
   autoStop: false, // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
   timeout: 4000, // milliseconds between scrolls
   pause: true, // pause scrolling on hover
+  direction: false,
 
   vertical: false,
   circular: true, // continue scrolling when reach the last item
