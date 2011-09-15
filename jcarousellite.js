@@ -37,7 +37,9 @@ $.fn.jCarouselLite = function(options) {
         tl = tLi.length,
         v = o.visible,
         start = Math.min(o.start, tl-1);
-        mainDirection = 1;
+        direction = 1;
+
+    div.data('dirjc', direction);
 
     if (o.circular) {
         ul.prepend(tLi.slice(tl-v-1+1).clone(true))
@@ -82,7 +84,8 @@ $.fn.jCarouselLite = function(options) {
       self.setAutoAdvance = setTimeout(function() {
 
         if (!autoStop || autoStop > advanceCounter) {
-          go(curr+mainDirection*o.scroll);
+          direction = div.data('dirjc');
+          go( curr + (direction * o.scroll) );
           advanceCounter++;
           advancer();
         }
@@ -96,9 +99,11 @@ $.fn.jCarouselLite = function(options) {
 
         o['$' + btn].bind('click.jc', function() {
           var step = index === 0 ? curr-o.scroll : curr+o.scroll;
-          if(o.direction) {
-            if(index) mainDirection=1;
-            else mainDirection=-1;
+          if (o.directional) {
+            // set direction of subsequent scrolls to:
+            //  1 if "btnNext" clicked
+            // -1 if "btnPrev" clicked
+            div.data( 'dirjc', ((index) ? 1 : -1) );
           }
           return go( step );
         });
@@ -239,6 +244,7 @@ $.fn.jCarouselLite = function(options) {
     .bind('endCarousel.jc', function() {
       if (self.setAutoAdvance) {
         clearTimeout(self.setAutoAdvance);
+        self.setAutoAdvance = null;
       }
       if (o.btnPrev) {
         o[$btnPrev].addClass(o.btnDisabledClass).unbind('.jc');
@@ -251,10 +257,9 @@ $.fn.jCarouselLite = function(options) {
           $(val).unbind('.jc');
         });
       }
-      if (self.setAutoAdvance) {
-        self.setAutoAdvance = null;
-      }
-      div.removeData('pausedjc').removeData('stoppedjc');
+      $.each(['pausedjc', 'stoppedjc', 'dirjc'], function(i, d) {
+        div.removeData(d);
+      });
       div.unbind('.jc');
     });
   });
@@ -272,10 +277,11 @@ $.fn.jCarouselLite.defaults = {
   speed: 200,
   easing: null,
   auto: false, // true to enable auto scrolling
+  directional: false, // true to enable changing direction of auto scrolling when user clicks prev or next button
+
   autoStop: false, // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
   timeout: 4000, // milliseconds between scrolls
   pause: true, // pause scrolling on hover
-  direction: false,
 
   vertical: false,
   circular: true, // continue scrolling when reach the last item
