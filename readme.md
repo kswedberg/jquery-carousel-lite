@@ -71,19 +71,19 @@ example
 $(".carousel").jCarouselLite({
   btnNext: ".next",
   btnPrev: ".prev",
-  btnGo: [".0", ".1", ".2"]
+  btnGo: [".one", ".two", ".three"]
 });
 ```
 
 If you don't want next and previous buttons for navigation, instead you prefer custom navigation based on
 the item number within the carousel, you can use this option. Just supply an array of selectors for each element
 in the carousel. The index of the array represents the index of the element. In other words, if the
-first element in the array is ".0", when the element represented by ".0" is clicked, the carousel
-will slide to the first element and so on and so forth. This feature is very powerful. For example, i made a tabbed
+first element in the array is ".one", when the element represented by ".one" is clicked, the carousel
+will slide to the first element and so on. This feature is very powerful. For example, i made a tabbed
 interface out of it by making my navigation elements styled like tabs in css. As the carousel is capable of holding
 any content, not just images, you can have a very simple tabbed navigation in minutes without using any other plugin.
 
-The best part is that, the tab will "slide" based on the provided effect.
+The best part is that the tab will "slide" based on the provided effect.
 
 ### `mouseWheel` : boolean - default is false
 
@@ -110,21 +110,33 @@ $(".carousel").jCarouselLite({
 });
 ```
 
-### `auto` : number - default is null, meaning autoscroll is disabled by default
+### `auto` : Boolean - default is false, meaning autoscroll is disabled by default
 
 example
 
 ```javascript
 $(".carousel").jCarouselLite({
-  auto: 800,
+  auto: true,
   speed: 500
 });
 ```
 
-You can make your carousel auto-navigate itself by specfying a millisecond value in this option. The value you specify is the amount of time between 2 slides. The default is null, and that disables auto scrolling.
-Specify this value and magically your carousel will start auto scrolling.
+The carousel will navigate by itself if this option is set to `true`.
 
-### `speed` : number - 200 is default
+### `timeout` : number - default is 4000
+
+example
+
+```javascript
+$(".carousel").jCarouselLite({
+  auto: true,
+  timeout: 8000
+});
+```
+
+When the `auto` option is set to `true`, the carousel automatically transitions from one slide to the next after the amount of time specified by the `timeout` option.
+
+### `speed` : number - default is 200
 
 example
 

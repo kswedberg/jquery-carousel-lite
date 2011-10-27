@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.6
  *
- * Date: Thu Sep 15 11:46:52 2011 EDT
+ * Date: Thu Oct 27 19:05:46 2011 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -276,11 +276,11 @@ $.fn.jCarouselLite.defaults = {
 
   speed: 200,
   easing: null,
+  timeout: 4000, // milliseconds between scrolls
   auto: false, // true to enable auto scrolling
   directional: false, // true to enable changing direction of auto scrolling when user clicks prev or next button
 
   autoStop: false, // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
-  timeout: 4000, // milliseconds between scrolls
   pause: true, // pause scrolling on hover
 
   vertical: false,
