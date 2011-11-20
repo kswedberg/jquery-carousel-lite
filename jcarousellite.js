@@ -1,7 +1,7 @@
 /*!
- * jQuery jCarousellite Plugin v1.6
+ * jQuery jCarousellite Plugin v1.6.1
  *
- * Date: Thu Oct 27 19:05:46 2011 EDT
+ * Date: Sat Nov 19 23:55:07 2011 EST
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -17,7 +17,8 @@
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.6'
+  version: '1.6.1',
+  curr: 0
 };
 
 $.fn.jCarouselLite = function(options) {
@@ -36,7 +37,7 @@ $.fn.jCarouselLite = function(options) {
         tLi = ul.children('li'),
         tl = tLi.length,
         v = o.visible,
-        start = Math.min(o.start, tl-1);
+        start = Math.min(o.start, tl - 1);
         direction = 1;
 
     div.data('dirjc', direction);
@@ -49,6 +50,8 @@ $.fn.jCarouselLite = function(options) {
     var li = ul.children('li'),
         itemLength = li.length,
         curr = start;
+
+    $.jCarouselLite.curr = curr;
 
     div.css("visibility", "visible");
 
@@ -72,24 +75,26 @@ $.fn.jCarouselLite = function(options) {
       div.css(sizes);
       li.css({width: li.width(), height: li.height()});
     }
+
     sizes[sizeProp] = ulSize + 'px';
     sizes[animCss] = -(curr*liSize);
     ul.css(sizes);
 
     // set up timed advancer
     var advanceCounter = 0,
-        autoStop = iterations(tl,o);
+        autoStop = iterations(tl,o),
+        autoScrollBy = typeof o.auto == 'number' ? o.auto : o.scroll;
 
     var advancer = function() {
       self.setAutoAdvance = setTimeout(function() {
 
         if (!autoStop || autoStop > advanceCounter) {
           direction = div.data('dirjc');
-          go( curr + (direction * o.scroll) );
+          go( curr + (direction * autoScrollBy) );
           advanceCounter++;
           advancer();
         }
-      }, o.timeout+o.speed);
+      }, o.timeout + o.speed);
     };
 
     // bind click handlers to prev and next buttons, if set
@@ -127,13 +132,14 @@ $.fn.jCarouselLite = function(options) {
         });
       });
     }
+
     if (o.mouseWheel && div.mousewheel) {
       div.bind('mousewheel.jc', function(e, d) {
         return d > 0 ? go(curr-o.scroll) : go(curr+o.scroll);
       });
     }
 
-    if (o.pause) {
+    if (o.pause && o.auto) {
       div.bind('mouseenter.jc', function() {
         div.trigger('pauseCarousel.jc');
       }).bind('mouseleave.jc', function() {
@@ -149,6 +155,8 @@ $.fn.jCarouselLite = function(options) {
       return li.slice(curr).slice(0,v);
     }
 
+    $.jCarouselLite.vis = vis;
+
     function go(to) {
       if (running) { return false; }
       var direction = to > curr;
@@ -161,7 +169,7 @@ $.fn.jCarouselLite = function(options) {
         if (to <= start - v - 1) {
           ul.css( animCss, -( (itemLength - (v*2) ) * liSize ) + "px" );
           // If "scroll" > 1, then the "to" might not be equal to the condition; it can be lesser depending on the number of elements.
-          curr = to == start - v - 1 ? itemLength-(v*2) - 1 : itemLength-(v*2)-o.scroll;
+          curr = to == start - v - 1 ? itemLength-(v*2) - 1 : itemLength-(v*2) - o.scroll;
         } else if (to>=itemLength-v+1) { // If last, then goto first
           ul.css(animCss, -( v * liSize ) + "px" );
 
@@ -175,19 +183,19 @@ $.fn.jCarouselLite = function(options) {
       } else {
         // Disable buttons when the carousel reaches the last/first, and enable when not
         o.$btnPrev.toggleClass(o.btnDisabledClass, o.btnPrev && to <= 0);
-        o.$btnNext.toggleClass(o.btnDisabledClass, o.btnNext && to > itemLength-v);
+        o.$btnNext.toggleClass(o.btnDisabledClass, o.btnNext && to > itemLength - v);
 
-        if (to<0) {
+        if (to < 0) {
           curr = 0;
-        } else if  (to>itemLength-v) {
-          curr = itemLength-v;
+        } else if  (to > itemLength - v) {
+          curr = itemLength - v;
         } else {
           curr = to;
         }
       }
-
+      $.jCarouselLite.curr = curr;
       running = true;
-      aniProps[animCss] = -(curr*liSize);
+      aniProps[animCss] = -(curr * liSize);
 
       ul.animate(aniProps, o.speed, o.easing, function() {
         if (o.afterEnd) {
@@ -216,12 +224,16 @@ $.fn.jCarouselLite = function(options) {
     })
     .bind('startCarousel.jc', function(event) {
       clearTimeout(self.setAutoAdvance);
+      self.setAutoAdvance = undefined;
       div.trigger('go', '+=' + o.scroll);
       advancer();
       div.removeData('pausedjc').removeData('stoppedjc');
     })
     .bind('resumeCarousel.jc', function(event, forceRun) {
+      if (self.setAutoAdvance) { return; }
       clearTimeout(self.setAutoAdvance);
+      self.setAutoAdvance = undefined;
+
       var stopped = div.data('stoppedjc');
       if ( forceRun || !stopped ) {
         advancer();
@@ -234,17 +246,20 @@ $.fn.jCarouselLite = function(options) {
 
     .bind('pauseCarousel.jc', function(event) {
       clearTimeout(self.setAutoAdvance);
+      self.setAutoAdvance = undefined;
       div.data('pausedjc', true);
     })
     .bind('stopCarousel.jc', function(event) {
       clearTimeout(self.setAutoAdvance);
+      self.setAutoAdvance = undefined;
+
       div.data('stoppedjc', true);
     })
 
     .bind('endCarousel.jc', function() {
       if (self.setAutoAdvance) {
         clearTimeout(self.setAutoAdvance);
-        self.setAutoAdvance = null;
+        self.setAutoAdvance = undefined;
       }
       if (o.btnPrev) {
         o[$btnPrev].addClass(o.btnDisabledClass).unbind('.jc');
@@ -276,20 +291,40 @@ $.fn.jCarouselLite.defaults = {
 
   speed: 200,
   easing: null,
-  timeout: 4000, // milliseconds between scrolls
-  auto: false, // true to enable auto scrolling
-  directional: false, // true to enable changing direction of auto scrolling when user clicks prev or next button
 
-  autoStop: false, // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
-  pause: true, // pause scrolling on hover
+  // milliseconds between scrolls
+  timeout: 4000,
+
+  // true to enable auto scrolling; number to auto-scroll by different number at a time than that of scroll option
+  auto: false,
+
+  // true to enable changing direction of auto scrolling when user clicks prev or next button
+  directional: false,
+
+// number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
+  autoStop: false,
+
+  // pause scrolling on hover
+  pause: true,
 
   vertical: false,
-  circular: true, // continue scrolling when reach the last item
-  visible: 3,
-  start: 0, // index of item to show initially in the first posiition
-  scroll: 1, // number of items to scroll at a time
 
+  // continue scrolling when reach the last item
+  circular: true,
+
+  // the number to be visible at a given time.
+  visible: 3,
+
+  // index of item to show initially in the first posiition
+  start: 0,
+
+  // number of items to scroll at a time
+  scroll: 1,
+
+  // function to be called before each transition starts
   beforeStart: null,
+
+  // function to be called after each transition ends
   afterEnd: null
 };
 
