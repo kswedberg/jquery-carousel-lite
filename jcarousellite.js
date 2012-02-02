@@ -194,8 +194,13 @@ $.fn.jCarouselLite = function(options) {
       }
 
       // Disable buttons when the carousel reaches the last/first, and enable when not
-      o.$btnPrev.toggleClass(o.btnDisabledClass, o.btnPrev && curr === 0);
-      o.$btnNext.toggleClass(o.btnDisabledClass, o.btnNext && curr === itemLength - visibleFloor);
+      if (o.btnPrev) {
+        o.$btnPrev.toggleClass(o.btnDisabledClass, curr === 0);
+      }
+      if (o.btnNext) {
+        o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
+      }
+
 
       $.jCarouselLite.curr = curr;
       running = true;
