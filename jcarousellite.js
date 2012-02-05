@@ -1,7 +1,7 @@
 /*!
- * jQuery jCarousellite Plugin v1.6.2
+ * jQuery jCarousellite Plugin v1.6.3
  *
- * Date: Sat Nov 19 23:55:07 2011 EST
+ * Date: Sat Feb 04 22:53:15 2012 EST
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -17,7 +17,7 @@
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.6.2',
+  version: '1.6.3',
   curr: 0
 };
 
