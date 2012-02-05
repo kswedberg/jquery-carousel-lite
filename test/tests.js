@@ -25,8 +25,9 @@ jQuery(document).ready(function($) {
     setTimeout(function() {
       equal(s.eq(1).css('left'), '-1200px', 'second carousel went to index 1 (2nd item)');
       start();
-    }, 210);
+    }, 250);
   });
+
   asyncTest('go to 0', function() {
     var s = this.slides;
     this.slideshow.eq(1).trigger('go', 0);
@@ -34,7 +35,8 @@ jQuery(document).ready(function($) {
     setTimeout(function() {
       equal(s.eq(1).css('left'), '-800px', 'second carousel went back to index 0 (1st item)');
       start();
-    }, 210);
+    }, 250);
+
   });
 
   module('directional option', {

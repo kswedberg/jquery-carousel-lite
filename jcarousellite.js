@@ -37,9 +37,10 @@ $.fn.jCarouselLite = function(options) {
         tLi = ul.children('li'),
         tl = tLi.length,
         visibleNum = o.visible,
+        // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
         visibleCeil = Math.ceil(visibleNum),
         visibleFloor = Math.floor(visibleNum),
-        start = Math.min(o.start, tl - 1);
+        start = Math.min(o.start, tl - 1),
         direction = 1;
 
     div.data('dirjc', direction);
@@ -271,10 +272,10 @@ $.fn.jCarouselLite = function(options) {
         self.setAutoAdvance = undefined;
       }
       if (o.btnPrev) {
-        o[$btnPrev].addClass(o.btnDisabledClass).unbind('.jc');
+        o.$btnPrev.addClass(o.btnDisabledClass).unbind('.jc');
       }
       if (o.btnNext) {
-        o[$btnNext].addClass(o.btnDisabledClass).unbind('.jc');
+        o.$btnNext.addClass(o.btnDisabledClass).unbind('.jc');
       }
       if (o.btnGo) {
         $.each(o.btnGo, function(i, val) {
