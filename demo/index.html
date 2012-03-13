@@ -28,8 +28,25 @@ body {
 .slide {
   float: left;
   width: 360px;
-height: 150px;
+  height: 150px;
   padding: 20px;
+}
+
+.nav a {
+  display: inline-block;
+  margin: 0;
+  padding: .2em .5em;
+  color: #00A3CB;
+  text-decoration: none;
+
+}
+.nav a:hover {
+  color: #00436B;
+}
+.nav a.active,
+.nav a.active:hover {
+  background-color: #00A3CB;
+  color: white;
 }
 </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -38,7 +55,7 @@ height: 150px;
   <script src="../jcarousellite.js"></script>
   <script>
     $(document).ready(function() {
-      $('.slideshow').jCarouselLite({
+      var carousel1Options = {
         auto: true,
         visible: 2,
         speed: 300,
@@ -49,7 +66,21 @@ height: 150px;
         btnNext: function() {
           return $(this).find('.next');
         }
-      });
+      };
+
+      var carousel2Options = {
+        auto: true,
+        visible: 2,
+        speed: 300,
+        pause: true,
+        btnGo: $('div.nav').find('a')
+      };
+
+      var $slideshows = $('.slideshow');
+
+      $slideshows.eq(0).jCarouselLite(carousel1Options);
+
+      $slideshows.eq(1).jCarouselLite(carousel2Options);
 
     });
 
@@ -132,9 +163,13 @@ height: 150px;
       </li>
 
     </ul>
-    <a href="#" class="prev">&lt;</a>
-    <a href="#" class="next">&gt;</a>
-
+    <div class="nav">
+      <a href="#">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+      <a href="#">5</a>
+    </div>
   </div>
 
 </div>

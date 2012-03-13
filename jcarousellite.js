@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.6.3
  *
- * Date: Sat Feb 04 22:53:15 2012 EST
+ * Date: Tue Mar 13 15:23:26 2012 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
@@ -41,7 +41,8 @@ $.fn.jCarouselLite = function(options) {
         visibleCeil = Math.ceil(visibleNum),
         visibleFloor = Math.floor(visibleNum),
         start = Math.min(o.start, tl - 1),
-        direction = 1;
+        direction = 1,
+        activeBtnOffset = 0;
 
     div.data('dirjc', direction);
 
@@ -49,7 +50,15 @@ $.fn.jCarouselLite = function(options) {
         ul.prepend( tLi.slice(tl - visibleCeil - 1 + 1).clone(true) )
           .append( tLi.slice(0,visibleCeil).clone(true) );
         start += visibleCeil;
+        activeBtnOffset = visibleCeil;
     }
+
+    var setActiveBtn = function(i) {
+      var activeBtnIndex = (i - activeBtnOffset) % tl;
+      $(o.btnGo).removeClass(o.activeClass).eq(activeBtnIndex).addClass(o.activeClass);
+      return activeBtnIndex;
+    };
+
     var li = ul.children('li'),
         itemLength = li.length,
         curr = start;
@@ -134,6 +143,9 @@ $.fn.jCarouselLite = function(options) {
           return go(o.circular ? visibleNum + i : i);
         });
       });
+
+      // set the active class on the btn corresponding to the "start" li
+      setActiveBtn(start);
     }
 
     if (o.mouseWheel && div.mousewheel) {
@@ -163,6 +175,7 @@ $.fn.jCarouselLite = function(options) {
     function go(to) {
       if (running) { return false; }
       var direction = to > curr;
+
       if (o.beforeStart) {
         o.beforeStart.call(this, vis(), direction);
       }
@@ -202,11 +215,14 @@ $.fn.jCarouselLite = function(options) {
         o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
       }
 
+      // set the active class on the btnGo element corresponding to the first visible carousel li
+      if (o.btnGo) {
+        setActiveBtn(curr);
+      }
 
       $.jCarouselLite.curr = curr;
       running = true;
       aniProps[animCss] = -(curr * liSize);
-
       ul.animate(aniProps, o.speed, o.easing, function() {
         if (o.afterEnd) {
           o.afterEnd.call(this, vis(), direction);
@@ -296,7 +312,13 @@ $.fn.jCarouselLite.defaults = {
   btnPrev: null,
   btnNext: null,
   btnDisabledClass: 'disabled',
+
+  // array (or jQuery object) of elements. When clicked, makesthe corresponding carousel LI the first visible one
   btnGo: null,
+
+  // class applied to the active btnGo element
+  activeClass: 'active',
+
   mouseWheel: false,
 
   speed: 200,
