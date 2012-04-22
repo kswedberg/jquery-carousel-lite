@@ -1,23 +1,23 @@
 /*!
- * jQuery jCarousellite Plugin v1.6.4
+ * jQuery jCarousellite Plugin v1.6.5
  *
- * Date: Tue Mar 13 15:26:25 2012 EDT
+ * Date: Sun Apr 22 16:49:39 2012 EDT
  * Requires: jQuery v1.4+
  *
+ * Copyright 2012 Karl Swedberg
  * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
- * Modifications/enhancements by Karl Swedberg
  * Dual licensed under the MIT and GPL licenses (just like jQuery):
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
- * jQuery plugin to navigate images/any content in a carousel style widget.
+ * jQuery plugin to navigate images/any content in a carousel-style widget.
  *
 */
 
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.6.4',
+  version: '1.6.5',
   curr: 0
 };
 
