@@ -1,12 +1,10 @@
 # jCarouselLite
 
-jQuery plugin to navigate images/any content in a carousel style widget.
+By [Karl Swedberg](http://www.learningjquery.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
 
-Created by Ganeshji Marwaha. Enhanced by Karl Swedberg.
+This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup.
 
-Creates a carousel-style navigation widget for images/any-content from a simple HTML markup.
-
-The HTML markup that is used to build the carousel can be as simple as...
+The HTML markup to build the carousel can be as simple as the following:
 
 ```html
 <div class="carousel">
@@ -18,79 +16,83 @@ The HTML markup that is used to build the carousel can be as simple as...
 </div>
 ```
 
-As you can see, this snippet is nothing but a simple div containing an unordered list of images.
-You don't need any special "class" attribute, or a special "css" file for this plugin.
-I am using a class attribute just for the sake of explanation here.
+This snippet is nothing but a simple div containing an unordered list of images.
+The "carousel" class for the div here is **just for the sake of explanation**.
+You can use any class — or none at all — for any of the elements.
 
-To navigate the elements of the carousel, you need some kind of navigation buttons.
-For example, you will need a "previous" button to go backward, and a "next" button to go forward.
-This need not be part of the carousel "div" itself. It can be any element in your page.
-Let's assume that the following elements in your document can be used as next and prev buttons...
+To manually navigate the elements of the carousel, you can include some kind of navigation buttons.
+For example, you can have a "previous" button to go backward and a "next" button to go forward.
+They need not be part of the carousel `div` itself; they can be any element in your document.
+For example, let's assume you want the following elements to be used as prev and next buttons:
 
 ```html
-<button class="prev">&lt;&lt;</button>
-<button class="next">&gt;&gt;</button>
+<button class='prev'> &raquo; </button>
+<button class='next'> &laquo; </button>
 ```
 
-Now, all you need to do is call the carousel component on the div element that represents it, and pass in the
+All you need to do is call the carousel component on the `div` element that represents it and pass in the
 navigation buttons as options.
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev"
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev'
 });
 ```
 
-That's it, you would have now converted your raw div, into a magnificent carousel.
-
-There are quite a few other options that you can use to customize it though. Each will be explained with an example below.
+There are quite a few other options that you can use to customize it. Each will be explained with an example below.
 
 ## Options
 
-You can specify all the options shown below as an options object param.
+You can specify all the options shown below as an options object parameters.
 
 ### `btnPrev`, `btnNext` : string - no defaults
 
 example:
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev"
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev'
 });
 ```
 
 Creates a basic carousel. Clicking "btnPrev" navigates backwards and "btnNext" navigates forward.
 
-### `btnGo` - array - no defaults
+### `btnGo` - array | jQuery object - no defaults
 
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
-  btnGo: [".one", ".two", ".three"]
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  btnGo: ['.one', '.two', '.three']
 });
 ```
 
-If you don't want next and previous buttons for navigation, instead you prefer custom navigation based on
-the item number within the carousel, you can use this option. Just supply an array of selectors for each element
-in the carousel. The index of the array represents the index of the element. In other words, if the
-first element in the array is ".one", when the element represented by ".one" is clicked, the carousel
-will slide to the first element and so on. This feature is very powerful. For example, i made a tabbed
-interface out of it by making my navigation elements styled like tabs in css. As the carousel is capable of holding
-any content, not just images, you can have a very simple tabbed navigation in minutes without using any other plugin.
+You can use the `btnGo` option along with the btnNext/btnPrev buttons or instead of them.
+the item number within the carousel, you can use this option.
+If you supply an array, the index of each item in the array represents the index of the element in the carousel.
+In other words, if the first element in the array is ".one," then clicking the element represented by ".one"
+will slide the carousel to the first element.
 
-The best part is that the tab will "slide" based on the provided effect.
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnGo: $('#carousel-nav a')
+});
+```
+
+In this example, clicking a link within `#carousel-nav` will slide the carousel to the slide with an index matching the link's index among the other links.
 
 ### `mouseWheel` : boolean - default is false
 
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
+$('div.carousel').jCarouselLite({
   mouseWheel: true
 });
 ```
@@ -103,47 +105,59 @@ The carousel can also be navigated using the mouse wheel interface of a scroll m
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   mouseWheel: true
 });
 ```
 
-### `auto` : Boolean - default is false, meaning autoscroll is disabled by default
+### `auto` : Boolean | Number - default is false, meaning automatic scrolling is disabled by default
 
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
+$('div.carousel').jCarouselLite({
   auto: true,
   speed: 500
 });
 ```
+example
 
-The carousel will navigate by itself if this option is set to `true`.
+```javascript
+$('div.carousel').jCarouselLite({
+  auto: 2,
+  scroll: 1,
+  visible: 2,
+  btnNext: '.next',
+  btnPrev: '.prev'
+});
+```
+
+
+The carousel will navigate by itself if this option is set to `true` or a number greater than 0. If `true`, the carousel will scroll by the number of slides indicated by the `scroll` option (default is 1). If a positive number, it will auto-scroll by that number instead, although clicks on the previous/next button will still cause it to scroll by the `scroll` option's number.
 
 ### `timeout` : number - default is 4000
 
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
+$('div.carousel').jCarouselLite({
   auto: true,
   timeout: 8000
 });
 ```
 
-When the `auto` option is set to `true`, the carousel automatically transitions from one slide to the next after the amount of time specified by the `timeout` option.
+When the `auto` option is set to `true` (or a number greater than 0), the carousel automatically transitions after the amount of time specified by the `timeout` option.
 
 ### `speed` : number - default is 200
 
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   speed: 800
 });
 ```
@@ -156,10 +170,10 @@ different speeds like 800, 600, 1500 etc. Providing 0, will remove the slide eff
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
-  easing: "bounceout"
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  easing: 'bounceout'
 });
 ```
 
@@ -171,9 +185,9 @@ the carousel will slide based on the provided easing effect.
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   vertical: true
 });
 ```
@@ -187,9 +201,9 @@ display horizontally. The next and prev items will slide the items from left-rig
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   circular: false
 });
 ```
@@ -204,9 +218,9 @@ and similarly for "previous" button and first element.
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   visible: 4
 });
 ```
@@ -220,9 +234,10 @@ last item half visible. This gives you the effect of showing the user that there
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  // start on the *third* item
   start: 2
 });
 ```
@@ -235,9 +250,9 @@ has a start of 0, and so on.
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   scroll: 2
 });
 ```
@@ -251,14 +266,14 @@ default, only one item is scrolled, but you may set it to any number. Eg: settin
 example
 
 ```javascript
-$(".carousel").jCarouselLite({
-  btnNext: ".next",
-  btnPrev: ".prev",
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
   beforeStart: function(a, direction) {
-    alert("Before animation starts:" + a);
+    alert('Before animation starts:' + a);
   },
   afterEnd: function(a, , direction) {
-    alert("After animation ends:" + a);
+    alert('After animation ends:' + a);
   }
 });
 ```
@@ -275,7 +290,7 @@ The plugin binds a few custom event handlers to the wrapping `div` element. They
 example
 
 ```javascript
-$(".carousel").trigger("pauseCarousel")
+$('div.carousel').trigger('pauseCarousel')
 ```
 
 Pauses an autoscrolling carousel until `resumeCarousel` is triggered. Note: if the `pause` option is set to `true`, then the `resumeCarousel` event is automatically triggered when the mouse leaves the carousel div.
@@ -285,7 +300,7 @@ Pauses an autoscrolling carousel until `resumeCarousel` is triggered. Note: if t
 example
 
 ```javascript
-$(".carousel").trigger("resumeCarousel")
+$('div.carousel').trigger('resumeCarousel')
 ```
 
 Resumes an autoscrolling carousel after having been paused.
@@ -295,7 +310,7 @@ Resumes an autoscrolling carousel after having been paused.
 example
 
 ```javascript
-$(".carousel").trigger("endCarousel")
+$('div.carousel').trigger('endCarousel')
 ```
 
 Stops the carousel from functioning and removes all events and data bound by the plugin.
@@ -305,11 +320,11 @@ Stops the carousel from functioning and removes all events and data bound by the
 example
 
 ```javascript
-$(".carousel").trigger("go", 3)
+$('div.carousel').trigger('go', 3)
 ```
 
 ```javascript
-$(".carousel").trigger("go", "+=2")
+$('div.carousel').trigger('go', '+=2')
 ```
 When triggering the `go` custom event, you can pass in a number or a string representing a relative number ("+=n" or "-=n") to specify which item in the carousel to go to. The default is "+=1" (i.e. the next item).
 

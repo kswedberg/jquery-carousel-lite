@@ -26,7 +26,7 @@ $.fn.jCarouselLite = function(options) {
 
   this.each(function() {
 
-    var sizes = {},
+    var styles = { ul: {} },
         running = false,
         animCss = o.vertical ? "top": "left",
         aniProps = {},
@@ -42,18 +42,24 @@ $.fn.jCarouselLite = function(options) {
         visibleFloor = Math.floor(visibleNum),
         start = Math.min(o.start, tl - 1),
         direction = 1,
-        activeBtnOffset = 0;
+        activeBtnOffset = 0,
+        beforeCirc, afterCirc;
 
     div.data('dirjc', direction);
 
     if (o.circular) {
-        ul.prepend( tLi.slice(tl - visibleCeil - 1 + 1).clone(true) )
-          .append( tLi.slice(0,visibleCeil).clone(true) );
-        start += visibleCeil;
-        activeBtnOffset = visibleCeil;
+      beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
+      afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
+      ul.prepend( beforeCirc )
+        .append( afterCirc );
+
+      start += visibleCeil;
+      activeBtnOffset = visibleCeil;
     }
 
     var setActiveBtn = function(i) {
+      i = Math.ceil(i);
+
       var activeBtnIndex = (i - activeBtnOffset) % tl;
       $(o.btnGo).removeClass(o.activeClass).eq(activeBtnIndex).addClass(o.activeClass);
       return activeBtnIndex;
@@ -61,40 +67,37 @@ $.fn.jCarouselLite = function(options) {
 
     var li = ul.children('li'),
         itemLength = li.length,
-        curr = start;
+        curr = start,
+
+        // Full li size(incl margin)-Used for animation
+        liSize = o.vertical ? li.outerHeight(true) : li.outerWidth(true),
+
+        // size of full ul(total length, not just for the visible items)
+        ulSize = liSize * itemLength,
+
+        // size of entire div(total length for just the visible items)
+        divSize = liSize * visibleNum;
 
     $.jCarouselLite.curr = curr;
-
-    div.css("visibility", "visible");
 
     if (o.autoCSS) {
       div.css({visibility: 'visible', overflow: 'hidden', position: 'relative', zIndex: 2, left: '0px'});
       ul.css({margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1});
       li.css({overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'});
-    }
 
-    // Full li size(incl margin)-Used for animation
-    var liSize = o.vertical ? height(li) : width(li);
-
-    // size of full ul(total length, not just for the visible items)
-    var ulSize = liSize * itemLength;
-
-    // size of entire div(total length for just the visible items)
-    var divSize = liSize * visibleNum;
-
-    if (o.autoCSS) {
-      sizes[sizeProp] = divSize + 'px';
-      div.css(sizes);
+      styles.div = {};
+      styles.div[sizeProp] = divSize + 'px';
+      div.css(styles.div);
       li.css({width: li.width(), height: li.height()});
-    }
 
-    sizes[sizeProp] = ulSize + 'px';
-    sizes[animCss] = -(curr*liSize);
-    ul.css(sizes);
+      styles.ul[sizeProp] = ulSize + 'px';
+      styles.ul[animCss] = -(curr * liSize) + 'px';
+      ul.css(styles.ul);
+    }
 
     // set up timed advancer
     var advanceCounter = 0,
-        autoStop = iterations(tl,o),
+        autoStop = iterations(tl, o),
         autoScrollBy = typeof o.auto == 'number' ? o.auto : o.scroll;
 
     var advancer = function() {
@@ -106,7 +109,7 @@ $.fn.jCarouselLite = function(options) {
           advanceCounter++;
           advancer();
         }
-      }, o.timeout + o.speed);
+      }, o.timeout);
     };
 
     // bind click handlers to prev and next buttons, if set
@@ -115,7 +118,7 @@ $.fn.jCarouselLite = function(options) {
         o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
 
         o['$' + btn].bind('click.jc', function() {
-          var step = index === 0 ? curr-o.scroll : curr+o.scroll;
+          var step = index === 0 ? curr - o.scroll : curr + o.scroll;
           if (o.directional) {
             // set direction of subsequent scrolls to:
             //  1 if "btnNext" clicked
@@ -175,44 +178,37 @@ $.fn.jCarouselLite = function(options) {
     function go(to) {
       if (running) { return false; }
       var direction = to > curr;
-
       if (o.beforeStart) {
         o.beforeStart.call(this, vis(), direction);
       }
+
       // If circular and we are in first or last, then go to the other end
       if (o.circular) {
-        // If first, then goto last
-        if (to <= start - visibleCeil - 1) {
-          ul.css( animCss, -( (itemLength - (visibleCeil * 2) ) * liSize ) + "px" );
-          // If "scroll" > 1, then the "to" might not be equal to the condition; it can be lesser depending on the number of elements.
-          curr = to == start - visibleCeil - 1 ? itemLength - (visibleCeil * 2) - 1 : itemLength - (visibleCeil * 2) - o.scroll;
-        } else if (to >= itemLength - visibleCeil + 1) { // If last, then go to first
-          ul.css(animCss, - ( visibleCeil * liSize ) + 'px' );
-
-          // If "scroll" > 1, then the "to" might not be equal to the condition; it can be greater depending on the number of elements.
-          curr = (to == itemLength - visibleCeil + 1) ? visibleCeil + 1 : visibleCeil + o.scroll;
-        } else {
-          curr = to;
+        if (to > curr && to >= visibleCeil + tl) {
+          curr = curr % tl;
+          to = to % tl;
+          ul.css(animCss, -curr * liSize);
         }
 
-      // If non-circular and to points beyond first or last, we change to first or last.
+        curr = to + (to % 1);
+
+      // If non-circular and "to" points beyond first or last, we change to first or last.
       } else {
-
         if (to < 0) {
-          curr = 0;
+          to = 0;
         } else if  (to > itemLength - visibleFloor) {
-          curr = itemLength - visibleFloor;
-        } else {
-          curr = to;
+          to = itemLength - visibleFloor;
         }
-      }
 
-      // Disable buttons when the carousel reaches the last/first, and enable when not
-      if (o.btnPrev) {
-        o.$btnPrev.toggleClass(o.btnDisabledClass, curr === 0);
-      }
-      if (o.btnNext) {
-        o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
+        curr = to;
+
+        // Disable buttons when the carousel reaches the last/first, and enable when not
+        if (o.btnPrev) {
+          o.$btnPrev.toggleClass(o.btnDisabledClass, curr === 0);
+        }
+        if (o.btnNext) {
+          o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
+        }
       }
 
       // set the active class on the btnGo element corresponding to the first visible carousel li
@@ -222,6 +218,7 @@ $.fn.jCarouselLite = function(options) {
 
       $.jCarouselLite.curr = curr;
       running = true;
+
       aniProps[animCss] = -(curr * liSize);
       ul.animate(aniProps, o.speed, o.easing, function() {
         if (o.afterEnd) {
@@ -229,7 +226,8 @@ $.fn.jCarouselLite = function(options) {
         }
         running = false;
       });
-      return false;
+
+      return curr;
     } // end go function
 
     // bind custom events so they can be triggered by user
@@ -360,16 +358,13 @@ $.fn.jCarouselLite.defaults = {
   afterEnd: null
 };
 
-function css(el, prop) {
-  return parseInt($.css(el[0], prop), 10) || 0;
-}
-function width(el) {
-  return  el[0].offsetWidth + css(el, 'marginLeft') + css(el, 'marginRight');
-}
-function height(el) {
-  return el[0].offsetHeight + css(el, 'marginTop') + css(el, 'marginBottom');
-}
 function iterations(itemLength, options) {
   return options.autoStop && (options.circular ? options.autoStop : Math.min(itemLength, options.autoStop));
+}
+
+function fixIds(i) {
+  if ( this.id ) {
+    this.id += i;
+  }
 }
 })(jQuery);
