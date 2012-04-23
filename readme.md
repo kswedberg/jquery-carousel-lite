@@ -2,7 +2,7 @@
 
 By [Karl Swedberg](http://www.learningjquery.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
 
-This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup.
+This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup. Check out a [bare-bones demo](http://plugins.learningjquery.com/jcarousellite/demo/).
 
 The HTML markup to build the carousel can be as simple as the following:
 
