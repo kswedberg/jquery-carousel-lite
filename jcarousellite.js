@@ -117,7 +117,8 @@ $.fn.jCarouselLite = function(options) {
       if ( o[btn] ) {
         o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
 
-        o['$' + btn].bind('click.jc', function() {
+        o['$' + btn].bind('click.jc', function(event) {
+          event.preventDefault();
           var step = index === 0 ? curr - o.scroll : curr + o.scroll;
           if (o.directional) {
             // set direction of subsequent scrolls to:
@@ -142,7 +143,8 @@ $.fn.jCarouselLite = function(options) {
 
     if (o.btnGo) {
       $.each(o.btnGo, function(i, val) {
-        $(val).bind('click.jc', function() {
+        $(val).bind('click.jc', function(event) {
+          event.preventDefault();
           return go(o.circular ? visibleNum + i : i);
         });
       });
@@ -187,6 +189,10 @@ $.fn.jCarouselLite = function(options) {
         if (to > curr && to >= visibleCeil + tl) {
           curr = curr % tl;
           to = to % tl;
+          ul.css(animCss, -curr * liSize);
+        } else if ( to < curr && to < 0) {
+          curr += tl;
+          to += tl;
           ul.css(animCss, -curr * liSize);
         }
 
