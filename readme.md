@@ -261,6 +261,32 @@ The number of items that should scroll/slide when you click the next/prev naviga
 default, only one item is scrolled, but you may set it to any number. Eg: setting it to "2" will scroll
 2 items when you click the next or previous buttons.
 
+### `init` : function - callback
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  init: function(opts, $lis) {
+    if ($lis.length > opts.visible) {
+      $('div.carousel').append('<a class="prevnext prev">previous</a> <a class="prevnext next">next</a>');
+    } else {
+      return false;
+    }
+  }
+});
+```
+
+The init callback function allows you to do some logic for each carousel div before any of the carousel behavior and styles are applied to it.
+The function will be passed two arguments:
+
+1. Object representing the result of merging the default settings with the options object passed in when calling .jCarousellite()
+2. jQuery Object containing the top-level `<li>` elements in the carousel (useful for checking their length against number of items to be visible at once)
+
+If the function returns `false`, the plugin will skip all the carousel magic for that carousel `<div>`.
+
 ### `beforeStart`, `afterEnd` : function - callbacks
 
 example
@@ -278,8 +304,11 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-If you want to do some logic before the slide starts and after the slide ends, you can
-register these 2 callbacks. The functions will be passed two arguments. The first represents an array of elements that are visible at the time of callback. The second is a Boolean indicating whether the direction is forward (`true`) or backward (`false`);
+If you want to do some logic before the slide starts and after the slide ends, you can register these 2 callbacks.
+The functions will be passed two arguments:
+
+1. Array of elements that are visible at the time of callback.
+2. Boolean indicating whether the direction is forward (`true`) or backward (`false`);
 
 ## Events
 

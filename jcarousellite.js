@@ -45,6 +45,13 @@ $.fn.jCarouselLite = function(options) {
         activeBtnOffset = 0,
         beforeCirc, afterCirc;
 
+
+    var init = o.init.call(this, o, tLi);
+    // bail out for this carousel if the o.init() callback returns `false`
+    if ( init === false ) {
+      return;
+    }
+
     div.data('dirjc', direction);
 
     if (o.circular) {
@@ -337,7 +344,7 @@ $.fn.jCarouselLite.defaults = {
   // true to enable changing direction of auto scrolling when user clicks prev or next button
   directional: false,
 
-// number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
+  // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
   autoStop: false,
 
   // pause scrolling on hover
@@ -356,6 +363,14 @@ $.fn.jCarouselLite.defaults = {
 
   // number of items to scroll at a time
   scroll: 1,
+
+  // Function to be called for each matched carousel when .jCaourselLite() is called.
+  // Inside the function, `this` is the carousel div.
+  // The function can take 2 arguments:
+      // 1. The merged options object
+      // 2. A jQuery object containing the <li> items in the carousel
+  // If the function returns `false`, the plugin will skip all the carousel magic for that carousel div
+  init: function() {},
 
   // function to be called before each transition starts
   beforeStart: null,
