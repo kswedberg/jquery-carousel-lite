@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.7.2
  *
- * Date: Thu Apr 26 15:53:51 2012 EDT
+ * Date: Sun May 13 15:26:28 2012 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2012 Karl Swedberg
