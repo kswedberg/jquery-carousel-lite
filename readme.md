@@ -59,7 +59,7 @@ $('div.carousel').jCarouselLite({
 
 Creates a basic carousel. Clicking "btnPrev" navigates backwards and "btnNext" navigates forward.
 
-### `btnGo` - array | jQuery object - no defaults
+### `btnGo` : array | jQuery object - no defaults
 
 example
 
@@ -86,6 +86,35 @@ $('div.carousel').jCarouselLite({
 ```
 
 In this example, clicking a link within `#carousel-nav` will slide the carousel to the slide with an index matching the link's index among the other links.
+
+### `activeClass` : string - default is "active"
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnGo: $('#carousel-nav a'),
+  visible: 2,
+  activeClass: 'current'
+});
+```
+
+When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the first currently visible carousel item will have a class added to it. The default `activeClass` is "active," but this can be overridden as shown in the example above.
+
+
+### `visibleClass` : string - default is "vis"
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnGo: $('#carousel-nav a'),
+  visible: 2,
+  visibleClass: 'highlight'
+});
+```
+
+When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the currently visible carousel item(s) will have a class added to them. The default `visibleClass` is "vis," but this can be overridden as shown in the example above.
 
 ### `mouseWheel` : boolean - default is false
 

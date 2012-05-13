@@ -1,5 +1,5 @@
 /*!
- * jQuery jCarousellite Plugin v1.7.1
+ * jQuery jCarousellite Plugin v1.7.2
  *
  * Date: Thu Apr 26 15:53:51 2012 EDT
  * Requires: jQuery v1.4+
@@ -17,7 +17,7 @@
 (function($) {
 
 $.jCarouselLite = {
-  version: '1.7.1',
+  version: '1.7.2',
   curr: 0
 };
 
