@@ -67,8 +67,20 @@ $.fn.jCarouselLite = function(options) {
     var setActiveBtn = function(i) {
       i = Math.ceil(i);
 
-      var activeBtnIndex = (i - activeBtnOffset) % tl;
-      $(o.btnGo).removeClass(o.activeClass).eq(activeBtnIndex).addClass(o.activeClass);
+      var activeBtnIndex = (i - activeBtnOffset) % tl,
+          $btnsGo = $(o.btnGo),
+          visEnd = activeBtnIndex + visibleFloor;
+
+      // remove active and visible classes from all the go buttons
+      $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
+      // add active class to the go button corresponding to the first visible slide
+      $btnsGo.eq(activeBtnIndex).addClass(o.activeClass);
+      // add visible class to go buttons corresponding to all visible slides
+      $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
+      if ( visEnd > $btnsGo.length ) {
+        $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
+      }
+
       return activeBtnIndex;
     };
 
@@ -329,6 +341,9 @@ $.fn.jCarouselLite.defaults = {
 
   // class applied to the active btnGo element
   activeClass: 'active',
+
+  // class applied to the btnGo elements corresponding to the visible slides
+  visibleClass: 'vis',
 
   mouseWheel: false,
 

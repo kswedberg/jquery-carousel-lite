@@ -1,4 +1,4 @@
-/*global test:false,equal:false,asyncTest:false,start:false,stop:false */
+/*global test:false,equal:false,deepEqual:false,asyncTest:false,start:false,stop:false */
 jQuery(document).ready(function($) {
 
   module('carousels', {
@@ -105,10 +105,19 @@ jQuery(document).ready(function($) {
     }
   });
 
-  asyncTest('active class correct when carousel auto-transitions', function() {
+  asyncTest('active and vis classes correct when carousel auto-transitions', function() {
     equal($('a.go.active').index(), 0, 'first "go button" is initially active');
+    var vis = $('a.go.vis').map(function() {
+      return $(this).index();
+    }).get();
+    deepEqual(vis, [0, 1], '2 "go buttons" represent initially visible items');
+
     setTimeout(function() {
       equal($('a.go.active').index(), 1, 'second "go button" active after autoscrolling forward once');
+      vis = $('a.go.vis').map(function() {
+        return $(this).index();
+      }).get();
+      deepEqual(vis, [1, 2], '2 "go buttons" represent initially visible items');
       start();
     }, 300);
 
