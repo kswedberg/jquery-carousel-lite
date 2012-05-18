@@ -46,7 +46,7 @@ There are quite a few other options that you can use to customize it. Each will 
 
 You can specify all the options shown below as an options object parameters.
 
-### `btnPrev`, `btnNext` : string - no defaults
+### `btnPrev`, `btnNext` : String - no defaults
 
 example:
 
@@ -87,7 +87,58 @@ $('div.carousel').jCarouselLite({
 
 In this example, clicking a link within `#carousel-nav` will slide the carousel to the slide with an index matching the link's index among the other links.
 
-### `activeClass` : string - default is "active"
+### `autoCSS` : Boolean - default is true
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  autoCSS: false
+});
+```
+
+When the `autoCSS` option is set to `false`, the plugin does *not* set any of the initial styles on the carousel elements, allowing you to apply these styles (or a subset of them) yourself in a stylesheet.
+
+The following is a generic example of styles set by the plugin when the default `autoCSS: true` is used.
+
+```css
+/* the selectors here (div, ul, li) are meant only for example.
+   you would,of course, use more specific selectors
+   to target your actual carousel elements */
+
+div {
+  visibility: visible;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  /* if the vertical option is set to true, the following would be height */
+  width: XXX /* calculated: width of the first li * number of visible items */;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  list-style-type: none;
+  z-index: 1;
+
+  /* if the vertical option is set to true, the following would be height */
+  /* can be any number larger than total combined width of list items */
+  width: XXX /* calculated: width of the first li * total number of list items */;
+
+  /* if the vertical option is set to true, the following would be margin-top */
+  margin-left: -XXX /* calculdated: -starting item * width of first li */;
+}
+
+li {
+  overflow: visible /* if vertical: true, overflow is hidden */;
+  float: left /* if vertical: true, float is none */;
+  width: XXX /*calculated: width of the first li */
+  height: XXX /*calculated: height of the first li */
+}
+```
+
+### `activeClass` : String - default is "active"
 
 example
 
@@ -102,7 +153,7 @@ $('div.carousel').jCarouselLite({
 When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the first currently visible carousel item will have a class added to it. The default `activeClass` is "active," but this can be overridden as shown in the example above.
 
 
-### `visibleClass` : string - default is "vis"
+### `visibleClass` : String - default is "vis"
 
 example
 
@@ -116,7 +167,155 @@ $('div.carousel').jCarouselLite({
 
 When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the currently visible carousel item(s) will have a class added to them. The default `visibleClass` is "vis," but this can be overridden as shown in the example above.
 
-### `mouseWheel` : boolean - default is false
+
+### `auto` : Boolean | Number - default is false, meaning automatic scrolling is disabled by default
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  auto: true,
+  speed: 500
+});
+```
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  auto: 2,
+  scroll: 1,
+  visible: 2,
+  btnNext: '.next',
+  btnPrev: '.prev'
+});
+```
+
+The carousel will navigate by itself if this option is set to `true` or a number greater than 0. If `true`, the carousel will scroll by the number of slides indicated by the `scroll` option (default is 1). If a positive number, it will auto-scroll by that number instead, although clicks on the previous/next button will still cause it to scroll by the `scroll` option's number.
+
+### `timeout` : Number - default is 4000
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  auto: true,
+  timeout: 8000
+});
+```
+
+When the `auto` option is set to `true` (or a number greater than 0), the carousel automatically transitions after the amount of time specified by the `timeout` option.
+
+### `speed` : Number - default is 200
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  speed: 800
+});
+```
+
+Specifying a speed will slow-down or speed-up the sliding speed of your carousel. Try it out with
+different speeds like 800, 600, 1500 etc. Providing 0, will remove the slide effect.
+
+### `easing` : String - no easing effects by default.
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  easing: 'bounceout'
+});
+```
+
+You can specify any easing effect. The default easing of jQuery core, "swing," is used if no easing is specified in the options. You will need an easing plugin if you wish to specify an easing effect other than jQuery's own "swing" or "linear."
+
+### `vertical` : Boolean - default is false
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  vertical: true
+});
+```
+
+Determines the direction of the carousel. true, means the carousel will display vertically. The next and
+prev buttons will slide the items vertically as well. The default is false, which means that the carousel will
+display horizontally. The next and prev items will slide the items from left-right in this case.
+
+### `circular` : Boolean - default is true
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  circular: false
+});
+```
+
+Setting it to `true` enables circular navigation. This means, if you click "next" after you reach the last
+element, you will automatically slide to the first element and vice versa. If you set circular to false, then
+if you click on the "next" button after you reach the last element, you will stay in the last element itself
+and similarly for "previous" button and first element.
+
+### `visible` : Number - default is 3
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  visible: 4
+});
+```
+
+This specifies the number of items visible at all times within the carousel. The default is 3.
+You are even free to experiment with real numbers. Eg: "3.5" will have 3 items fully visible and the
+last item half visible. This gives you the effect of showing the user that there are more images to the right.
+
+### `start` : Number - default is 0
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  // start on the *third* item
+  start: 2
+});
+```
+
+You can specify from which item the carousel should start. Remember, the first item in the carousel
+has a start of 0, and so on.
+
+### `scroll` : Number - default is 1
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  scroll: 2
+});
+```
+
+The number of items that should scroll/slide when you click the next/prev navigation buttons. By
+default, only one item is scrolled, but you may set it to any number. Eg: setting it to "2" will scroll
+2 items when you click the next or previous buttons.
+
+### `mouseWheel` : Boolean - default is false
 
 example
 
@@ -141,156 +340,7 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-### `auto` : Boolean | Number - default is false, meaning automatic scrolling is disabled by default
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  auto: true,
-  speed: 500
-});
-```
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  auto: 2,
-  scroll: 1,
-  visible: 2,
-  btnNext: '.next',
-  btnPrev: '.prev'
-});
-```
-
-
-The carousel will navigate by itself if this option is set to `true` or a number greater than 0. If `true`, the carousel will scroll by the number of slides indicated by the `scroll` option (default is 1). If a positive number, it will auto-scroll by that number instead, although clicks on the previous/next button will still cause it to scroll by the `scroll` option's number.
-
-### `timeout` : number - default is 4000
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  auto: true,
-  timeout: 8000
-});
-```
-
-When the `auto` option is set to `true` (or a number greater than 0), the carousel automatically transitions after the amount of time specified by the `timeout` option.
-
-### `speed` : number - default is 200
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  speed: 800
-});
-```
-
-Specifying a speed will slow-down or speed-up the sliding speed of your carousel. Try it out with
-different speeds like 800, 600, 1500 etc. Providing 0, will remove the slide effect.
-
-### `easing` : string - no easing effects by default.
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  easing: 'bounceout'
-});
-```
-
-You can specify any easing effect. Note: You need easing plugin for that. Once specified,
-the carousel will slide based on the provided easing effect.
-
-### `vertical` : boolean - default is false
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  vertical: true
-});
-```
-
-Determines the direction of the carousel. true, means the carousel will display vertically. The next and
-prev buttons will slide the items vertically as well. The default is false, which means that the carousel will
-display horizontally. The next and prev items will slide the items from left-right in this case.
-
-### `circular` : boolean - default is true
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  circular: false
-});
-```
-
-Setting it to `true` enables circular navigation. This means, if you click "next" after you reach the last
-element, you will automatically slide to the first element and vice versa. If you set circular to false, then
-if you click on the "next" button after you reach the last element, you will stay in the last element itself
-and similarly for "previous" button and first element.
-
-### `visible` : number - default is 3
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  visible: 4
-});
-```
-
-This specifies the number of items visible at all times within the carousel. The default is 3.
-You are even free to experiment with real numbers. Eg: "3.5" will have 3 items fully visible and the
-last item half visible. This gives you the effect of showing the user that there are more images to the right.
-
-### `start` : number - default is 0
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  // start on the *third* item
-  start: 2
-});
-```
-
-You can specify from which item the carousel should start. Remember, the first item in the carousel
-has a start of 0, and so on.
-
-### `scroll` : number - default is 1
-
-example
-
-```javascript
-$('div.carousel').jCarouselLite({
-  btnNext: '.next',
-  btnPrev: '.prev',
-  scroll: 2
-});
-```
-
-The number of items that should scroll/slide when you click the next/prev navigation buttons. By
-default, only one item is scrolled, but you may set it to any number. Eg: setting it to "2" will scroll
-2 items when you click the next or previous buttons.
-
-### `init` : function - callback
+### `init` : Function - callback
 
 example
 
@@ -316,7 +366,7 @@ The function will be passed two arguments:
 
 If the function returns `false`, the plugin will skip all the carousel magic for that carousel `<div>`.
 
-### `beforeStart`, `afterEnd` : function - callbacks
+### `beforeStart`, `afterEnd` : Function - callbacks
 
 example
 
