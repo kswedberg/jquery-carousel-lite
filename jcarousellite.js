@@ -1,7 +1,7 @@
 /*!
  * jQuery jCarousellite Plugin v1.7.2
  *
- * Date: Sun May 13 15:26:28 2012 EDT
+ * Date: Sun May 27 23:19:43 2012 EDT
  * Requires: jQuery v1.4+
  *
  * Copyright 2012 Karl Swedberg
@@ -205,9 +205,9 @@ $.fn.jCarouselLite = function(options) {
 
       // If circular and we are in first or last, then go to the other end
       if (o.circular) {
-        if (to > curr && to >= visibleCeil + tl) {
+        if (to > curr && to > itemLength - visibleCeil) {
           curr = curr % tl;
-          to = to % tl;
+          to = to - tl;
           ul.css(animCss, -curr * liSize);
         } else if ( to < curr && to < 0) {
           curr += tl;
