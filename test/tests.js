@@ -81,7 +81,7 @@ jQuery(document).ready(function($) {
   });
 
 
-  module('activeClass option', {
+  module('activeClass and visClsas options', {
     setup: function() {
       this.slideshow = $('div.slideshow').eq(0);
       this.slides = this.slideshow.find('ul.slides');
@@ -123,8 +123,33 @@ jQuery(document).ready(function($) {
 
   });
 
+  module('nav buttons', {
+    setup: function() {
+      this.slideshow = $('div.slideshow').eq(0);
+      this.slides = this.slideshow.find('ul.slides');
+      var btns = '';
+      var l = this.slides.children().length;
+
+      for (var i = 0; i < l; i++) {
+        btns += '<a class="go" href="#">' + (i+1) + '</a>';
+      }
+
+      this.slideshow.append('<div class="gonav">' + btns + '</div>');
+      this.slideshow.prepend('<div class="pagernav"></div>');
+    }
+  });
+
   asyncTest('correct carousel position after go button clicked', function() {
     var s = this.slides;
+    this.slideshow.jCarouselLite({
+      auto: true,
+      visible: 2,
+      speed: 2,
+      timeout: 200,
+      directional: true,
+      btnGo: $('a.go')
+    });
+
     $('a.go').eq(2).triggerHandler('click');
     setTimeout(function() {
       equal(s.css('left'), '-1600px', 'clicked on button index 2, left prop accounts for 2 prepended slides');
@@ -135,6 +160,27 @@ jQuery(document).ready(function($) {
       }, 100);
     }, 100);
   });
+
+  asyncTest('correct carousel position after autoPager nav button clicked', function() {
+    var pagernav = this.slideshow.find('div.pagernav');
+    var s = this.slides;
+    this.slideshow.trigger('endCarousel');
+    this.slideshow.jCarouselLite({
+      auto: false,
+      visible: 2,
+      speed: 2,
+      autoPager: this.slideshow.find('div.pagernav'),
+      timeout: 200,
+      btnGo: $('a.go')
+    });
+
+    pagernav.find('a').eq(1).triggerHandler('click');
+    setTimeout(function() {
+      equal(s.css('left'), '-1600px', 'clicked on 2nd pager, left prop accounts for 2 prepended slides');
+      start();
+    }, 100);
+  });
+
 
 
 });

@@ -22,7 +22,7 @@ $.jCarouselLite = {
 };
 
 $.fn.jCarouselLite = function(options) {
-  var o = $.extend({}, $.fn.jCarouselLite.defaults, options);
+  var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options);
 
   this.each(function() {
 
@@ -43,7 +43,8 @@ $.fn.jCarouselLite = function(options) {
         start = Math.min(o.start, tl - 1),
         direction = 1,
         activeBtnOffset = 0,
-        beforeCirc, afterCirc;
+        activeBtnTypes = {},
+        beforeCirc, afterCirc, pageNav, pageNavCount;
 
 
     var init = o.init.call(this, o, tLi);
@@ -64,23 +65,30 @@ $.fn.jCarouselLite = function(options) {
       activeBtnOffset = visibleCeil;
     }
 
-    var setActiveBtn = function(i) {
+    var setActiveBtn = function(i, types) {
       i = Math.ceil(i);
 
-      var activeBtnIndex = (i - activeBtnOffset) % tl,
-          $btnsGo = $(o.btnGo),
+      var $btnsGo,
+          activeBtnIndex = (i - activeBtnOffset) % tl,
           visEnd = activeBtnIndex + visibleFloor;
 
-      // remove active and visible classes from all the go buttons
-      $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
-      // add active class to the go button corresponding to the first visible slide
-      $btnsGo.eq(activeBtnIndex).addClass(o.activeClass);
-      // add visible class to go buttons corresponding to all visible slides
-      $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
-      if ( visEnd > $btnsGo.length ) {
-        $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
-      }
+      if ( types.go ) {
+        $btnsGo = $(o.btnGo);
+        // remove active and visible classes from all the go buttons
+        $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
+        // add active class to the go button corresponding to the first visible slide
+        $btnsGo.eq(activeBtnIndex).addClass(o.activeClass);
+        // add visible class to go buttons corresponding to all visible slides
+        $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
 
+        if ( visEnd > $btnsGo.length ) {
+          $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
+        }
+      }
+      if ( types.pager ) {
+        pageNav.removeClass(o.activeClass);
+        pageNav.eq( Math.floor(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
+      }
       return activeBtnIndex;
     };
 
@@ -135,7 +143,6 @@ $.fn.jCarouselLite = function(options) {
     $.each([ 'btnPrev', 'btnNext' ], function(index, btn) {
       if ( o[btn] ) {
         o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
-
         o['$' + btn].bind('click.jc', function(event) {
           event.preventDefault();
           var step = index === 0 ? curr - o.scroll : curr + o.scroll;
@@ -167,10 +174,34 @@ $.fn.jCarouselLite = function(options) {
           return go(o.circular ? visibleNum + i : i);
         });
       });
-
-      // set the active class on the btn corresponding to the "start" li
-      setActiveBtn(start);
+      activeBtnTypes.go = 1;
     }
+
+    if (o.autoPager) {
+      pageNavCount = Math.ceil(tl / visibleNum);
+      pageNav = [];
+      for (var i=0; i < pageNavCount; i++) {
+        pageNav.push('<li><a href="#">' + (i+1) + '</a></li>');
+      }
+      if (pageNav.length > 1) {
+        pageNav = $('<ul>' + pageNav.join('') + '</ul>').appendTo(o.autoPager).find('li');
+      }
+      pageNav.find('a').each(function(i) {
+        $(this).bind('click.jc', function(event) {
+          event.preventDefault();
+          var slide = i * visibleNum;
+          if (o.circular) {
+            slide += visibleNum;
+          }
+          return go(slide);
+        });
+      });
+      activeBtnTypes.pager = 1;
+    }
+
+    // set the active class on the btn corresponding to the "start" li
+    setActiveBtn(start, activeBtnTypes);
+
 
     if (o.mouseWheel && div.mousewheel) {
       div.bind('mousewheel.jc', function(e, d) {
@@ -198,7 +229,9 @@ $.fn.jCarouselLite = function(options) {
 
     function go(to) {
       if (running) { return false; }
-      var direction = to > curr;
+      var prev = curr,
+          direction = to > curr;
+
       if (o.beforeStart) {
         o.beforeStart.call(this, vis(), direction);
       }
@@ -236,12 +269,19 @@ $.fn.jCarouselLite = function(options) {
         }
       }
 
-      // set the active class on the btnGo element corresponding to the first visible carousel li
-      if (o.btnGo) {
-        setActiveBtn(curr);
-      }
+      // if btnGo, set the active class on the btnGo element corresponding to the first visible carousel li
+      // if autoPager, set active class on the appropriate autopager element
+      setActiveBtn(curr, activeBtnTypes);
 
       $.jCarouselLite.curr = curr;
+
+      if (prev === curr) {
+        if (o.afterEnd) {
+          o.afterEnd.call(this, vis(), direction);
+        }
+        return curr;
+      }
+
       running = true;
 
       aniProps[animCss] = -(curr * liSize);
@@ -251,7 +291,6 @@ $.fn.jCarouselLite = function(options) {
         }
         running = false;
       });
-
       return curr;
     } // end go function
 
@@ -330,15 +369,19 @@ $.fn.jCarouselLite = function(options) {
 
   return this;
 };
+
 $.fn.jCarouselLite.defaults = {
   autoCSS: true,
   btnPrev: null,
   btnNext: null,
-  btnDisabledClass: 'disabled',
 
-  // array (or jQuery object) of elements. When clicked, makesthe corresponding carousel LI the first visible one
+  // array (or jQuery object) of elements. When clicked, makes the corresponding carousel LI the first visible one
   btnGo: null,
 
+  // selector (or jQuery object) indicating the containing element for pagination navigation.
+  autoPager: null,
+
+  btnDisabledClass: 'disabled',
   // class applied to the active btnGo element
   activeClass: 'active',
 
