@@ -22,7 +22,8 @@ $.jCarouselLite = {
 };
 
 $.fn.jCarouselLite = function(options) {
-  var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options);
+  var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options),
+      ceil = Math.ceil;
 
   this.each(function() {
 
@@ -38,7 +39,7 @@ $.fn.jCarouselLite = function(options) {
         tl = tLi.length,
         visibleNum = o.visible,
         // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
-        visibleCeil = Math.ceil(visibleNum),
+        visibleCeil = ceil(visibleNum),
         visibleFloor = Math.floor(visibleNum),
         start = Math.min(o.start, tl - 1),
         direction = 1,
@@ -66,7 +67,7 @@ $.fn.jCarouselLite = function(options) {
     }
 
     var setActiveBtn = function(i, types) {
-      i = Math.ceil(i);
+      i = ceil(i);
 
       var $btnsGo,
           activeBtnIndex = (i - activeBtnOffset) % tl,
@@ -87,7 +88,7 @@ $.fn.jCarouselLite = function(options) {
       }
       if ( types.pager ) {
         pageNav.removeClass(o.activeClass);
-        pageNav.eq( Math.floor(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
+        pageNav.eq( ceil(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
       }
       return activeBtnIndex;
     };
@@ -178,7 +179,7 @@ $.fn.jCarouselLite = function(options) {
     }
 
     if (o.autoPager) {
-      pageNavCount = Math.ceil(tl / visibleNum);
+      pageNavCount = ceil(tl / visibleNum);
       pageNav = [];
       for (var i=0; i < pageNavCount; i++) {
         pageNav.push('<li><a href="#">' + (i+1) + '</a></li>');
