@@ -23,7 +23,8 @@ $.jCarouselLite = {
 
 $.fn.jCarouselLite = function(options) {
   var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options),
-      ceil = Math.ceil;
+      ceil = Math.ceil,
+      mabs = Math.abs;
 
   this.each(function() {
 
@@ -45,6 +46,8 @@ $.fn.jCarouselLite = function(options) {
         direction = 1,
         activeBtnOffset = 0,
         activeBtnTypes = {},
+        axisPrimary = o.vertical ? 'y' : 'x',
+        axisSecondary = o.vertical ? 'x' : 'y',
         beforeCirc, afterCirc, pageNav, pageNavCount;
 
 
@@ -366,10 +369,62 @@ $.fn.jCarouselLite = function(options) {
       });
       div.unbind('.jc');
     });
+
+    // touch gesture support
+    var startTouch = {};
+    var endTouch = {};
+
+    var touchEvents = {
+      touchstart: function(event) {
+        startTouch.x = event.targetTouches[0].pageX;
+        startTouch.y = event.targetTouches[0].pageY;
+        startTouch[animCss] = parseFloat( ul.css(animCss) );
+        startTouch.time = +new Date();
+      },
+
+      touchmove: function(event) {
+        var tlength = event.targetTouches.length;
+        if (tlength === 1) {
+          event.preventDefault();
+          endTouch.x = event.targetTouches[0].pageX;
+          endTouch.y = event.targetTouches[0].pageY;
+          aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
+          ul.css(aniProps);
+        } else {
+          endTouch = startTouch;
+        }
+      },
+
+      touchend: function(event) {
+        var pxDelta = startTouch[axisPrimary] - endTouch[axisPrimary],
+            timeDelta =  +new Date() - startTouch.time;
+
+        if ( timeDelta > o.swipeThresholds.time && mabs(pxDelta) > liSize / 2 ) {
+          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + 2]);
+        } else if ( timeDelta < o.swipeThresholds.time &&
+          mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary] &&
+             mabs(pxDelta) > o.swipeThresholds[axisPrimary]
+           ) {
+          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + 2]);
+        } else {
+          aniProps[animCss] = startTouch[animCss];
+          ul.animate(aniProps, 200);
+        }
+      }
+    };
+
+    if ( 'ontouchend' in document && o.swipe ) {
+      div.bind('touchstart touchmove touchend', function(event) {
+        event = event.originalEvent;
+        touchEvents[event.type](event);
+      });
+    } // end swipe events
+
   });
 
   return this;
 };
+
 
 $.fn.jCarouselLite.defaults = {
   autoCSS: true,
@@ -423,6 +478,12 @@ $.fn.jCarouselLite.defaults = {
   // number of items to scroll at a time
   scroll: 1,
 
+  swipe: true,
+  swipeThresholds: {
+    x: 80,
+    y: 120,
+    time: 150
+  },
   // Function to be called for each matched carousel when .jCaourselLite() is called.
   // Inside the function, `this` is the carousel div.
   // The function can take 2 arguments:
