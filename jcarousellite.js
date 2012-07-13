@@ -400,15 +400,15 @@ $.fn.jCarouselLite = function(options) {
             timeDelta =  +new Date() - startTouch.time;
 
         if ( timeDelta > o.swipeThresholds.time && mabs(pxDelta) > liSize / 2 ) {
-          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + 2]);
+          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + o.scroll]);
         } else if ( timeDelta < o.swipeThresholds.time &&
           mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary] &&
              mabs(pxDelta) > o.swipeThresholds[axisPrimary]
            ) {
-          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + 2]);
+          div.trigger('go.jc', [ (pxDelta > 0 ? '+=' : '-=') + o.scroll]);
         } else {
           aniProps[animCss] = startTouch[animCss];
-          ul.animate(aniProps, 200);
+          ul.animate(aniProps, 400);
         }
       }
     };
