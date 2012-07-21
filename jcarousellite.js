@@ -278,7 +278,10 @@ $.fn.jCarouselLite = function(options) {
       settings = settings || {};
       var prev = curr,
           direction = to > curr,
-          speed = settings.speed || o.speed;
+          speed = settings.speed || o.speed,
+          // offset appears if touch moves slides
+          offset = settings.offset || 0;
+
 
       if (o.beforeStart) {
         o.beforeStart.call(this, vis(), direction);
@@ -289,11 +292,11 @@ $.fn.jCarouselLite = function(options) {
         if (to > curr && to > itemLength - visibleCeil) {
           curr = curr % tl;
           to = to - tl;
-          ul.css(animCss, -curr * styles.liSize);
+          ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;
           to += tl;
-          ul.css(animCss, -curr * styles.liSize);
+          ul.css(animCss, (-curr * styles.liSize) - offset);
         }
 
         curr = to + (to % 1);
@@ -450,33 +453,40 @@ $.fn.jCarouselLite = function(options) {
         }
 
         var pxDelta = startTouch[axisPrimary] - endTouch[axisPrimary],
-            secondaryAbsDelta = mabs(startTouch[axisSecondary] - endTouch[axisSecondary]),
+            pxAbsDelta = mabs( pxDelta ),
+            primaryAxisGood = pxAbsDelta > o.swipeThresholds[axisPrimary],
+            secondaryAxisGood =  mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary],
             timeDelta = +new Date() - startTouch.time,
             quickSwipe = timeDelta < o.swipeThresholds.time,
-            to = (pxDelta > 0 ? '+=' : '-=') + o.scroll,
+            operator = pxDelta > 0 ? '+=' : '-=',
+            to = operator + o.scroll,
             swipeInfo  = { force: true };
 
         // quick, clean swipe
-        if ( quickSwipe &&
-          mabs(pxDelta) > o.swipeThresholds[axisPrimary] &&
-          secondaryAbsDelta < o.swipeThresholds[axisSecondary]
-          ) {
+        if ( quickSwipe && primaryAxisGood && secondaryAxisGood ) {
           // set animation speed to twice as fast as that set in speed option
           swipeInfo.speed = o.speed / 2;
         }
-
+        else
         // slow swipe < 1/2 slide width, OR
         // not enough movement for swipe, OR
         // too much movement on secondary axis when quick swipe
-        if ( (!quickSwipe.time && mabs(pxDelta) < styles.liSize / 2) ||
-          mabs(pxDelta) < o.swipeThresholds[axisPrimary] ||
-          (quickSwipe && secondaryAbsDelta > o.swipeThresholds[axisSecondary])
+        if ( (!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
+          !primaryAxisGood ||
+          (quickSwipe && !secondaryAxisGood)
           ) {
           // revert to same slide
           to = curr;
         }
+        else
+        // slow swipe > 1/2 slide width
+        if ( !quickSwipe && pxAbsDelta > styles.liSize / 2 ) {
+          to = Math.round(pxAbsDelta / styles.liSize);
+          to = operator + (to > o.visible ? o.visible : to);
 
-        // Otherwise, assume slow swipe and > 1/2 slide width
+          // send pxDelta along as offset in case carousel is circular and needs to reset
+          swipeInfo.offset = pxDelta;
+        }
 
         div.trigger('go.jc', [to, swipeInfo]);
         endTouch = {};
@@ -493,7 +503,7 @@ $.fn.jCarouselLite = function(options) {
     // Responsive design handling:
     // Reset dimensions on window.resize
     prepResize = o.autoCSS;
-    $(window).on('resize', function(event) {
+    $(window).bind('resize', function(event) {
 
       if (prepResize) {
         ul.width( ul.width() * 2 );
