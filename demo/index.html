@@ -61,7 +61,7 @@ body {
   <script>
     $(document).ready(function() {
       var carousel1Options = {
-        auto: true,
+        // auto: true,
         visible: 2,
         speed: 300,
         pause: true,
@@ -74,7 +74,7 @@ body {
       };
 
       var carousel2Options = {
-        auto: true,
+        auto: false,
         visible: 2,
         speed: 300,
         pause: true,
@@ -86,6 +86,9 @@ body {
       $slideshows.eq(0).jCarouselLite(carousel1Options);
 
       $slideshows.eq(1).jCarouselLite(carousel2Options);
+
+
+
 
     });
 
