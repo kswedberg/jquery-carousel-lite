@@ -1,4 +1,4 @@
-/*global test:false,equal:false,deepEqual:false,asyncTest:false,start:false,stop:false */
+/*global module:false,test:false,equal:false,deepEqual:false,asyncTest:false,start:false,stop:false */
 jQuery(document).ready(function($) {
 
   module('carousels', {
