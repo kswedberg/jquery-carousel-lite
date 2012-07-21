@@ -1,33 +1,20 @@
-/*!
- * jQuery jCarousellite Plugin v1.7.2
- *
- * Date: Sun May 27 23:19:43 2012 EDT
- * Requires: jQuery v1.4+
- *
- * Copyright 2012 Karl Swedberg
- * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
- * Dual licensed under the MIT and GPL licenses (just like jQuery):
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- *
- * jQuery plugin to navigate images/any content in a carousel-style widget.
- *
-*/
 
 (function($) {
-
 $.jCarouselLite = {
-  version: '1.7.2',
+  version: '@VERSION',
   curr: 0
 };
 
 $.fn.jCarouselLite = function(options) {
   var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options),
-      ceil = Math.ceil;
+      ceil = Math.ceil,
+      mabs = Math.abs;
 
   this.each(function() {
 
-    var styles = { ul: {} },
+    var beforeCirc, afterCirc, pageNav, pageNavCount, resize, prepResize, touchEvents,
+        styles = { div: {}, ul: {}, li: {} },
+        firstCss = true,
         running = false,
         animCss = o.vertical ? "top": "left",
         aniProps = {},
@@ -45,7 +32,10 @@ $.fn.jCarouselLite = function(options) {
         direction = 1,
         activeBtnOffset = 0,
         activeBtnTypes = {},
-        beforeCirc, afterCirc, pageNav, pageNavCount;
+        startTouch = {},
+        endTouch = {},
+        axisPrimary = o.vertical ? 'y' : 'x',
+        axisSecondary = o.vertical ? 'x' : 'y';
 
 
     var init = o.init.call(this, o, tLi);
@@ -95,33 +85,72 @@ $.fn.jCarouselLite = function(options) {
 
     var li = ul.children('li'),
         itemLength = li.length,
-        curr = start,
-
-        // Full li size(incl margin)-Used for animation
-        liSize = o.vertical ? li.outerHeight(true) : li.outerWidth(true),
-
-        // size of full ul(total length, not just for the visible items)
-        ulSize = liSize * itemLength,
-
-        // size of entire div(total length for just the visible items)
-        divSize = liSize * visibleNum;
+        curr = start;
 
     $.jCarouselLite.curr = curr;
 
-    if (o.autoCSS) {
-      div.css({visibility: 'visible', overflow: 'hidden', position: 'relative', zIndex: 2, left: '0px'});
-      ul.css({margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1});
-      li.css({overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'});
+    var getDimensions = function(reset) {
+      var liSize, ulSize, divSize;
 
-      styles.div = {};
+      if (reset) {
+
+        styles.div[sizeProp] = '';
+        styles.li = {
+          width: '', height: ''
+        };
+        // bail out with the reset styles
+        return styles;
+      }
+
+      // Full li size(incl margin)-Used for animation
+      liSize = o.vertical ? li.outerHeight(true) : li.outerWidth(true);
+
+      // size of full ul(total length, not just for the visible items)
+      ulSize = liSize * itemLength;
+
+      // size of entire div(total length for just the visible items)
+      divSize = liSize * visibleNum;
+
       styles.div[sizeProp] = divSize + 'px';
-      div.css(styles.div);
-      li.css({width: li.width(), height: li.height()});
-
       styles.ul[sizeProp] = ulSize + 'px';
       styles.ul[animCss] = -(curr * liSize) + 'px';
-      ul.css(styles.ul);
-    }
+      styles.li = {
+        width: li.width(), height: li.height()
+      };
+      styles.liSize = liSize;
+      return styles;
+    };
+
+
+    var setDimensions = function(reset) {
+      var css;
+      var prelimCss = {
+        div: {visibility: 'visible', overflow: 'hidden', position: 'relative', zIndex: 2, left: '0'},
+        ul: {margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1},
+        li: {overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'}
+      };
+
+      if (reset) {
+        css = getDimensions(true);
+        div.css(css.div);
+        ul.css(css.ul);
+        li.css(css.li);
+      }
+
+      css = getDimensions();
+
+      if (o.autoCSS) {
+        if (firstCss) {
+          $.extend(true, css, prelimCss);
+          firstCss = false;
+        }
+        li.css(css.li);
+        ul.css(css.ul);
+        div.css(css.div);
+      }
+    };
+
+    setDimensions();
 
     // set up timed advancer
     var advanceCounter = 0,
@@ -228,10 +257,15 @@ $.fn.jCarouselLite = function(options) {
 
     $.jCarouselLite.vis = vis;
 
-    function go(to) {
+    function go(to, settings) {
       if (running) { return false; }
+      settings = settings || {};
       var prev = curr,
-          direction = to > curr;
+          direction = to > curr,
+          speed = settings.speed || o.speed,
+          // offset appears if touch moves slides
+          offset = settings.offset || 0;
+
 
       if (o.beforeStart) {
         o.beforeStart.call(this, vis(), direction);
@@ -242,11 +276,11 @@ $.fn.jCarouselLite = function(options) {
         if (to > curr && to > itemLength - visibleCeil) {
           curr = curr % tl;
           to = to - tl;
-          ul.css(animCss, -curr * liSize);
+          ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;
           to += tl;
-          ul.css(animCss, -curr * liSize);
+          ul.css(animCss, (-curr * styles.liSize) - offset);
         }
 
         curr = to + (to % 1);
@@ -276,7 +310,7 @@ $.fn.jCarouselLite = function(options) {
 
       $.jCarouselLite.curr = curr;
 
-      if (prev === curr) {
+      if (prev === curr && !settings.force) {
         if (o.afterEnd) {
           o.afterEnd.call(this, vis(), direction);
         }
@@ -285,19 +319,21 @@ $.fn.jCarouselLite = function(options) {
 
       running = true;
 
-      aniProps[animCss] = -(curr * liSize);
-      ul.animate(aniProps, o.speed, o.easing, function() {
+      aniProps[animCss] = -(curr * styles.liSize);
+      ul.animate(aniProps, speed, o.easing, function() {
         if (o.afterEnd) {
           o.afterEnd.call(this, vis(), direction);
         }
         running = false;
       });
+
       return curr;
     } // end go function
 
     // bind custom events so they can be triggered by user
     div
-    .bind('go.jc', function(e, to) {
+    .bind('go.jc', function(e, to, settings) {
+
       if (typeof to == 'undefined') {
         to = '+=1';
       }
@@ -309,7 +345,7 @@ $.fn.jCarouselLite = function(options) {
       } else {
         to += start;
       }
-      go(to);
+      go(to, settings);
     })
     .bind('startCarousel.jc', function(event) {
       clearTimeout(self.setAutoAdvance);
@@ -345,6 +381,10 @@ $.fn.jCarouselLite = function(options) {
       div.data('stoppedjc', true);
     })
 
+    .bind('refreshCarousel.jc', function(event) {
+      setDimensions(o.autoCSS);
+    })
+
     .bind('endCarousel.jc', function() {
       if (self.setAutoAdvance) {
         clearTimeout(self.setAutoAdvance);
@@ -366,7 +406,104 @@ $.fn.jCarouselLite = function(options) {
       });
       div.unbind('.jc');
     });
-  });
+
+    // touch gesture support
+
+    touchEvents = {
+      touchstart: function(event) {
+        startTouch.x = event.targetTouches[0].pageX;
+        startTouch.y = event.targetTouches[0].pageY;
+        startTouch[animCss] = parseFloat( ul.css(animCss) );
+        startTouch.time = +new Date();
+      },
+
+      touchmove: function(event) {
+        var tlength = event.targetTouches.length;
+        if (tlength === 1) {
+          event.preventDefault();
+          endTouch.x = event.targetTouches[0].pageX;
+          endTouch.y = event.targetTouches[0].pageY;
+          aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
+          ul.css(aniProps);
+        } else {
+          endTouch = startTouch;
+        }
+      },
+
+      touchend: function(event) {
+        // bail out early if there is no touch movement
+        if (!endTouch.x) {
+          return;
+        }
+
+        var pxDelta = startTouch[axisPrimary] - endTouch[axisPrimary],
+            pxAbsDelta = mabs( pxDelta ),
+            primaryAxisGood = pxAbsDelta > o.swipeThresholds[axisPrimary],
+            secondaryAxisGood =  mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary],
+            timeDelta = +new Date() - startTouch.time,
+            quickSwipe = timeDelta < o.swipeThresholds.time,
+            operator = pxDelta > 0 ? '+=' : '-=',
+            to = operator + o.scroll,
+            swipeInfo  = { force: true };
+
+        // quick, clean swipe
+        if ( quickSwipe && primaryAxisGood && secondaryAxisGood ) {
+          // set animation speed to twice as fast as that set in speed option
+          swipeInfo.speed = o.speed / 2;
+        }
+        else
+        // slow swipe < 1/2 slide width, OR
+        // not enough movement for swipe, OR
+        // too much movement on secondary axis when quick swipe
+        if ( (!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
+          !primaryAxisGood ||
+          (quickSwipe && !secondaryAxisGood)
+          ) {
+          // revert to same slide
+          to = curr;
+        }
+        else
+        // slow swipe > 1/2 slide width
+        if ( !quickSwipe && pxAbsDelta > styles.liSize / 2 ) {
+          to = Math.round(pxAbsDelta / styles.liSize);
+          to = operator + (to > o.visible ? o.visible : to);
+
+          // send pxDelta along as offset in case carousel is circular and needs to reset
+          swipeInfo.offset = pxDelta;
+        }
+
+        div.trigger('go.jc', [to, swipeInfo]);
+        endTouch = {};
+      }
+    };
+
+    if ( 'ontouchend' in document && o.swipe ) {
+      div.bind('touchstart touchmove touchend', function(event) {
+        event = event.originalEvent;
+        touchEvents[event.type](event);
+      });
+    } // end swipe events
+
+    // Responsive design handling:
+    // Reset dimensions on window.resize
+    if (o.responsive) {
+      prepResize = o.autoCSS;
+      $(window).bind('resize', function(event) {
+        if (prepResize) {
+          ul.width( ul.width() * 2 );
+          prepResize = false;
+        }
+
+        clearTimeout(resize);
+        resize = setTimeout(function() {
+          div.trigger('refreshCarousel');
+          prepResize = o.autoCSS;
+        }, 100);
+
+      });
+    }
+
+  }); // end each
 
   return this;
 };
@@ -423,6 +560,13 @@ $.fn.jCarouselLite.defaults = {
   // number of items to scroll at a time
   scroll: 1,
 
+  responsive: true,
+  swipe: true,
+  swipeThresholds: {
+    x: 80,
+    y: 120,
+    time: 150
+  },
   // Function to be called for each matched carousel when .jCaourselLite() is called.
   // Inside the function, `this` is the carousel div.
   // The function can take 2 arguments:
