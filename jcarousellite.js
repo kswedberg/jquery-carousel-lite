@@ -1,21 +1,9 @@
-/*!
- * jQuery jCarousellite Plugin v1.7.2
- *
- * Date: Sun May 27 23:19:43 2012 EDT
- * Requires: jQuery v1.4+
- *
- * Copyright 2012 Karl Swedberg
- * Copyright 2007 Ganeshji Marwaha (gmarwaha.com)
- * Dual licensed under the MIT and GPL licenses (just like jQuery):
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- *
- * jQuery plugin to navigate images/any content in a carousel-style widget.
- *
-*/
+/*! jQuery jCarouselLite - v1.7.2 - 2012-07-21
+* http://kswedberg.github.com/jquery-carousel-lite/
+* Copyright (c) 2012 Karl Swedberg; Licensed MIT, GPL */
+
 
 (function($) {
-
 $.jCarouselLite = {
   version: '1.7.2',
   curr: 0
@@ -502,21 +490,23 @@ $.fn.jCarouselLite = function(options) {
 
     // Responsive design handling:
     // Reset dimensions on window.resize
-    prepResize = o.autoCSS;
-    $(window).bind('resize', function(event) {
+    if (o.responsive) {
+      prepResize = o.autoCSS;
+      $(window).bind('resize', function(event) {
+        if (prepResize) {
+          ul.width( ul.width() * 2 );
+          prepResize = false;
+        }
 
-      if (prepResize) {
-        ul.width( ul.width() * 2 );
-        prepResize = false;
-      }
+        clearTimeout(resize);
+        resize = setTimeout(function() {
+          div.trigger('refreshCarousel');
+          prepResize = o.autoCSS;
+        }, 100);
 
-      clearTimeout(resize);
-      resize = setTimeout(function() {
-        div.trigger('refreshCarousel');
-        prepResize = o.autoCSS;
-      }, 100);
+      });
+    }
 
-    });
   }); // end each
 
   return this;
@@ -574,6 +564,7 @@ $.fn.jCarouselLite.defaults = {
   // number of items to scroll at a time
   scroll: 1,
 
+  responsive: true,
   swipe: true,
   swipeThresholds: {
     x: 80,
