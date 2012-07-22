@@ -460,7 +460,7 @@ $.fn.jCarouselLite = function(options) {
           (quickSwipe && !secondaryAxisGood)
           ) {
           // revert to same slide
-          to = curr;
+          to = '+=0';
         }
         else
         // slow swipe > 1/2 slide width
