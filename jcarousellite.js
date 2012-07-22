@@ -1,11 +1,11 @@
-/*! jQuery jCarouselLite - v1.7.2 - 2012-07-21
+/*! jQuery jCarouselLite - v1.8 - 2012-07-22
 * http://kswedberg.github.com/jquery-carousel-lite/
 * Copyright (c) 2012 Karl Swedberg; Licensed MIT, GPL */
 
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.7.2',
+  version: '1.8',
   curr: 0
 };
 
@@ -464,7 +464,7 @@ $.fn.jCarouselLite = function(options) {
           (quickSwipe && !secondaryAxisGood)
           ) {
           // revert to same slide
-          to = curr;
+          to = '+=0';
         }
         else
         // slow swipe > 1/2 slide width
