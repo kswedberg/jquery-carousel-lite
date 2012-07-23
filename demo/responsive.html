@@ -2,15 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>demo</title>
+
 <style type="text/css">
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 body {
   font-size: 13px;
   font-family: Helvetica, Arial, Verdana, sans-serif;
   line-height: 1.3em;
 }
 .container {
-  width: 840px;
+  width: 850px;
   margin: 0 auto;
 }
 .slideshow {
@@ -31,37 +38,49 @@ body {
   height: 150px;
   padding: 20px;
 }
-
-.nav a {
+.prev,
+.next {
+  position: relative;
+  z-index: 10;
   display: inline-block;
-  margin: 0;
-  padding: .2em .5em;
-  color: #00A3CB;
+  padding: 2px 8px;
+  margin-bottom: 5px;
   text-decoration: none;
+  background-color: #f3f3f3;
+  color: #555;
+  border: 1px solid #ccc;
+}
+.disabled {
+  color: #bbb;
+}
 
-}
-.nav a:hover {
-  color: #00436B;
-}
-.nav a.vis,
-.nav a.vis:hover {
-  background-color: #aaa;
-  color: white;
-}
-.nav a.active,
-.nav a.active:hover {
-  background-color: #00A3CB;
-  color: white;
+@media (max-width: 849px) {
+  .container {
+    width: 530px;
+  }
+  .slideshow {
+    width: 500px;
+    padding: 10px;
+  }
+  .slide {
+    width: 230px;
+    height: 250px;
+    padding: 10px;
+  }
 }
 </style>
+
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="/lib/jquery.js"%3E%3C/script%3E'));</script>
+  <script src="../lib/ios-orientationchange-fix.js"></script>
+  <script src="../src/jquery.jcarousellite.js"></script>
 
-  <script src="../jcarousellite.js"></script>
   <script>
     $(document).ready(function() {
-      var carousel1Options = {
+
+      var carouselOptions = {
         // auto: true,
+        // circular: false,
         visible: 2,
         speed: 300,
         pause: true,
@@ -73,30 +92,13 @@ body {
         }
       };
 
-      var carousel2Options = {
-        auto: false,
-        visible: 2,
-        speed: 300,
-        pause: true,
-        btnGo: $('div.nav').find('a')
-      };
-
-      var $slideshows = $('.slideshow');
-
-      $slideshows.eq(0).jCarouselLite(carousel1Options);
-
-      $slideshows.eq(1).jCarouselLite(carousel2Options);
-
-
-
+      $('div.slideshow').jCarouselLite(carouselOptions);
 
     });
-
   </script>
 </head>
 <body>
 <div class="container">
-  <p><a href="responsieve.html">"Responsive" demo</a></p>
   <div class="slideshow">
     <ul class="slides">
 
@@ -130,56 +132,12 @@ body {
         <div class="img-wrapper">5                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
       </li>
-
     </ul>
     <a href="#" class="prev">&lt;</a>
     <a href="#" class="next">&gt;</a>
   </div>
 
-  <div class="slideshow">
-    <ul class="slides">
 
-      <li class="slide">
-        <div class="img-wrapper">1 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        </div>
-      </li>
-
-      <li class="slide">
-        <div class="img-wrapper">2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          <span class="description"><span>GRCC Green Roof</span></span>
-        </div>
-      </li>
-
-
-      <li class="slide">
-        <div class="img-wrapper">3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          <span class="description"><span>Zeeland Natatorium</span></span>
-        </div>
-      </li>
-
-      <li class="slide">
-        <div class="img-wrapper">4
-          In culpa qui officia deserunt mollit anim id est laborum.
-          <span class="description"><span>CityFlats Hotel</span></span>
-
-        </div>
-      </li>
-
-      <li class="slide">
-        <div class="img-wrapper">5                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          <span class="description"><span>Calvin College</span></span>
-        </div>
-      </li>
-
-    </ul>
-    <div class="nav">
-      <a href="#">1</a>
-      <a href="#">2</a>
-      <a href="#">3</a>
-      <a href="#">4</a>
-      <a href="#">5</a>
-    </div>
-  </div>
 
 </div>
 </body>
