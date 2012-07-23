@@ -48,15 +48,15 @@ You can specify all the options shown below as object properties.
 
 ### `responsive` : Boolean - default is true
 
-Allows the height and width of the carousel and its list items to be reset when the window size changes. Adds an event handler on the window resize event to be fired when the window stops being resized. Requires CSS media queries.
+New as of jCarouselLite 1.8. Allows the height and width of the carousel and its list items to be reset when the window size changes. Adds an event handler on the window resize event to be fired when the window stops being resized. Requires CSS media queries.
 
 ### `swipe` : Boolean - default is true
 
-Enables the carousel to respond to touch input — namely single-touch swiping motions.
+New as of jCarouselLite 1.8. Enables the carousel to respond to touch input — namely single-touch swiping motions.
 
 ### swipeThresholds : Object - default is { x: 80, y: 120, time: 150 }
 
-The three swipeThresholds properties refer to movement along the x and y axes (in pixels) and the duration of that movement (in milliseconds) from touch start to touch end. The combination of these properties determine when a directional swipe has occurred and, thus, when the carousel should scroll.
+New as of jCarouselLite 1.8 The three swipeThresholds properties refer to movement along the x and y axes (in pixels) and the duration of that movement (in milliseconds) from touch start to touch end. The combination of these properties determine when a directional swipe has occurred and, thus, when the carousel should scroll.
 
 ### `btnPrev`, `btnNext` : String - no defaults
 
