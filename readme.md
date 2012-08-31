@@ -152,6 +152,8 @@ li {
 
 ### `activeClass` : String - default is "active"
 
+The `activeClass` value is automatically added to the active slides class. This allows customized animations within the `beforeStart` and `beforeEnd` callback options.
+
 When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the first currently visible carousel item will have a class added to it. The default `activeClass` is "active," but this can be overridden as shown in the following example:
 
 example
@@ -376,6 +378,25 @@ $('div.carousel').jCarouselLite({
     } else {
       return false;
     }
+  }
+});
+```
+
+### `first`, `last` : Function - callbacks
+
+When the `circular` option is set to false you have the option of doing something once the first or last slide has been reached via callbacks.
+
+example
+
+```javascript
+$('div.carousel').jCarouselLite({
+  btnNext: '.next',
+  btnPrev: '.prev',
+  first: function() {
+    alert('This is the first slide');
+  },
+  last: function() {
+    alert('This is the last slide');
   }
 });
 ```
