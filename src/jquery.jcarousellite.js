@@ -125,7 +125,7 @@ $.fn.jCarouselLite = function(options) {
     var setDimensions = function(reset) {
       var css;
       var prelimCss = {
-        div: {visibility: 'visible', overflow: 'hidden', position: 'relative', zIndex: 2, left: '0'},
+        div: {visibility: 'visible', position: 'relative', zIndex: 2, left: '0'},
         ul: {margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1},
         li: {overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'}
       };
@@ -271,6 +271,8 @@ $.fn.jCarouselLite = function(options) {
         o.beforeStart.call(this, vis(), direction);
       }
 
+      li.removeClass(o.activeClass);
+
       // If circular and we are in first or last, then go to the other end
       if (o.circular) {
         if (to > curr && to > itemLength - visibleCeil) {
@@ -294,6 +296,14 @@ $.fn.jCarouselLite = function(options) {
         }
 
         curr = to;
+
+        if (curr === 0 && o.first) {
+          o.first.call(this, vis(), direction);
+        }
+
+        if (curr === itemLength - visibleFloor && o.last) {
+          o.last.call(this, vis(), direction);
+        }
 
         // Disable buttons when the carousel reaches the last/first, and enable when not
         if (o.btnPrev) {
@@ -326,6 +336,8 @@ $.fn.jCarouselLite = function(options) {
         }
         running = false;
       });
+
+      li.eq(curr).addClass(o.activeClass);
 
       return curr;
     } // end go function
@@ -503,6 +515,8 @@ $.fn.jCarouselLite = function(options) {
       });
     }
 
+
+
   }); // end each
 
   return this;
@@ -512,55 +526,25 @@ $.fn.jCarouselLite.defaults = {
   autoCSS: true,
   btnPrev: null,
   btnNext: null,
-
-  // array (or jQuery object) of elements. When clicked, makes the corresponding carousel LI the first visible one
-  btnGo: null,
-
-  // selector (or jQuery object) indicating the containing element for pagination navigation.
-  autoPager: null,
-
+  btnGo: null,            // array (or jQuery object) of elements. When clicked, makes the corresponding carousel LI the first visible one
+  autoPager: null,          // selector (or jQuery object) indicating the containing element for pagination navigation.
   btnDisabledClass: 'disabled',
-  // class applied to the active btnGo element
-  activeClass: 'active',
-
-  // class applied to the btnGo elements corresponding to the visible slides
-  visibleClass: 'vis',
-
+  activeClass: 'active',      // class applied to the active slide and btnGo element
+  visibleClass: 'vis',        // class applied to the btnGo elements corresponding to the visible slides
   mouseWheel: false,
-
   speed: 200,
   easing: null,
-
-  // milliseconds between scrolls
-  timeout: 4000,
-
-  // true to enable auto scrolling; number to auto-scroll by different number at a time than that of scroll option
-  auto: false,
-
-  // true to enable changing direction of auto scrolling when user clicks prev or next button
-  directional: false,
-
-  // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
-  autoStop: false,
-
-  // pause scrolling on hover
-  pause: true,
-
+  timeout: 4000,          // milliseconds between scrolls
+  auto: false,            // true to enable auto scrolling; number to auto-scroll by different number at a time than that of scroll option
+  directional: false,       // true to enable changing direction of auto scrolling when user clicks prev or next button
+  autoStop: false,          // number of times before autoscrolling will stop. (if circular is false, won't iterate more than number of items)
+  pause: true,            // pause scrolling on hover
   vertical: false,
-
-  // continue scrolling when reach the last item
-  circular: true,
-
-  // the number to be visible at a given time.
-  visible: 3,
-
-  // index of item to show initially in the first posiition
-  start: 0,
-
-  // number of items to scroll at a time
-  scroll: 1,
-
-  responsive: true,
+  circular: true,         // continue scrolling when reach the last item
+  visible: 3,           // the number to be visible at a given time.
+  start: 0,             // index of item to show initially in the first posiition
+  scroll: 1,            // number of items to scroll at a time
+  responsive: false,
   swipe: true,
   swipeThresholds: {
     x: 80,
@@ -574,12 +558,10 @@ $.fn.jCarouselLite.defaults = {
       // 2. A jQuery object containing the <li> items in the carousel
   // If the function returns `false`, the plugin will skip all the carousel magic for that carousel div
   init: function() {},
-
-  // function to be called before each transition starts
-  beforeStart: null,
-
-  // function to be called after each transition ends
-  afterEnd: null
+  first: null,                  // function to be called once the first slide is hit
+  last: null,                   // function to be called once the last slide is hit
+  beforeStart: null,        // function to be called before each transition starts
+  afterEnd: null          // function to be called after each transition ends
 };
 
 function iterations(itemLength, options) {
