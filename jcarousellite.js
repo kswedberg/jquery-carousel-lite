@@ -1,4 +1,4 @@
-/*! jQuery jCarouselLite - v1.8.1 - 2012-08-31
+/*! jQuery jCarouselLite - v1.8.1 - 2012-09-18
 * http://kswedberg.github.com/jquery-carousel-lite/
 * Copyright (c) 2012 Karl Swedberg; Licensed MIT, GPL */
 
@@ -272,7 +272,7 @@ $.fn.jCarouselLite = function(options) {
 
 
       if (o.beforeStart) {
-        o.beforeStart.call(this, vis(), direction);
+        o.beforeStart.call(div, vis(), direction);
       }
 
       li.removeClass(o.activeClass);
@@ -326,7 +326,7 @@ $.fn.jCarouselLite = function(options) {
 
       if (prev === curr && !settings.force) {
         if (o.afterEnd) {
-          o.afterEnd.call(this, vis(), direction);
+          o.afterEnd.call(div, vis(), direction);
         }
         return curr;
       }
@@ -336,7 +336,7 @@ $.fn.jCarouselLite = function(options) {
       aniProps[animCss] = -(curr * styles.liSize);
       ul.animate(aniProps, speed, o.easing, function() {
         if (o.afterEnd) {
-          o.afterEnd.call(this, vis(), direction);
+          o.afterEnd.call(div, vis(), direction);
         }
         running = false;
       });

@@ -403,7 +403,9 @@ $('div.carousel').jCarouselLite({
 
 ### `beforeStart`, `afterEnd` : Function - callbacks
 
-If you want to do some logic before the slide starts and after the slide ends, you can register these 2 callbacks.
+If you want to do some logic before the slide starts and after the slide ends,
+you can register these 2 callbacks. Inside the functions, `this` is the
+div on which the .jCarouselLite() method is called.
 The functions will be passed two arguments:
 
 1. Array of elements that are visible at the time of callback.

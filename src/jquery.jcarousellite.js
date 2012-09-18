@@ -268,7 +268,7 @@ $.fn.jCarouselLite = function(options) {
 
 
       if (o.beforeStart) {
-        o.beforeStart.call(this, vis(), direction);
+        o.beforeStart.call(div, vis(), direction);
       }
 
       li.removeClass(o.activeClass);
@@ -322,7 +322,7 @@ $.fn.jCarouselLite = function(options) {
 
       if (prev === curr && !settings.force) {
         if (o.afterEnd) {
-          o.afterEnd.call(this, vis(), direction);
+          o.afterEnd.call(div, vis(), direction);
         }
         return curr;
       }
@@ -332,7 +332,7 @@ $.fn.jCarouselLite = function(options) {
       aniProps[animCss] = -(curr * styles.liSize);
       ul.animate(aniProps, speed, o.easing, function() {
         if (o.afterEnd) {
-          o.afterEnd.call(this, vis(), direction);
+          o.afterEnd.call(div, vis(), direction);
         }
         running = false;
       });
