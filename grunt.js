@@ -5,6 +5,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: '<json:jcarousellite.jquery.json>',
+    component: './component.json',
     meta: {
       banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
         '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -71,10 +72,15 @@ module.exports = function(grunt) {
     // Concat specified files.
     var name = this.file.dest,
         files = grunt.file.expandFiles( this.file.src ),
+        comp = grunt.config('component'),
+        pkg = grunt.config("pkg"),
         compiled = grunt.helper('concat', files, {separator: this.data.separator}),
-        version = grunt.config("pkg.version");
+        version = pkg.version;
 
     // compiled = '/* concatenated files:\n' + this.file.src.join(', ') + '\n*/\n\n' + compiled;
+
+    // update components.json
+    grunt.file.write( comp, JSON.stringify(pkg) );
 
     // Embed Version
     compiled = compiled.replace( /@VERSION/, version );
