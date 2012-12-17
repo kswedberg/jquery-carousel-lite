@@ -45,15 +45,17 @@ $.fn.jCarouselLite = function(options) {
     }
 
     div.data('dirjc', direction);
+    div.data(animCss + 'jc', div.css(animCss));
 
     if (o.circular) {
-      beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
-      afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
-      ul.prepend( beforeCirc )
-        .append( afterCirc );
 
+        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
+        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
+        ul.prepend( beforeCirc )
+          .append( afterCirc );
       start += visibleCeil;
       activeBtnOffset = visibleCeil;
+
     }
 
     var setActiveBtn = function(i, types) {
@@ -413,7 +415,12 @@ $.fn.jCarouselLite = function(options) {
           $(val).unbind('.jc');
         });
       }
-      $.each(['pausedjc', 'stoppedjc', 'dirjc'], function(i, d) {
+
+      if (o.circular) {
+        li.slice(0, visibleCeil).remove();
+        li.slice(-visibleCeil).remove();
+      }
+      $.each([animCss + 'jc', 'pausedjc', 'stoppedjc', 'dirjc'], function(i, d) {
         div.removeData(d);
       });
       div.unbind('.jc');
