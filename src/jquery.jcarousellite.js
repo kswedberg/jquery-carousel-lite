@@ -217,23 +217,22 @@ $.fn.jCarouselLite = function(options) {
       }
       if (pageNav.length > 1) {
         pageNav = $('<ul>' + pageNav.join('') + '</ul>').appendTo(o.autoPager).find('li');
-      }
-      pageNav.find('a').each(function(i) {
-        $(this).bind('click.jc', function(event) {
-          event.preventDefault();
-          var slide = i * visibleNum;
-          if (o.circular) {
-            slide += visibleNum;
-          }
-          return go(slide);
+        pageNav.find('a').each(function(i) {
+          $(this).bind('click.jc', function(event) {
+            event.preventDefault();
+            var slide = i * visibleNum;
+            if (o.circular) {
+              slide += visibleNum;
+            }
+            return go(slide);
+          });
         });
-      });
-      activeBtnTypes.pager = 1;
+        activeBtnTypes.pager = 1;
+      }
     }
 
     // set the active class on the btn corresponding to the "start" li
     setActiveBtn(start, activeBtnTypes);
-
 
     if (o.mouseWheel && div.mousewheel) {
       div.bind('mousewheel.jc', function(e, d) {
