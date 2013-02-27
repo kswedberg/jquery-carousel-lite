@@ -8,15 +8,18 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('jcarousellite.jquery.json'),
     component: './component.json',
     meta: {
-      banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
+      banner: '/*! <%= "\\n" %>' +
+          ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd")  + "\\n" %>' +
-          '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-          '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-          ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %>  */' +
-          '<%= "\\n\\n" %>',
-      version: '\\n \\nvar version = <%= pkg.version %>;\\n'
+          '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
+          ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>' +
+          '<%= "\\n" %>' +
+          ' * Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %>' +
+          ' (<%= _.pluck(pkg.licenses, "url").join(", ") %>)' +
+          '<%= "\\n" %>' + ' */' +
+          '<%= "\\n\\n" %>'
     },
-		concat: {
+    concat: {
       all: {
         src: ['src/jquery.<%= pkg.name %>.js'],
         dest: '<%= pkg.name %>.js'
@@ -38,8 +41,10 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'jshint'
+      scripts: {
+        files: '<%= jshint.all %>',
+        tasks: ['jshint']
+      }
     },
     shell: {
       rsync: {
@@ -49,7 +54,7 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      files: ['grunt.js', 'src/**/*.js'],
+      all: ['Gruntfile.js', 'src/**/*.js'],
       options: {
         curly: true,
         // eqeqeq: true,
@@ -139,5 +144,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-shell');
 };
