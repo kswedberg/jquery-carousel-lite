@@ -13,6 +13,7 @@ $.fn.jCarouselLite = function(options) {
   this.each(function() {
 
     var beforeCirc, afterCirc, pageNav, pageNavCount, resize, prepResize, touchEvents,
+        isTouch = 'ontouchend' in document,
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
         running = false,
@@ -240,7 +241,7 @@ $.fn.jCarouselLite = function(options) {
       });
     }
 
-    if (o.pause && o.auto) {
+    if (o.pause && o.auto && !isTouch) {
       div.bind('mouseenter.jc', function() {
         div.trigger('pauseCarousel.jc');
       }).bind('mouseleave.jc', function() {
@@ -495,7 +496,7 @@ $.fn.jCarouselLite = function(options) {
       }
     };
 
-    if ( 'ontouchend' in document && o.swipe ) {
+    if ( isTouch && o.swipe ) {
       div.bind('touchstart touchmove touchend', function(event) {
         event = event.originalEvent;
         touchEvents[event.type](event);
