@@ -1,11 +1,14 @@
-/*! jQuery jCarousel Lite - v1.8.1 - 2013-02-07
-* http://kswedberg.github.com/jquery-carousel-lite/
-* Copyright (c) 2013 Karl Swedberg; Licensed MIT  */
+/*!
+ * jCarousel Lite - v1.8.2 - 2013-03-03
+ * http://kswedberg.github.com/jquery-carousel-lite/
+ * Copyright (c) 2013 Karl Swedberg
+ * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
+ */
 
 
 (function($) {
 $.jCarouselLite = {
-  version: '@VERSION',
+  version: '1.8.2',
   curr: 0
 };
 
@@ -17,6 +20,7 @@ $.fn.jCarouselLite = function(options) {
   this.each(function() {
 
     var beforeCirc, afterCirc, pageNav, pageNavCount, resize, prepResize, touchEvents,
+        isTouch = 'ontouchend' in document,
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
         running = false,
@@ -221,23 +225,22 @@ $.fn.jCarouselLite = function(options) {
       }
       if (pageNav.length > 1) {
         pageNav = $('<ul>' + pageNav.join('') + '</ul>').appendTo(o.autoPager).find('li');
-      }
-      pageNav.find('a').each(function(i) {
-        $(this).bind('click.jc', function(event) {
-          event.preventDefault();
-          var slide = i * visibleNum;
-          if (o.circular) {
-            slide += visibleNum;
-          }
-          return go(slide);
+        pageNav.find('a').each(function(i) {
+          $(this).bind('click.jc', function(event) {
+            event.preventDefault();
+            var slide = i * visibleNum;
+            if (o.circular) {
+              slide += visibleNum;
+            }
+            return go(slide);
+          });
         });
-      });
-      activeBtnTypes.pager = 1;
+        activeBtnTypes.pager = 1;
+      }
     }
 
     // set the active class on the btn corresponding to the "start" li
     setActiveBtn(start, activeBtnTypes);
-
 
     if (o.mouseWheel && div.mousewheel) {
       div.bind('mousewheel.jc', function(e, d) {
@@ -245,7 +248,7 @@ $.fn.jCarouselLite = function(options) {
       });
     }
 
-    if (o.pause && o.auto) {
+    if (o.pause && o.auto && !isTouch) {
       div.bind('mouseenter.jc', function() {
         div.trigger('pauseCarousel.jc');
       }).bind('mouseleave.jc', function() {
@@ -500,7 +503,7 @@ $.fn.jCarouselLite = function(options) {
       }
     };
 
-    if ( 'ontouchend' in document && o.swipe ) {
+    if ( isTouch && o.swipe ) {
       div.bind('touchstart touchmove touchend', function(event) {
         event = event.originalEvent;
         touchEvents[event.type](event);

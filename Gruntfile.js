@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('jcarousellite.jquery.json'),
     component: './component.json',
     meta: {
-      banner: '/*! <%= "\\n" %>' +
+      banner: '/*!<%= "\\n" %>' +
           ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd")  + "\\n" %>' +
           '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
@@ -53,6 +53,12 @@ module.exports = function(grunt) {
         stdout: true
       }
     },
+    setshell: {
+      rsync: {
+        file: 'gitignore/settings.json',
+        cmdAppend: '<%= pkg.name %>/'
+      }
+    },
     jshint: {
       all: ['Gruntfile.js', 'src/**/*.js'],
       options: {
@@ -68,14 +74,59 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          require: false
+        }
+      }
+    },
+    version: {
+      same: {
+        src: ['src/*.js', '*.json']
+      },
+      patch: {
+        src: [
+          '<%= pkg.name %>.jquery.json',
+          'package.json',
+          'src/jquery.<%= pkg.name %>.js',
+          '<%= pkg.name %>.js'
+        ],
+        options: {
+          release: 'patch'
+        }
+      },
+      bannerPatch: {
+        src: ['<%= pkg.name %>.js'],
+        options: {
+          prefix: 'Lite - v',
+          release: 'patch'
         }
       }
     }
   });
 
-  // Default task.
-  grunt.registerTask('build', ['jshint', 'concat', 'version', 'component', 'uglify']);
+  grunt.registerMultiTask( 'setshell', 'Set grunt shell commands', function() {
+    var settings, cmd,
+        tgt = this.target,
+        cmdLabel = 'shell.' + tgt + '.command',
+        file = this.data.file,
+        append = this.data.cmdAppend || '';
+
+    if ( !grunt.file.exists(file) ) {
+      grunt.warn('File does not exist: ' + file);
+    }
+
+    settings = grunt.file.readJSON(file);
+    if (!settings[tgt]) {
+      grunt.warn('No ' + tgt + ' property found in ' + file);
+    }
+
+    cmd = settings[tgt] + append;
+    grunt.config(cmdLabel, cmd);
+    grunt.log.writeln( ('Setting ' + cmdLabel + ' to:').cyan );
+
+    grunt.log.writeln(cmd);
+
+  });
 
   grunt.registerTask( 'component', 'update component.json', function() {
     var comp = grunt.config('component'),
@@ -101,28 +152,6 @@ module.exports = function(grunt) {
     grunt.log.writeln( "File '" + comp + "' updated." );
   });
 
-	grunt.registerTask( 'version', 'insert version', function() {
-		// Concat specified files.
-		var name = grunt.config('concat.all.dest'),
-        pkg = grunt.config("pkg"),
-        compiled = grunt.file.read(name),
-        version = "version = '" + pkg.version + "'";
-
-		// Embed Version
-    compiled = compiled.replace( /version = '[^']+'/, version );
-		// Write concatenated source to file
-		grunt.file.write( name, compiled );
-
-		// Fail task if errors were logged.
-		if ( this.errorCount ) {
-			return false;
-		}
-
-		// Otherwise, print a success message.
-		grunt.log.writeln( "File '" + name + "' created." );
-
-	});
-
   grunt.registerTask( 'rsync', 'deploy site', function() {
     var file, cmd,
         path = 'gitignore/settings.json';
@@ -139,11 +168,31 @@ module.exports = function(grunt) {
       .writeln('no command property found in ' + path);
     }
   });
-  grunt.registerTask( 'deploy', ['rsync', 'shell:rsync']);
+
+  grunt.registerTask('docs', function() {
+    var marked = require('marked'),
+        readme = grunt.file.read('readme.md'),
+        head = grunt.template.process(grunt.file.read('lib/tpl/header.tpl')),
+        foot = grunt.file.read('lib/tpl/footer.tpl'),
+        doc = marked(readme);
+
+    marked.setOptions({
+      gfm: true
+    });
+
+    grunt.file.write('index.html', head + doc + foot);
+  });
+
+  grunt.registerTask( 'deploy', ['setshell:rsync', 'shell:rsync']);
+
+  // Default task.
+  grunt.registerTask('build', ['jshint', 'concat', 'version:same', 'component', 'uglify', 'docs']);
+  grunt.registerTask('patch', ['jshint', 'concat', 'version:bannerPatch', 'version:patch', 'component', 'uglify']);
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-version');
   grunt.loadNpmTasks('grunt-shell');
 };
