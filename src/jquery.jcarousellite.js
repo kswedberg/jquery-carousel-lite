@@ -17,9 +17,9 @@ $.fn.jCarouselLite = function(options) {
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
         running = false,
-        animCss = o.vertical ? "top": "left",
+        animCss = o.vertical ? 'top': 'left',
         aniProps = {},
-        sizeProp = o.vertical ? "height": "width",
+        sizeProp = o.vertical ? 'height': 'width',
         self = this,
         div = $(this),
         ul = div.find('ul').eq(0),
@@ -50,10 +50,10 @@ $.fn.jCarouselLite = function(options) {
 
     if (o.circular) {
 
-        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
-        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
-        ul.prepend( beforeCirc )
-          .append( afterCirc );
+      beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
+      afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
+      ul.prepend( beforeCirc )
+        .append( afterCirc );
       start += visibleCeil;
       activeBtnOffset = visibleCeil;
 
@@ -158,7 +158,7 @@ $.fn.jCarouselLite = function(options) {
     // set up timed advancer
     var advanceCounter = 0,
         autoStop = iterations(tl, o),
-        autoScrollBy = typeof o.auto == 'number' ? o.auto : o.scroll;
+        autoScrollBy = typeof o.auto === 'number' ? o.auto : o.scroll;
 
     var advancer = function() {
       self.setAutoAdvance = setTimeout(function() {
@@ -348,14 +348,14 @@ $.fn.jCarouselLite = function(options) {
     div
     .bind('go.jc', function(e, to, settings) {
 
-      if (typeof to == 'undefined') {
+      if (typeof to === 'undefined') {
         to = '+=1';
       }
 
-      var todir = typeof to == 'string' && /(\+=|-=)(\d+)/.exec(to);
+      var todir = typeof to === 'string' && /(\+=|-=)(\d+)/.exec(to);
 
       if ( todir ) {
-        to = todir[1] == '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
+        to = todir[1] === '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
       } else {
         to += start;
       }
