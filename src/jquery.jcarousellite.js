@@ -430,6 +430,8 @@ $.fn.jCarouselLite = function(options) {
 
     touchEvents = {
       touchstart: function(event) {
+        endTouch.x = 0;
+        endTouch.y = 0;
         startTouch.x = event.targetTouches[0].pageX;
         startTouch.y = event.targetTouches[0].pageY;
         startTouch[animCss] = parseFloat( ul.css(animCss) );
