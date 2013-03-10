@@ -126,7 +126,7 @@ $.fn.jCarouselLite = function(options) {
 
 
     var setDimensions = function(reset) {
-      var css;
+      var css, tmpDivSize;
       var prelimCss = {
         div: {visibility: 'visible', position: 'relative', zIndex: 2, left: '0'},
         ul: {margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1},
@@ -142,11 +142,24 @@ $.fn.jCarouselLite = function(options) {
 
       css = getDimensions();
 
-      if (o.autoCSS) {
+      if (o.autoCSS && firstCss) {
         if (firstCss) {
           $.extend(true, css, prelimCss);
           firstCss = false;
         }
+      }
+
+      if (o.autoWidth) {
+        tmpDivSize = parseInt(div.css(sizeProp), 10);
+        css.li[sizeProp] = tmpDivSize / o.visible;
+        styles.liSize = css.li[sizeProp];
+        // Need to adjust other settings to fit with li width
+        css.ul[sizeProp] = (styles.liSize * itemLength) + 'px';
+        css.ul[animCss] = -(curr * styles.liSize) + 'px';
+        css.div[sizeProp] = tmpDivSize;
+      }
+
+      if (o.autoCSS) {
         li.css(css.li);
         ul.css(css.ul);
         div.css(css.div);
@@ -517,7 +530,7 @@ $.fn.jCarouselLite = function(options) {
 
         clearTimeout(resize);
         resize = setTimeout(function() {
-          div.trigger('refreshCarousel');
+          div.trigger('refreshCarousel.jc');
           prepResize = o.autoCSS;
         }, 100);
 
@@ -532,7 +545,6 @@ $.fn.jCarouselLite = function(options) {
 };
 
 $.fn.jCarouselLite.defaults = {
-  autoCSS: true,
   btnPrev: null,
   btnNext: null,
 
@@ -580,7 +592,17 @@ $.fn.jCarouselLite.defaults = {
 
   // number of items to scroll at a time
   scroll: 1,
+
+  // whether to set initial styles on the carousel elements. See readme for info
+  autoCSS: true,
+
+  // whether the dimensions should change on resize
   responsive: false,
+
+  // whether to set width of <li>s based on width of <div>
+  autoWidth: false,
+
+  // touch options
   swipe: true,
   swipeThresholds: {
     x: 80,
