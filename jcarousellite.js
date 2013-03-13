@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.8.2 - 2013-03-03
+ * jCarousel Lite - v1.8.3 - 2013-03-13
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2013 Karl Swedberg
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
@@ -8,7 +8,7 @@
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.8.2',
+  version: '1.8.3',
   curr: 0
 };
 
@@ -24,9 +24,9 @@ $.fn.jCarouselLite = function(options) {
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
         running = false,
-        animCss = o.vertical ? "top": "left",
+        animCss = o.vertical ? 'top': 'left',
         aniProps = {},
-        sizeProp = o.vertical ? "height": "width",
+        sizeProp = o.vertical ? 'height': 'width',
         self = this,
         div = $(this),
         ul = div.find('ul').eq(0),
@@ -57,10 +57,10 @@ $.fn.jCarouselLite = function(options) {
 
     if (o.circular) {
 
-        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
-        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
-        ul.prepend( beforeCirc )
-          .append( afterCirc );
+      beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
+      afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
+      ul.prepend( beforeCirc )
+        .append( afterCirc );
       start += visibleCeil;
       activeBtnOffset = visibleCeil;
 
@@ -133,7 +133,7 @@ $.fn.jCarouselLite = function(options) {
 
 
     var setDimensions = function(reset) {
-      var css;
+      var css, tmpDivSize;
       var prelimCss = {
         div: {visibility: 'visible', position: 'relative', zIndex: 2, left: '0'},
         ul: {margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1},
@@ -149,11 +149,24 @@ $.fn.jCarouselLite = function(options) {
 
       css = getDimensions();
 
-      if (o.autoCSS) {
+      if (o.autoCSS && firstCss) {
         if (firstCss) {
           $.extend(true, css, prelimCss);
           firstCss = false;
         }
+      }
+
+      if (o.autoWidth) {
+        tmpDivSize = parseInt(div.css(sizeProp), 10);
+        css.li[sizeProp] = tmpDivSize / o.visible;
+        styles.liSize = css.li[sizeProp];
+        // Need to adjust other settings to fit with li width
+        css.ul[sizeProp] = (styles.liSize * itemLength) + 'px';
+        css.ul[animCss] = -(curr * styles.liSize) + 'px';
+        css.div[sizeProp] = tmpDivSize;
+      }
+
+      if (o.autoCSS) {
         li.css(css.li);
         ul.css(css.ul);
         div.css(css.div);
@@ -165,7 +178,7 @@ $.fn.jCarouselLite = function(options) {
     // set up timed advancer
     var advanceCounter = 0,
         autoStop = iterations(tl, o),
-        autoScrollBy = typeof o.auto == 'number' ? o.auto : o.scroll;
+        autoScrollBy = typeof o.auto === 'number' ? o.auto : o.scroll;
 
     var advancer = function() {
       self.setAutoAdvance = setTimeout(function() {
@@ -355,14 +368,14 @@ $.fn.jCarouselLite = function(options) {
     div
     .bind('go.jc', function(e, to, settings) {
 
-      if (typeof to == 'undefined') {
+      if (typeof to === 'undefined') {
         to = '+=1';
       }
 
-      var todir = typeof to == 'string' && /(\+=|-=)(\d+)/.exec(to);
+      var todir = typeof to === 'string' && /(\+=|-=)(\d+)/.exec(to);
 
       if ( todir ) {
-        to = todir[1] == '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
+        to = todir[1] === '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
       } else {
         to += start;
       }
@@ -437,6 +450,8 @@ $.fn.jCarouselLite = function(options) {
 
     touchEvents = {
       touchstart: function(event) {
+        endTouch.x = 0;
+        endTouch.y = 0;
         startTouch.x = event.targetTouches[0].pageX;
         startTouch.y = event.targetTouches[0].pageY;
         startTouch[animCss] = parseFloat( ul.css(animCss) );
@@ -522,7 +537,7 @@ $.fn.jCarouselLite = function(options) {
 
         clearTimeout(resize);
         resize = setTimeout(function() {
-          div.trigger('refreshCarousel');
+          div.trigger('refreshCarousel.jc');
           prepResize = o.autoCSS;
         }, 100);
 
@@ -537,7 +552,6 @@ $.fn.jCarouselLite = function(options) {
 };
 
 $.fn.jCarouselLite.defaults = {
-  autoCSS: true,
   btnPrev: null,
   btnNext: null,
 
@@ -585,7 +599,17 @@ $.fn.jCarouselLite.defaults = {
 
   // number of items to scroll at a time
   scroll: 1,
+
+  // whether to set initial styles on the carousel elements. See readme for info
+  autoCSS: true,
+
+  // whether the dimensions should change on resize
   responsive: false,
+
+  // whether to set width of <li>s (and left/top of <ul>) based on width of <div>
+  autoWidth: false,
+
+  // touch options
   swipe: true,
   swipeThresholds: {
     x: 80,
