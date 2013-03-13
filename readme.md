@@ -61,7 +61,7 @@ There are quite a few other settings that you can use to customize it. Each will
 
 * [Options](#options)
 * [Callback Options](#callbacks)
-* [Events](events)
+* [Events](#events)
 * [Responsive Carousels](#responsive-carousels)
 
 ## Options <a id="options">
@@ -459,7 +459,7 @@ The default is "+=1" (i.e. the next item).
 $('div.carousel').trigger('go')
 ```
 
-## Responsive Carousels<a id="responsive"></a>
+## Responsive Carousels<a id="responsive-carousels"></a>
 
 The `responsive` option is set to `false` by default. Once you set it to `true`,
 you may want to set a few other options to get the desired effect:
