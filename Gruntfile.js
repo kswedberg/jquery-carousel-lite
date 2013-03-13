@@ -2,6 +2,17 @@
 module.exports = function(grunt) {
 
   var _ = grunt.util._;
+  var marked = require('marked');
+  // var hl = require('highlight').Highlight;
+  var hl = require('node-syntaxhighlighter');
+  marked.setOptions({
+    highlight: function(code, lang) {
+
+      lang = hl.getLanguage(lang);
+      return hl.highlight(code, lang);
+    },
+    gfm: true
+  });
 
   // Project configuration.
   grunt.initConfig({
@@ -44,6 +55,10 @@ module.exports = function(grunt) {
       scripts: {
         files: '<%= jshint.all %>',
         tasks: ['jshint']
+      },
+      docs: {
+        files: ['readme.md', 'lib/tpl/**/*.tpl', 'Gruntfile.js'],
+        tasks: ['docs']
       }
     },
     shell: {
@@ -170,17 +185,22 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('docs', function() {
-    var marked = require('marked'),
+    var doc,
         readme = grunt.file.read('readme.md'),
         head = grunt.template.process(grunt.file.read('lib/tpl/header.tpl')),
-        foot = grunt.file.read('lib/tpl/footer.tpl'),
-        doc = marked(readme);
+        foot = grunt.file.read('lib/tpl/footer.tpl');
 
-    marked.setOptions({
-      gfm: true
-    });
+    // Stupid hack putting function foo() {} into each js code block
+    // because otherwise the highlight.js script isn't highlighting them.
+    // readme = readme.replace(/(```javascript\s*)/g, '$1function foo() {}');
+    // Convert to markdown (with the highlight.js processing in setOptions.highlight)
+    doc = marked(readme);
+    // Remove function foo() {} after processing
+    // doc = doc.replace(/<span class="keyword">function<\/span> foo\(\) \{\}(\n)?/g, '');
+
 
     grunt.file.write('index.html', head + doc + foot);
+
   });
 
   grunt.registerTask( 'deploy', ['setshell:rsync', 'shell:rsync']);

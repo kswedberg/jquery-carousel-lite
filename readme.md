@@ -4,6 +4,10 @@ By [Karl Swedberg](http://www.learningjquery.com/), based on the original by [Ga
 
 This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup. Check out a [bare-bones demo](http://plugins.learningjquery.com/jcarousellite/demo/).
 
+## Getting Started
+
+### HTML
+
 The HTML markup to build the carousel can be as simple as the following:
 
 ```html
@@ -30,6 +34,19 @@ For example, let's assume you want the following elements to be used as prev and
 <button class='next'> &laquo; </button>
 ```
 
+### CSS
+
+With the default settings, the carousel probably needs only a single CSS rule in your stylesheet
+(again, using `<div class="carousel">` as our example):
+
+```css
+div.carousel {
+  overflow: hidden;
+}
+```
+
+### jQuery
+
 All you need to do is call the carousel component on the `div` element that represents it and pass in the
 navigation buttons as options.
 
@@ -40,15 +57,20 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-There are quite a few other options that you can use to customize it. Each will be explained with an example below.
+There are quite a few other settings that you can use to customize it. Each will be explained with an example below.
 
-## Options
+* [Options](#options)
+* [Callback Options](#callbacks)
+* [Events](events)
+* [Responsive Carousels](#responsive-carousels)
+
+## Options <a id="options">
 
 You can specify all the options shown below as object properties.
 
-### `responsive` : Boolean - default is true
+### `responsive` : Boolean - default is false
 
-New as of jCarouselLite 1.8. Allows the height and width of the carousel and its list items to be reset when the window size changes. Adds an event handler on the window resize event to be fired when the window stops being resized. Requires CSS media queries.
+New as of jCarouselLite 1.8. Allows the height and width of the carousel and its list items to be reset when the window size changes (if `autoCSS` and/or `autoWidth` set to `true`). Adds an event handler on the window resize event that triggers the `refreshCarousel` custom event when the window stops being resized. See [Responsive Carousels](#responsive-carousels) for more information.
 
 ### `swipe` : Boolean - default is true
 
@@ -61,8 +83,6 @@ New as of jCarouselLite 1.8 The three swipeThresholds properties refer to moveme
 ### `btnPrev`, `btnNext` : String - no defaults
 
 Creates a basic carousel. Clicking "btnPrev" navigates backwards and "btnNext" navigates forward.
-
-example:
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -79,8 +99,6 @@ If you supply an array, the index of each item in the array represents the index
 In other words, if the first element in the array is ".one," then clicking the element represented by ".one"
 will slide the carousel to the first element.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnNext: '.next',
@@ -90,8 +108,6 @@ $('div.carousel').jCarouselLite({
 ```
 
 In the following example, clicking a link within `#carousel-nav` will slide the carousel to the item with an index matching the link's index among the other links.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -103,8 +119,6 @@ $('div.carousel').jCarouselLite({
 
 When the `autoCSS` option is set to `false`, the plugin does *not* set any of the initial styles on the carousel elements, allowing you to apply these styles (or a subset of them) yourself in a stylesheet.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   autoCSS: false
@@ -115,12 +129,11 @@ The following is a generic example of styles set by the plugin when the default 
 
 ```css
 /* the selectors here (div, ul, li) are meant only for example.
-   you would,of course, use more specific selectors
+   you would, of course, use more specific selectors
    to target your actual carousel elements */
 
 div {
   visibility: visible;
-  overflow: hidden;
   position: relative;
   z-index: 2;
   /* if the vertical option is set to true, the following would be height */
@@ -150,13 +163,17 @@ li {
 }
 ```
 
+### `autoWidth`: Boolean - default is false
+
+When the `autoWidth` option is set to `true`, the plugin sets the width of
+the `<li>`s and left/top of the `<ul>` based on the width of the `<div>`
+
+
 ### `activeClass` : String - default is "active"
 
 The `activeClass` value is automatically added to the active slide's class. This allows customized animations within the `beforeStart` and `beforeEnd` callback options.
 
 When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the first currently visible carousel item will have a class added to it. The default `activeClass` is "active," but this can be overridden as shown in the following example:
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -171,8 +188,6 @@ $('div.carousel').jCarouselLite({
 
 When the `btnGo` option is set, the element in the `btnGo` set that corresponds to the currently visible carousel item(s) will have a class added to them. The default `visibleClass` is "vis," but this can be overridden as shown in the following example:
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnGo: $('#carousel-nav a'),
@@ -186,16 +201,12 @@ $('div.carousel').jCarouselLite({
 
 The carousel will navigate by itself if this option is set to `true` or a number greater than 0. If `true`, the carousel will scroll by the number of slides indicated by the `scroll` option (default is 1). If a positive number, it will auto-scroll by that number instead, although clicks on the previous/next button will still cause it to scroll by the `scroll` option's number.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   auto: true,
   speed: 500
 });
 ```
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   auto: 2,
@@ -210,8 +221,6 @@ $('div.carousel').jCarouselLite({
 
 When the `auto` option is set to `true` (or a number greater than 0), the carousel automatically transitions after the amount of time specified by the `timeout` option.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   auto: true,
@@ -222,8 +231,6 @@ $('div.carousel').jCarouselLite({
 ### `speed` : Number - default is 200
 
 Specifying a speed will slow down or speed up the sliding speed of your carousel. Providing 0 will remove the slide effect.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -236,8 +243,6 @@ $('div.carousel').jCarouselLite({
 ### `easing` : String - no easing effects by default.
 
 The default easing of jQuery core, "swing," is used if no easing is specified in the options. You will need an easing plugin if you wish to specify an easing effect other than jQuery's own "swing" or "linear."
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -252,8 +257,6 @@ $('div.carousel').jCarouselLite({
 Determines the direction of the carousel. If set to `true`, the carousel will display vertically; the next and
 prev buttons will slide the items vertically as well. The default is `false`, which means that the carousel will
 display horizontally. The next and prev buttons will slide the items from left to right in this case.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -270,8 +273,6 @@ element, you will automatically slide to the first element and vice versa. If yo
 if you click on the "next" button after you reach the last element, you will stay in the last element itself
 and similarly for "previous" button and first element.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnNext: '.next',
@@ -285,8 +286,6 @@ $('div.carousel').jCarouselLite({
 This specifies the number of items visible at all times within the carousel. The default is 3.
 You may set this option to a fractional number (such as `3.5`), as well.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnNext: '.next',
@@ -299,8 +298,6 @@ $('div.carousel').jCarouselLite({
 
 You can specify from which item the carousel should start. Remember, the first item in the carousel
 has a start of 0, and so on.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -317,8 +314,6 @@ The number of items that should scroll/slide when you click the next/prev naviga
 default, only one item is scrolled, but you may set it to any number. For example, setting it to `2` will scroll
 2 items when you click the next or previous buttons.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnNext: '.next',
@@ -334,8 +329,6 @@ The carousel can also be navigated using the mouse wheel interface of a scroll m
 * include the mouse-wheel plugin from Brandon Aaron (http://github.com/brandonaaron/).
 * set the option "mouseWheel" to true.
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   mouseWheel: true
@@ -343,8 +336,6 @@ $('div.carousel').jCarouselLite({
 ```
 
 To use the previous/next buttons as well as the scroll wheel, just supply the options required for both:
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -354,7 +345,7 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-## Callback Options
+## Callback Options<a id="callbacks"></a>
 
 ### `init` : Function - callback
 
@@ -365,8 +356,6 @@ The function will be passed two arguments:
 2. jQuery Object containing the top-level `<li>` elements in the carousel (useful for checking their length against number of items to be visible at once)
 
 If the function returns `false`, the plugin will skip all the carousel magic for that carousel `<div>`.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -385,8 +374,6 @@ $('div.carousel').jCarouselLite({
 ### `first`, `last` : Function - callbacks
 
 When the `circular` option is set to false you have the option of doing something once the first or last slide has been reached via callbacks.
-
-example
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -411,8 +398,6 @@ The functions will be passed two arguments:
 1. Array of elements that are visible at the time of callback.
 2. Boolean indicating whether the direction is forward (`true`) or backward (`false`);
 
-example
-
 ```javascript
 $('div.carousel').jCarouselLite({
   btnNext: '.next',
@@ -426,15 +411,13 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-## Events
+## Events <a id="events"></a>
 
 The plugin binds a few custom event handlers to the wrapping `div` element. They can be triggered at any time by using jQuery's event triggering mechanism. If other custom events are bound to the same elements, you may wish to trigger these using the `.jc` namespace. For example, instead of `.trigger("pauseCarousel")`, you could write `.trigger("pauseCarousel.jc")`.
 
 ### `pauseCarousel`
 
 Pauses an autoscrolling carousel until `resumeCarousel` is triggered. Note: if the `pause` option is set to `true`, then the `resumeCarousel` event is automatically triggered when the mouse leaves the carousel div.
-
-example
 
 ```javascript
 $('div.carousel').trigger('pauseCarousel')
@@ -444,8 +427,6 @@ $('div.carousel').trigger('pauseCarousel')
 
 Resumes an autoscrolling carousel after having been paused.
 
-example
-
 ```javascript
 $('div.carousel').trigger('resumeCarousel')
 ```
@@ -454,22 +435,59 @@ $('div.carousel').trigger('resumeCarousel')
 
 Stops the carousel from functioning and removes all events and data bound by the plugin.
 
-example
-
 ```javascript
 $('div.carousel').trigger('endCarousel')
 ```
 
 ### `go`
 
-When triggering the `go` custom event, you can pass in a number or a string representing a relative number ("+=n" or "-=n") to specify which item in the carousel to go to. The default is "+=1" (i.e. the next item).
-
-example
+When triggering the `go` custom event, you can pass in an integer representing the item in the carousel to go to.
 
 ```javascript
 $('div.carousel').trigger('go', 3)
 ```
 
+You may also pass in a string ("+=n" or "-=n") to specify an item relative to the currently active item.
+
 ```javascript
 $('div.carousel').trigger('go', '+=2')
+```
+
+The default is "+=1" (i.e. the next item).
+
+```javascript
+$('div.carousel').trigger('go')
+```
+
+## Responsive Carousels<a id="responsive"></a>
+
+The `responsive` option is set to `false` by default. Once you set it to `true`,
+you may want to set a few other options to get the desired effect:
+
+### Everything automatic (`autoCSS` is `true` by default, so no need to add it)
+
+```javascript
+$('div.carousel').jCarouselLite({
+  // autoCSS: true,
+  autoWidth: true,
+  responsive: true
+});
+```
+
+### Everything manual (`autoWidth` is `false` by default, so no need to add it)
+
+Your best bet in this situation is to use CSS media queries.
+
+```javascript
+$('div.carousel').jCarouselLite({
+  autoCSS: false,
+  // autoWidth: false,
+  responsive: true
+});
+
+// Bind your own handler to the `refreshCarousel` custom event,
+// which is triggered when the window stops resizing
+$('div.carousel').on('refreshCarousel', function() {
+  // do something
+});
 ```

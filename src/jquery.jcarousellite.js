@@ -599,7 +599,7 @@ $.fn.jCarouselLite.defaults = {
   // whether the dimensions should change on resize
   responsive: false,
 
-  // whether to set width of <li>s based on width of <div>
+  // whether to set width of <li>s (and left/top of <ul>) based on width of <div>
   autoWidth: false,
 
   // touch options
