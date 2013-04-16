@@ -205,7 +205,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'deploy', ['setshell:rsync', 'shell:rsync']);
 
-  // Default task.
   grunt.registerTask('build', ['jshint', 'concat', 'version:same', 'component', 'uglify', 'docs']);
   grunt.registerTask('patch', ['jshint', 'concat', 'version:bannerPatch', 'version:patch', 'component', 'uglify']);
 
