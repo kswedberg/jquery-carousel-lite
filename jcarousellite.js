@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.8.4 - 2013-04-16
+ * jCarousel Lite - v1.8.5 - 2013-05-20
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2013 Karl Swedberg
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
@@ -8,7 +8,7 @@
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.8.4',
+  version: '1.8.5',
   curr: 0
 };
 
@@ -27,6 +27,7 @@ $.fn.jCarouselLite = function(options) {
         animCss = o.vertical ? 'top': 'left',
         aniProps = {},
         sizeProp = o.vertical ? 'height': 'width',
+        outerMethod = o.vertical ? 'outerHeight': 'outerWidth',
         self = this,
         div = $(this),
         ul = div.find('ul').eq(0),
@@ -113,7 +114,7 @@ $.fn.jCarouselLite = function(options) {
       }
 
       // Full li size(incl margin)-Used for animation
-      liSize = o.vertical ? li.outerHeight(true) : li.outerWidth(true);
+      liSize = li[outerMethod](true);
 
       // size of full ul(total length, not just for the visible items)
       ulSize = liSize * itemLength;
@@ -150,16 +151,15 @@ $.fn.jCarouselLite = function(options) {
       css = getDimensions();
 
       if (o.autoCSS && firstCss) {
-        if (firstCss) {
-          $.extend(true, css, prelimCss);
-          firstCss = false;
-        }
+        $.extend(true, css, prelimCss);
+        firstCss = false;
       }
 
       if (o.autoWidth) {
         tmpDivSize = parseInt(div.css(sizeProp), 10);
-        css.li[sizeProp] = tmpDivSize / o.visible;
-        styles.liSize = css.li[sizeProp];
+        styles.liSize = tmpDivSize / o.visible;
+        css.li[sizeProp] = styles.liSize - (li[outerMethod](true) - parseInt(li.css(sizeProp), 10));
+
         // Need to adjust other settings to fit with li width
         css.ul[sizeProp] = (styles.liSize * itemLength) + 'px';
         css.ul[animCss] = -(curr * styles.liSize) + 'px';
@@ -185,7 +185,7 @@ $.fn.jCarouselLite = function(options) {
 
         if (!autoStop || autoStop > advanceCounter) {
           direction = div.data('dirjc');
-          go( curr + (direction * autoScrollBy) );
+          go( curr + (direction * autoScrollBy), {auto: true} );
           advanceCounter++;
           advancer();
         }
@@ -299,7 +299,7 @@ $.fn.jCarouselLite = function(options) {
       if (o.circular) {
         if (to > curr && to > itemLength - visibleCeil) {
           curr = curr % tl;
-          to = to - tl;
+          to = curr + (settings.auto ? autoScrollBy : o.scroll);
           ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;

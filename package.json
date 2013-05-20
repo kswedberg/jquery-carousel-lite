@@ -1,6 +1,6 @@
 {
   "name": "jcarousellite",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "scripts": {
     "test": "./node_modules/.bin/grunt"
   },
@@ -12,6 +12,7 @@
     "grunt-shell": "~0.2",
     "grunt-contrib-concat": "~0.1.2rc6",
     "grunt-version": "~0.2.1",
-    "marked": "~0.2.8"
+    "marked": "~0.2.8",
+    "node-syntaxhighlighter": "~0.8.1"
   }
 }
