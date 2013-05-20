@@ -178,7 +178,7 @@ $.fn.jCarouselLite = function(options) {
 
         if (!autoStop || autoStop > advanceCounter) {
           direction = div.data('dirjc');
-          go( curr + (direction * autoScrollBy) );
+          go( curr + (direction * autoScrollBy), {auto: true} );
           advanceCounter++;
           advancer();
         }
@@ -292,7 +292,7 @@ $.fn.jCarouselLite = function(options) {
       if (o.circular) {
         if (to > curr && to > itemLength - visibleCeil) {
           curr = curr % tl;
-          to = to - tl;
+          to = curr + (settings.auto ? autoScrollBy : o.scroll);
           ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;
