@@ -17,11 +17,10 @@ body {
   line-height: 1.3em;
 }
 .container {
-  width: 850px;
+  max-width: 850px;
   margin: 0 auto;
 }
 .slideshow {
-  width: 800px;
   overflow: hidden;
   padding: 0 20px;
   margin-bottom: 20px;
@@ -52,21 +51,7 @@ body {
 }
 .disabled {
   color: #bbb;
-}
-
-@media (max-width: 849px) {
-  .container {
-    width: 530px;
-  }
-  .slideshow {
-    width: 500px;
-    padding: 10px;
-  }
-  .slide {
-    width: 230px;
-    height: 250px;
-    padding: 10px;
-  }
+  cursor: default;
 }
 </style>
 
@@ -80,7 +65,9 @@ body {
 
       var carouselOptions = {
         // auto: true,
-        // circular: false,
+        circular: false,
+        autoWidth: true,
+        responsive: true,
         visible: 2,
         speed: 300,
         pause: true,
