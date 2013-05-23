@@ -2,7 +2,7 @@
   "name": "jquery.jcarousellite",
   "version": "1.8.4",
   "dependencies": {
-    "jquery": "~1.4"
+    "jquery": "~1.8"
   },
   "main": "jcarousellite.js",
   "ignore": [
