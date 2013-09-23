@@ -17,7 +17,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('jcarousellite.jquery.json'),
-    component: './component.json',
+    bowerjson: './bower.json',
     meta: {
       banner: '/*!<%= "\\n" %>' +
           ' * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
@@ -143,8 +143,8 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask( 'component', 'update component.json', function() {
-    var comp = grunt.config('component'),
+  grunt.registerTask( 'bower', 'update bower.json', function() {
+    var comp = grunt.config('bowerjson'),
         pkg = grunt.config("pkg"),
         json = {};
 
@@ -198,15 +198,14 @@ module.exports = function(grunt) {
     // Remove function foo() {} after processing
     // doc = doc.replace(/<span class="keyword">function<\/span> foo\(\) \{\}(\n)?/g, '');
 
-
     grunt.file.write('index.html', head + doc + foot);
 
   });
 
   grunt.registerTask( 'deploy', ['setshell:rsync', 'shell:rsync']);
 
-  grunt.registerTask('build', ['jshint', 'concat', 'version:same', 'component', 'uglify', 'docs']);
-  grunt.registerTask('patch', ['jshint', 'concat', 'version:bannerPatch', 'version:patch', 'component', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'concat', 'version:same', 'bower', 'uglify', 'docs']);
+  grunt.registerTask('patch', ['jshint', 'concat', 'version:bannerPatch', 'version:patch', 'bower', 'uglify']);
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
