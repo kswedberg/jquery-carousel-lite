@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.8.5 - 2013-05-20
+ * jCarousel Lite - v1.8.5 - 2013-09-22
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2013 Karl Swedberg
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
@@ -19,7 +19,8 @@ $.fn.jCarouselLite = function(options) {
 
   this.each(function() {
 
-    var beforeCirc, afterCirc, pageNav, pageNavCount, resize, prepResize, touchEvents,
+    var beforeCirc, afterCirc, pageNav, pageNavCount, resize,
+        prepResize, touchEvents, $btnsGo,
         isTouch = 'ontouchend' in document,
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
@@ -67,15 +68,30 @@ $.fn.jCarouselLite = function(options) {
 
     }
 
+    if (o.btnGo && o.btnGo.length) {
+
+      if ( $.isArray(o.btnGo) && typeof o.btnGo[0] === 'string' ) {
+        $btnsGo = $( o.btnGo.join() );
+      } else {
+        $btnsGo = $(o.btnGo);
+      }
+
+      $btnsGo.each(function(i) {
+        $(this).bind('click.jc', function(event) {
+          event.preventDefault();
+          return go(o.circular ? visibleNum + i : i);
+        });
+      });
+      activeBtnTypes.go = 1;
+    }
+
     var setActiveBtn = function(i, types) {
       i = ceil(i);
 
-      var $btnsGo,
-          activeBtnIndex = (i - activeBtnOffset) % tl,
+      var activeBtnIndex = (i - activeBtnOffset) % tl,
           visEnd = activeBtnIndex + visibleFloor;
 
       if ( types.go ) {
-        $btnsGo = $(o.btnGo);
         // remove active and visible classes from all the go buttons
         $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
         // add active class to the go button corresponding to the first visible slide
@@ -87,6 +103,7 @@ $.fn.jCarouselLite = function(options) {
           $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
         }
       }
+
       if ( types.pager ) {
         pageNav.removeClass(o.activeClass);
         pageNav.eq( ceil(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
@@ -218,16 +235,6 @@ $.fn.jCarouselLite = function(options) {
       if ( o.btnNext && start + visibleFloor >= itemLength ) {
         o.$btnNext.addClass(o.btnDisabledClass);
       }
-    }
-
-    if (o.btnGo) {
-      $.each(o.btnGo, function(i, val) {
-        $(val).bind('click.jc', function(event) {
-          event.preventDefault();
-          return go(o.circular ? visibleNum + i : i);
-        });
-      });
-      activeBtnTypes.go = 1;
     }
 
     if (o.autoPager) {
@@ -460,6 +467,7 @@ $.fn.jCarouselLite = function(options) {
 
       touchmove: function(event) {
         var tlength = event.targetTouches.length;
+
         if (tlength === 1) {
           event.preventDefault();
           endTouch.x = event.targetTouches[0].pageX;
@@ -467,7 +475,8 @@ $.fn.jCarouselLite = function(options) {
           aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
           ul.css(aniProps);
         } else {
-          endTouch = startTouch;
+          endTouch.x = startTouch.x;
+          endTouch.y = startTouch.y;
         }
       },
 
@@ -515,14 +524,16 @@ $.fn.jCarouselLite = function(options) {
 
         div.trigger('go.jc', [to, swipeInfo]);
         endTouch = {};
+      },
+
+      handle: function(event) {
+        event = event.originalEvent;
+        touchEvents[event.type](event);
       }
     };
 
     if ( isTouch && o.swipe ) {
-      div.bind('touchstart touchmove touchend', function(event) {
-        event = event.originalEvent;
-        touchEvents[event.type](event);
-      });
+      div.bind('touchstart.jc touchmove.jc touchend.jc', touchEvents.handle);
     } // end swipe events
 
     // Responsive design handling:
@@ -613,7 +624,7 @@ $.fn.jCarouselLite.defaults = {
   swipe: true,
   swipeThresholds: {
     x: 80,
-    y: 120,
+    y: 40,
     time: 150
   },
 

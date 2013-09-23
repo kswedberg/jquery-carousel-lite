@@ -12,7 +12,8 @@ $.fn.jCarouselLite = function(options) {
 
   this.each(function() {
 
-    var beforeCirc, afterCirc, pageNav, pageNavCount, resize, prepResize, touchEvents,
+    var beforeCirc, afterCirc, pageNav, pageNavCount, resize,
+        prepResize, touchEvents, $btnsGo,
         isTouch = 'ontouchend' in document,
         styles = { div: {}, ul: {}, li: {} },
         firstCss = true,
@@ -60,15 +61,30 @@ $.fn.jCarouselLite = function(options) {
 
     }
 
+    if (o.btnGo && o.btnGo.length) {
+
+      if ( $.isArray(o.btnGo) && typeof o.btnGo[0] === 'string' ) {
+        $btnsGo = $( o.btnGo.join() );
+      } else {
+        $btnsGo = $(o.btnGo);
+      }
+
+      $btnsGo.each(function(i) {
+        $(this).bind('click.jc', function(event) {
+          event.preventDefault();
+          return go(o.circular ? visibleNum + i : i);
+        });
+      });
+      activeBtnTypes.go = 1;
+    }
+
     var setActiveBtn = function(i, types) {
       i = ceil(i);
 
-      var $btnsGo,
-          activeBtnIndex = (i - activeBtnOffset) % tl,
+      var activeBtnIndex = (i - activeBtnOffset) % tl,
           visEnd = activeBtnIndex + visibleFloor;
 
       if ( types.go ) {
-        $btnsGo = $(o.btnGo);
         // remove active and visible classes from all the go buttons
         $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
         // add active class to the go button corresponding to the first visible slide
@@ -80,6 +96,7 @@ $.fn.jCarouselLite = function(options) {
           $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
         }
       }
+
       if ( types.pager ) {
         pageNav.removeClass(o.activeClass);
         pageNav.eq( ceil(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
@@ -211,16 +228,6 @@ $.fn.jCarouselLite = function(options) {
       if ( o.btnNext && start + visibleFloor >= itemLength ) {
         o.$btnNext.addClass(o.btnDisabledClass);
       }
-    }
-
-    if (o.btnGo) {
-      $.each(o.btnGo, function(i, val) {
-        $(val).bind('click.jc', function(event) {
-          event.preventDefault();
-          return go(o.circular ? visibleNum + i : i);
-        });
-      });
-      activeBtnTypes.go = 1;
     }
 
     if (o.autoPager) {
