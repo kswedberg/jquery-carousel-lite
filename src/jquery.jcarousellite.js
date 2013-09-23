@@ -453,6 +453,7 @@ $.fn.jCarouselLite = function(options) {
 
       touchmove: function(event) {
         var tlength = event.targetTouches.length;
+
         if (tlength === 1) {
           event.preventDefault();
           endTouch.x = event.targetTouches[0].pageX;
@@ -460,7 +461,8 @@ $.fn.jCarouselLite = function(options) {
           aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
           ul.css(aniProps);
         } else {
-          endTouch = startTouch;
+          endTouch.x = startTouch.x;
+          endTouch.y = startTouch.y;
         }
       },
 
@@ -508,14 +510,16 @@ $.fn.jCarouselLite = function(options) {
 
         div.trigger('go.jc', [to, swipeInfo]);
         endTouch = {};
+      },
+
+      handle: function(event) {
+        event = event.originalEvent;
+        touchEvents[event.type](event);
       }
     };
 
     if ( isTouch && o.swipe ) {
-      div.bind('touchstart touchmove touchend', function(event) {
-        event = event.originalEvent;
-        touchEvents[event.type](event);
-      });
+      div.bind('touchstart.jc touchmove.jc touchend.jc', touchEvents.handle);
     } // end swipe events
 
     // Responsive design handling:
@@ -606,7 +610,7 @@ $.fn.jCarouselLite.defaults = {
   swipe: true,
   swipeThresholds: {
     x: 80,
-    y: 120,
+    y: 40,
     time: 150
   },
 
