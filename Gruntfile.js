@@ -145,7 +145,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'bower', 'update bower.json', function() {
     var comp = grunt.config('bowerjson'),
-        pkg = grunt.config("pkg"),
+        pkg = grunt.file.readJSON('jcarousellite.jquery.json'),
         json = {};
 
     ['name', 'version', 'dependencies'].forEach(function(el) {
