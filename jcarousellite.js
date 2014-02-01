@@ -31,8 +31,8 @@ $.fn.jCarouselLite = function(options) {
         outerMethod = o.vertical ? 'outerHeight': 'outerWidth',
         self = this,
         div = $(this),
-        ul = div.find('ul').eq(0),
-        tLi = ul.children('li'),
+        ul = div.find(o.ulSelector).eq(0),
+        tLi = ul.children(o.liSelector),
         tl = tLi.length,
         visibleNum = o.visible,
         // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
@@ -111,7 +111,7 @@ $.fn.jCarouselLite = function(options) {
       return activeBtnIndex;
     };
 
-    var li = ul.children('li'),
+    var li = ul.children(o.liSelector),
         itemLength = li.length,
         curr = start;
 
@@ -244,7 +244,7 @@ $.fn.jCarouselLite = function(options) {
         pageNav.push('<li><a href="#">' + (i+1) + '</a></li>');
       }
       if (pageNav.length > 1) {
-        pageNav = $('<ul>' + pageNav.join('') + '</ul>').appendTo(o.autoPager).find('li');
+        pageNav = $('<'+o.ulSelector+'>' + pageNav.join('') + '</'+o.ulSelector+'>').appendTo(o.autoPager).find(o.liSelector);
         pageNav.find('a').each(function(i) {
           $(this).bind('click.jc', function(event) {
             event.preventDefault();
@@ -563,6 +563,8 @@ $.fn.jCarouselLite = function(options) {
 };
 
 $.fn.jCarouselLite.defaults = {
+  ulSelector: 'ul',
+  liSelector: 'li',
   btnPrev: null,
   btnNext: null,
 
