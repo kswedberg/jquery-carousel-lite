@@ -8,7 +8,10 @@
   "ignore": [
     "demo/",
     "lib/",
+    "test/",
     "src/",
-    "*.json"
+    "Gruntfile.js",
+    "*.json",
+    "readme.md"
   ]
 }
