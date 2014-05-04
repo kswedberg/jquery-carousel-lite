@@ -1,7 +1,7 @@
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.8.7',
+  version: '1.8.8',
   curr: 0
 };
 
@@ -462,11 +462,13 @@ $.fn.jCarouselLite = function(options) {
         var tlength = event.targetTouches.length;
 
         if (tlength === 1) {
-          event.preventDefault();
           endTouch.x = event.targetTouches[0].pageX;
           endTouch.y = event.targetTouches[0].pageY;
           aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
           ul.css(aniProps);
+          if (o.preventTouchWindowScroll) {
+            event.preventDefault();
+          }
         } else {
           endTouch.x = startTouch.x;
           endTouch.y = startTouch.y;
@@ -620,6 +622,9 @@ $.fn.jCarouselLite.defaults = {
     y: 40,
     time: 150
   },
+
+  // whether to prevent vertical scrolling of the document window when swiping
+  preventTouchWindowScroll: true,
 
   // Function to be called for each matched carousel when .jCaourselLite() is called.
   // Inside the function, `this` is the carousel div.

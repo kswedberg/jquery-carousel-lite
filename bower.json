@@ -1,6 +1,6 @@
 {
   "name": "jquery.jcarousellite",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "dependencies": {
     "jquery": ">=1.4"
   },
