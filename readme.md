@@ -405,7 +405,7 @@ $('div.carousel').jCarouselLite({
   beforeStart: function(a, direction) {
     alert('Before animation starts:' + a);
   },
-  afterEnd: function(a, , direction) {
+  afterEnd: function(a, direction) {
     alert('After animation ends:' + a);
   }
 });
