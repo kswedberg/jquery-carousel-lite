@@ -298,13 +298,8 @@ $.fn.jCarouselLite = function(options) {
       // If circular and we are in first or last, then go to the other end
       if (o.circular) {
         if (to > curr && to > itemLength - visibleCeil) {
-
-          // temporarily set "to" as the difference
-          to = to - curr;
           curr = curr % tl;
-
-          // use the difference to make "to" correct relative to curr
-          to = curr + to;
+          to = curr + (settings.auto ? autoScrollBy : o.scroll);
           ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;

@@ -37,44 +37,7 @@ jQuery(document).ready(function($) {
       equal(s.eq(1).css('left'), '-800px', 'second carousel went back to index 0 (1st item)');
       start();
     }, 250);
-  });
 
-  module('custom start and relative triggered go', {
-    setup: function() {
-
-      $('.slideshow').jCarouselLite({
-        start: 4,
-        visible: 2,
-        speed: 2
-      });
-      this.slideshow = $('div.slideshow').eq(1);
-      this.slides = $('ul.slides').eq(1);
-    }
-  });
-
-  test('starting position', function() {
-    equal(this.slides.css('left'), '-2400px', 'second carousel starts at index 4 (5th item)');
-  });
-
-
-  asyncTest('go foward 2 (wrap around)', function() {
-    var slides = this.slides;
-    this.slideshow.trigger('go', '+=2');
-
-    setTimeout(function() {
-      equal(slides.css('left'), '-1200px', 'second carousel advanced and wrapped around to index 1 (2nd item)');
-      start();
-    }, 750);
-  });
-
-  asyncTest('reset and go forward 4 (wrap around)', function() {
-    var slides = this.slides;
-    this.slideshow.trigger('go', '+=4');
-
-    setTimeout(function() {
-      equal(slides.css('left'), '-2000px', 'second carousel advanced and wrapped around to index 3 (4th item)');
-      start();
-    }, 750);
   });
 
   module('directional option', {
