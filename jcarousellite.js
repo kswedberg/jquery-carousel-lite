@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.8.8 - 2014-05-04
+ * jCarousel Lite - v1.8.9 - 2014-07-02
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2014 Karl Swedberg
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
@@ -8,7 +8,7 @@
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.8.8',
+  version: '1.8.9',
   curr: 0
 };
 
@@ -305,8 +305,13 @@ $.fn.jCarouselLite = function(options) {
       // If circular and we are in first or last, then go to the other end
       if (o.circular) {
         if (to > curr && to > itemLength - visibleCeil) {
+
+          // temporarily set "to" as the difference
+          to = to - curr;
           curr = curr % tl;
-          to = curr + (settings.auto ? autoScrollBy : o.scroll);
+
+          // use the difference to make "to" correct relative to curr
+          to = curr + to;
           ul.css(animCss, (-curr * styles.liSize) - offset);
         } else if ( to < curr && to < 0) {
           curr += tl;
