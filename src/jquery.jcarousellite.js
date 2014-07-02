@@ -436,7 +436,7 @@ $.fn.jCarouselLite = function(options) {
         o.$btnNext.addClass(o.btnDisabledClass).unbind('.jc');
       }
       if (o.btnGo) {
-        $.each(o.btnGo, function(i, val) {
+        $.each($(o.btnGo), function(i, val) {
           $(val).unbind('.jc');
         });
       }
