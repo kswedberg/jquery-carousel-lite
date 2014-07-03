@@ -2,7 +2,7 @@
   "name": "jcarousellite",
   "title": "jCarousel Lite",
   "description": "A jQuery carousel plugin based on jCarouselLite by Ganeshji Marwaha",
-  "version": "1.8.9",
+  "version": "1.8.10",
   "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
   "author": {
     "name": "Karl Swedberg",

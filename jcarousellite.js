@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.8.9 - 2014-07-02
+ * jCarousel Lite - v1.8.10 - 2014-07-03
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2014 Karl Swedberg
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
@@ -8,7 +8,7 @@
 
 (function($) {
 $.jCarouselLite = {
-  version: '1.8.9',
+  version: '1.8.10',
   curr: 0
 };
 
