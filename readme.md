@@ -431,6 +431,14 @@ Resumes an autoscrolling carousel after having been paused.
 $('div.carousel').trigger('resumeCarousel')
 ```
 
+### `stopCarousel`
+
+Stops an autoscrolling carousel in a similar fashion to `pauseCarousel`, with the exception that  `resumeCarousel` will NOT resume the carousel, and neither will the mouse leaving the carousel div.  To resume automatic movement on the carousel, use `startCarousel`.
+
+```javascript
+$('div.carousel').trigger('stopCarousel')
+```
+
 ### `endCarousel`
 
 Stops the carousel from functioning and removes all events and data bound by the plugin.
