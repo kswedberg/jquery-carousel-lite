@@ -462,8 +462,8 @@ $.fn.jCarouselLite = function(options) {
 
     touchEvents = {
       touchstart: function(event) {
-        endTouch.x = 0;
-        endTouch.y = 0;
+        endTouch.x = -1;
+        endTouch.y = -1;
         startTouch.x = event.targetTouches[0].pageX;
         startTouch.y = event.targetTouches[0].pageY;
         startTouch[animCss] = parseFloat( ul.css(animCss) );
@@ -489,7 +489,7 @@ $.fn.jCarouselLite = function(options) {
 
       touchend: function(event) {
         // bail out early if there is no touch movement
-        if (!endTouch.x) {
+        if (endTouch.x === -1) {
           return;
         }
 
