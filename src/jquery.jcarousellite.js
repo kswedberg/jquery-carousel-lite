@@ -1,7 +1,7 @@
 
 (function($) {
   $.jCarouselLite = {
-    version: '1.8.10',
+    version: '1.8.11',
     curr: 0
   };
 

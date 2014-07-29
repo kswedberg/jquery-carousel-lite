@@ -1,6 +1,6 @@
 {
   "name": "jquery.jcarousellite",
-  "version": "1.8.10",
+  "version": "1.8.11",
   "dependencies": {
     "jquery": ">=1.4"
   },
@@ -11,7 +11,7 @@
     "test/",
     "src/",
     "Gruntfile.js",
-    "package.json",
-    "jcarousellite.jquery.json"
+    "*.json",
+    "readme.md"
   ]
 }
