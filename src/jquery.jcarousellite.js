@@ -5,6 +5,8 @@
     curr: 0
   };
 
+  $.fn.anim = typeof $.fn.velocity !== 'undefined' ? $.fn.velocity : $.fn.animate;
+
   $.fn.jCarouselLite = function(options) {
     var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options),
         ceil = Math.ceil,
@@ -359,7 +361,7 @@
         running = true;
 
         aniProps[animCss] = -(curr * styles.liSize);
-        ul.animate(aniProps, speed, o.easing, function() {
+        ul.anim(aniProps, speed, o.easing, function() {
           if (o.afterEnd) {
             o.afterEnd.call(div, vis(), direction);
           }
