@@ -157,14 +157,17 @@ module.exports = function(grunt) {
       ignore: [
         'demo/',
         'lib/',
+        'test/',
         'src/',
-        '*.json'
+        'Gruntfile.js',
+        '*.json',
+        'readme.md'
       ]
     });
     json.name = 'jquery.' + json.name;
 
     grunt.file.write( comp, JSON.stringify(json, null, 2) );
-    grunt.log.writeln( "File '" + comp + "' updated." );
+    grunt.log.writeln( 'File "' + comp + ' updated."' );
   });
 
   grunt.registerTask( 'rsync', 'deploy site', function() {

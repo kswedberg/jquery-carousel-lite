@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demo</title>
+<style type="text/css">
+body {
+  font-size: 13px;
+  font-family: Helvetica, Arial, Verdana, sans-serif;
+  line-height: 1.3em;
+}
+.container {
+  width: 840px;
+  margin: 0 auto;
+}
+.slideshow {
+  width: 800px;
+  overflow: hidden;
+  padding: 0 100px;
+  margin: 0 auto 20px;
+  border: 5px solid #999;
+}
+.slides {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.slide {
+  float: left;
+  width: 300px;
+  height: 200px;
+  padding: 10px;
+}
+.slide img {
+  display: block;
+}
+.nav {
+  margin: 10px auto;
+  text-align: center;
+}
+.nav a {
+  display: inline-block;
+  margin: 0;
+  padding: .2em .5em;
+  color: #00A3CB;
+  text-decoration: none;
+
+}
+.nav a:hover {
+  color: #00436B;
+}
+.nav a.active,
+.nav a.active:hover {
+  background-color: #00A3CB;
+  color: white;
+}
+.disabled {
+  color: #f00;
+}
+</style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+  <script src="../jcarousellite.js"></script>
+  <script>
+    $(document).ready(function() {
+      var options = {
+        auto: true,
+        visible: 1,
+        circular: true,
+        speed: 300,
+        pause: true,
+        btnGo: $('div.nav a')
+      };
+
+
+      $('.slideshow').jCarouselLite(options);
+
+
+
+    });
+
+  </script>
+</head>
+<body>
+<div class="container">
+  <div class="slideshow">
+    <ul class="slides">
+      <li class="slide"><img src="http://placehold.it/300x200&text=1"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=2"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=3"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=4"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=5"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=6"></li>
+      <li class="slide"><img src="http://placehold.it/300x200&text=7"></li>
+    </ul>
+
+  </div>
+
+  <div class="nav">
+    <a href="#">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <a href="#">4</a>
+    <a href="#">5</a>
+    <a href="#">6</a>
+    <a href="#">7</a>
+  </div>
+
+</div>
+</body>
+</html>

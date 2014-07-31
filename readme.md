@@ -80,6 +80,10 @@ New as of jCarouselLite 1.8. Enables the carousel to respond to touch input — 
 
 New as of jCarouselLite 1.8 The three swipeThresholds properties refer to movement along the x and y axes (in pixels) and the duration of that movement (in milliseconds) from touch start to touch end. The combination of these properties determine when a directional swipe has occurred and, thus, when the carousel should scroll.
 
+### `preventTouchWindowScroll`: Boolean - default is true
+
+When true (default), prevents vertical scrolling of the document window when swiping on a horizontal carousel.
+
 ### `btnPrev`, `btnNext` : String - no defaults
 
 Creates a basic carousel. Clicking "btnPrev" navigates backwards and "btnNext" navigates forward.
@@ -168,6 +172,9 @@ li {
 When the `autoWidth` option is set to `true`, the plugin sets the width of
 the `<li>`s and left/top of the `<ul>` based on the width of the `<div>`
 
+### `btnDisabledClass`: String - default is "disabled"
+
+The `btnDisabledClass` value is automatically added to the `btnPrev` or `btnNext` element when a non-circular carousel is at the first or last slide, respectively.
 
 ### `activeClass` : String - default is "active"
 
@@ -216,6 +223,10 @@ $('div.carousel').jCarouselLite({
   btnPrev: '.prev'
 });
 ```
+
+### `directional`: Boolean - default is false
+
+If the `directional` option is set to `true`, autoscrolling changes direction  when the user clicks the "previous" or "next" button
 
 ### `timeout` : Number - default is 4000
 
@@ -405,7 +416,7 @@ $('div.carousel').jCarouselLite({
   beforeStart: function(a, direction) {
     alert('Before animation starts:' + a);
   },
-  afterEnd: function(a, , direction) {
+  afterEnd: function(a, direction) {
     alert('After animation ends:' + a);
   }
 });
@@ -429,6 +440,14 @@ Resumes an autoscrolling carousel after having been paused.
 
 ```javascript
 $('div.carousel').trigger('resumeCarousel')
+```
+
+### `stopCarousel`
+
+Stops an autoscrolling carousel in a similar fashion to `pauseCarousel`, with the exception that  `resumeCarousel` will NOT resume the carousel, and neither will the mouse leaving the carousel div.  To resume automatic movement on the carousel, use `startCarousel`.
+
+```javascript
+$('div.carousel').trigger('stopCarousel')
 ```
 
 ### `endCarousel`
