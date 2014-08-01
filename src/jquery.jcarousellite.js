@@ -26,8 +26,8 @@
           outerMethod = o.vertical ? 'outerHeight': 'outerWidth',
           self = this,
           div = $(this),
-          ul = div.find('ul').eq(0),
-          tLi = ul.children('li'),
+          ul = div.find(o.containerSelector).eq(0),
+          tLi = ul.children(o.itemSelector),
           tl = tLi.length,
           visibleNum = o.visible,
           // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
@@ -106,7 +106,7 @@
         return activeBtnIndex;
       };
 
-      var li = ul.children('li'),
+      var li = ul.children(o.itemSelector),
           itemLength = li.length,
           curr = start;
 
@@ -564,6 +564,12 @@
   };
 
   $.fn.jCarouselLite.defaults = {
+    // valid jquery selector for the "ul" container containing the slides 
+    containerSelector: 'ul',
+
+    // valid jquery selector for the slide "li" items
+    itemSelector: 'li',
+
     btnPrev: null,
     btnNext: null,
 
