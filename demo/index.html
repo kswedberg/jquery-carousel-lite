@@ -32,6 +32,13 @@ body {
   padding: 20px;
 }
 
+code {
+  background: #ccc;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 5px;
+}
+
 .nav a {
   display: inline-block;
   margin: 0;
@@ -81,14 +88,26 @@ body {
         btnGo: $('div.nav').find('a')
       };
 
+      var carousel3Options = {
+        containerSelector: 'section',
+        itemSelector: 'article',
+        visible: 2,
+        speed: 300,
+        btnPrev: function() {
+          return $(this).find('.prev');
+        },
+        btnNext: function() {
+          return $(this).find('.next');
+        }
+      };
+
       var $slideshows = $('.slideshow');
 
       $slideshows.eq(0).jCarouselLite(carousel1Options);
 
       $slideshows.eq(1).jCarouselLite(carousel2Options);
 
-
-
+      $slideshows.eq(2).jCarouselLite(carousel3Options);
 
     });
 
@@ -98,6 +117,7 @@ body {
 <div class="container">
   <p><a href="responsive.html">"Responsive" demo</a></p>
   <div class="slideshow">
+    <h2>Example using "Previous"/"Next" navigation:</h2>
     <ul class="slides">
 
       <li class="slide">
@@ -137,6 +157,7 @@ body {
   </div>
 
   <div class="slideshow">
+    <h2>Example using numbered navigation:</h2>
     <ul class="slides">
 
       <li class="slide">
@@ -179,6 +200,46 @@ body {
       <a href="#">4</a>
       <a href="#">5</a>
     </div>
+  </div>
+
+  <div class="slideshow">
+    <h2>Example using custom HTML5 selectors <code>section</code> and <code>article</code>:</h2>
+    <section class="slides">
+
+      <article class="slide">
+        <div class="img-wrapper">1 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="img-wrapper">2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>Green Roof</span></span>
+        </div>
+      </article>
+
+
+      <article class="slide">
+        <div class="img-wrapper">3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>Zeeland</span></span>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="img-wrapper">4
+          In culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>CityFlats Hotel</span></span>
+
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="img-wrapper">5                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </article>
+
+    </section>
+    <a href="#" class="prev">&lt;</a>
+    <a href="#" class="next">&gt;</a>
   </div>
 
 </div>
