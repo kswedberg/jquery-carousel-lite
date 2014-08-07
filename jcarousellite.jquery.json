@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git://github.com/kswedberg/jquery-carousel-lite.git"
   },
+  "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
   "bugs": {
     "url": "https://github.com/kswedberg/jquery-carousel-lite/issues"
   },

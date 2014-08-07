@@ -1,10 +1,27 @@
 {
   "name": "jcarousellite",
+  "title": "jCarousel Lite",
+  "description": "A jQuery carousel plugin based on jCarouselLite by Ganeshji Marwaha",
   "version": "1.9.1",
-  "scripts": {
-    "test": "./node_modules/.bin/grunt"
+  "author": {
+    "name": "Karl Swedberg",
+    "email": "kswedberg@gmail.com",
+    "url": "http://www.learningjquery.com/"
   },
-  "dependencies": {},
+  "contributors": [
+    {
+      "name": "Ganeshji Marwaha",
+      "url": "http://gmarwaha.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kswedberg/jquery-carousel-lite.git"
+  },
+  "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
+  "dependencies": {
+    "jquery": ">=1.4"
+  },
   "devDependencies": {
     "grunt-cli": "~0.1.0",
     "grunt-contrib-jshint": "~0.1.1rc6",
@@ -15,5 +32,16 @@
     "node-syntaxhighlighter": "~0.8.1",
     "grunt-contrib-watch": "~0.4.4",
     "marked": "~0.3.2"
-  }
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT"
+    }
+  ],
+  "keywords": [
+    "jQuery",
+    "carousel",
+    "slideshow"
+  ]
 }
