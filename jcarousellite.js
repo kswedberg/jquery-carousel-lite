@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.9.0 - 2014-08-07
+ * jCarousel Lite - v1.9.1 - 2014-08-07
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2014 Karl Swedberg
  * based on the original by Ganeshji Marwaha (gmarwaha.com)
@@ -9,7 +9,7 @@
 
 (function($) {
   $.jCarouselLite = {
-    version: '1.9.0',
+    version: '1.9.1',
     curr: 0
   };
 
@@ -23,10 +23,11 @@
     this.each(function() {
 
       var beforeCirc, afterCirc, pageNav, pageNavCount, resize,
+          li, itemLength, curr,
           prepResize, touchEvents, $btnsGo,
           isTouch = 'ontouchend' in document,
           styles = { div: {}, ul: {}, li: {} },
-          firstCss = true,
+          // firstCss = true,
           running = false,
           animCss = o.vertical ? 'top': 'left',
           aniProps = {},
@@ -57,18 +58,33 @@
         return;
       }
 
+      var makeCircular = function() {
+        if (beforeCirc && beforeCirc.length) {
+          beforeCirc.remove();
+          afterCirc.remove();
+        }
+        tLi = ul.children(o.liSelector);
+        tl = tLi.length;
+        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
+        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
+        ul.prepend( beforeCirc )
+          .append( afterCirc );
+        li = ul.children(o.liSelector);
+        itemLength = li.length;
+      };
+
       div.data('dirjc', direction);
       div.data(animCss + 'jc', div.css(animCss));
 
       if (o.circular) {
 
-        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
-        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
-        ul.prepend( beforeCirc )
-          .append( afterCirc );
+        makeCircular();
         start += visibleCeil;
         activeBtnOffset = visibleCeil;
 
+      } else {
+        li = ul.children(o.liSelector);
+        itemLength = li.length;
       }
 
       if (o.btnGo && o.btnGo.length) {
@@ -114,9 +130,7 @@
         return activeBtnIndex;
       };
 
-      var li = ul.children(o.itemSelector),
-          itemLength = li.length,
-          curr = start;
+      curr = start;
 
       $.jCarouselLite.curr = curr;
 
@@ -172,9 +186,9 @@
 
         css = getDimensions();
 
-        if (o.autoCSS && firstCss) {
+        if (o.autoCSS) {
           $.extend(true, css, prelimCss);
-          firstCss = false;
+          // firstCss = false;
         }
 
         if (o.autoWidth) {
@@ -296,10 +310,9 @@
         settings = settings || {};
         var prev = curr,
             direction = to > curr,
-            speed = settings.speed || o.speed,
+            speed = typeof settings.speed !== 'undefined' ? settings.speed : o.speed,
             // offset appears if touch moves slides
             offset = settings.offset || 0;
-
 
         if (o.beforeStart) {
           o.beforeStart.call(div, vis(), direction);
@@ -432,7 +445,10 @@
         div.data('stoppedjc', true);
       })
 
-      .bind('refreshCarousel.jc', function() {
+      .bind('refreshCarousel.jc', function(event, all) {
+        if (all && o.circular) {
+          makeCircular();
+        }
         setDimensions(o.autoCSS);
       })
 
@@ -560,7 +576,7 @@
 
           clearTimeout(resize);
           resize = setTimeout(function() {
-            div.trigger('refreshCarousel.jc');
+            div.trigger('refreshCarousel.jc', [true]);
             prepResize = o.autoCSS;
           }, 100);
         });
@@ -572,10 +588,11 @@
   };
 
   $.fn.jCarouselLite.defaults = {
-    // valid jquery selector for the "ul" container containing the slides 
+
+    // valid selector for the "ul" container containing the slides
     containerSelector: 'ul',
 
-    // valid jquery selector for the slide "li" items
+    // valid selector for the slide "li" items
     itemSelector: 'li',
 
     btnPrev: null,

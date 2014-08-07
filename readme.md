@@ -474,6 +474,18 @@ $('div.carousel').trigger('stopCarousel')
 
 Stops the carousel from functioning and removes all events and data bound by the plugin.
 
+### `refreshCarousel`
+
+Updates the dimensions of the carousel and, optionally (as of 1.9.1), the plugin's record of items being used in the carousel. When the `responsive` option is set to `true`, the `refreshCarousel` event is triggered automatically when the window stop resizing (it is "debounced" so it doesn't occur repeatedly during resize).
+
+```javascript
+// Insert a slide into the carousel.
+// Then...
+$('div.carousel').trigger('refreshCarousel', '[all]')
+```
+
+To get a better sense of dynamically adding slides to a carousel, see this <a href="http://plugins.learningjquery.com/demo/refresh.html">example of `refreshCarousel`</a>
+
 ```javascript
 $('div.carousel').trigger('endCarousel')
 ```

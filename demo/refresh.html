@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>demo</title>
+<style type="text/css">
+body {
+  font-size: 13px;
+  font-family: Helvetica, Arial, Verdana, sans-serif;
+  line-height: 1.3em;
+}
+.container {
+  width: 840px;
+  margin: 0 auto;
+}
+.slideshow {
+  width: 800px;
+  overflow: hidden;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  border: 5px solid #999;
+}
+.slides {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.slide {
+  float: left;
+  width: 360px;
+  height: 150px;
+  padding: 20px;
+}
+
+.nav a {
+  display: inline-block;
+  margin: 0;
+  padding: .2em .5em;
+  color: #00A3CB;
+  text-decoration: none;
+
+}
+.nav a:hover {
+  color: #00436B;
+}
+.nav a.vis,
+.nav a.vis:hover {
+  background-color: #aaa;
+  color: white;
+}
+.nav a.active,
+.nav a.active:hover {
+  background-color: #00A3CB;
+  color: white;
+}
+.ct {
+  color: #999;
+}
+</style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+  <script src="../src/jquery.jcarousellite.js"></script>
+  <script>
+    $(document).ready(function() {
+      var carouselOptions = {
+        // auto: true,
+        visible: 2,
+        speed: 300,
+        pause: true,
+        btnPrev: function() {
+          return $(this).find('.prev');
+        },
+        btnNext: function() {
+          return $(this).find('.next');
+        }
+      };
+
+
+      var $slideshow = $('.slideshow');
+
+      $slideshow.jCarouselLite(carouselOptions);
+
+      $('button.prepend').on('click', function() {
+        var curr = $.jCarouselLite.curr;
+        var newSlide = '<li class="slide prepended">' + $('#to-prepend').html() + '</li>';
+        $slideshow.children('ul').prepend(newSlide);
+
+        $slideshow.trigger('refreshCarousel', ['all']);
+        $slideshow.trigger('go', [curr + 1 - 2, {speed: 0}]);
+      });
+
+      $('button.insert').on('click', function() {
+        var curr = $.jCarouselLite.curr;
+        var newSlide = '<li class="slide">' + $('#to-insert').html() + '</li>';
+
+        // Insert the slide after the current slide
+        $slideshow.find('li.slide').eq(curr).after(newSlide);
+
+        // Trigger the refresh with the second argument set to <code>['all']</code>
+        $slideshow.trigger('refreshCarousel', ['all']);
+      });
+    });
+
+  </script>
+</head>
+<body>
+<div class="container">
+  <p><a href="responsive.html">"Responsive" demo</a></p>
+  <div class="slideshow">
+    <ul class="slides">
+
+      <li class="slide">
+        <div class="img-wrapper">1 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </div>
+      </li>
+
+      <li class="slide">
+        <div class="img-wrapper">2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>Green Roof</span></span>
+        </div>
+      </li>
+
+
+      <li class="slide">
+        <div class="img-wrapper">3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>Zeeland</span></span>
+        </div>
+      </li>
+
+      <li class="slide">
+        <div class="img-wrapper">4
+          In culpa qui officia deserunt mollit anim id est laborum.
+          <span class="description"><span>CityFlats Hotel</span></span>
+
+        </div>
+      </li>
+
+      <li class="slide">
+        <div class="img-wrapper">5
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+      </li>
+
+    </ul>
+    <a href="#" class="prev">&lt;</a>
+    <a href="#" class="next">&gt;</a>
+  </div>
+  <div style="float:left; width:45%;">
+    <button class="prepend">Insert new first slide</button>
+    <p><strong>Text that will be inserted as the first slide:</strong></p>
+    <div id="to-prepend">
+      Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
+    </div>
+    <p><strong>And the code to do it:</strong></p>
+    <pre style="width:100%; overflow:auto;"><code>
+$('button.insert').on('click', function() {
+  var curr = $.jCarouselLite.curr;
+  var newSlide = '&lt;li class="slide prepended">' +
+      $('#to-prepend').html() +
+      '&lt;/li>';
+
+  <span class="ct">// Insert the slide at the beginning</span>
+  $slideshow.children('ul').prepend(newSlide);
+
+  <span class="ct">// Trigger the refresh
+  // with the second argument set to ['all']</span>
+  $slideshow.trigger('refreshCarousel', ['all']);
+  <span class="ct">
+  // Now, since the slide was inserted *before* the current one,
+  // we have to immediately adjust the carousel position
+  // if we want it to remain at the same slide.
+  //
+  // Add 1 to the current position for the new slide,
+  // and subtract 1 for *each* visible slide
+  // (because the carousel is circular and
+  // the plugin thus adds "padding" slides)
+  </span>
+  $slideshow
+  .trigger('go', [curr + 1 - 2, {speed: 0}]);
+});
+    </code></pre>
+  </div>
+  <div style="float:right;width:45%;">
+    <button class="insert">Insert new slide</button>
+    <p><strong>Text that will be inserted in a new slide after the first currently visible slide:</strong></p>
+    <div id="to-insert">
+      Completely synergize resource intensive relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas. Dynamically innovate resource-leveling customer service for state of the art customer service.
+    </div>
+    <p><strong>And the code to do it:</strong></p>
+    <pre><code>
+$('button.insert').on('click', function() {
+  var curr = $.jCarouselLite.curr;
+  var newSlide = '&lt;li class="slide">' +
+      $('#to-insert').html() +
+      '&lt;/li>';
+
+  <span class="ct">// Insert the slide after the current slide</span>
+  $slideshow.find('li.slide').eq(curr)
+  .after(newSlide);
+
+  <span class="ct">// Trigger the refresh
+  // with the second argument set to ['all']
+  </span>
+  $slideshow.trigger('refreshCarousel', ['all']);
+});
+    </code></pre>
+  </div>
+</div>
+</body>
+</html>
