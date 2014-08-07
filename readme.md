@@ -68,6 +68,26 @@ There are quite a few other settings that you can use to customize it. Each will
 
 You can specify all the options shown below as object properties.
 
+### `containerSelector` : string - default is "ul" 
+
+*New as of jCarouselLite 1.9.* Allows the "ul" container to be customized using any valid selector expression to match elements against. The plugin will use the *first* element within the carousel div that matches the selector. 
+
+```javascript
+$('div.carousel').jCarouselLite({
+  containerSelector: '.my-slide-container'
+});
+```
+
+### `itemSelector` : string - default is "li" 
+
+*New as of jCarouselLite 1.9.* Allows the "li" slides to be customized using any valid selector expression to match elements against. The plugin will use elements that match the `itemSelector` string **and** are direct children of the `containerSelector`.
+
+```javascript
+$('div.carousel').jCarouselLite({
+  itemSelector: '.my-slide'
+});
+```
+
 ### `responsive` : Boolean - default is false
 
 New as of jCarouselLite 1.8. Allows the height and width of the carousel and its list items to be reset when the window size changes (if `autoCSS` and/or `autoWidth` set to `true`). Adds an event handler on the window resize event that triggers the `refreshCarousel` custom event when the window stops being resized. See [Responsive Carousels](#responsive-carousels) for more information.

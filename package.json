@@ -1,6 +1,6 @@
 {
   "name": "jcarousellite",
-  "version": "1.8.11",
+  "version": "1.9.0",
   "scripts": {
     "test": "./node_modules/.bin/grunt"
   },

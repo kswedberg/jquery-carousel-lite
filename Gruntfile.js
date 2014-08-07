@@ -25,6 +25,8 @@ module.exports = function(grunt) {
           '<%= pkg.homepage ? " * " + pkg.homepage + "\\n" : "" %>' +
           ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>' +
           '<%= "\\n" %>' +
+          ' * based on the original by Ganeshji Marwaha (gmarwaha.com)' +
+          '<%= "\\n" %>' +
           ' * Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %>' +
           ' (<%= _.pluck(pkg.licenses, "url").join(", ") %>)' +
           '<%= "\\n" %>' + ' */' +
