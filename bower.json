@@ -1,6 +1,19 @@
 {
   "name": "jquery.jcarousellite",
-  "version": "1.9.1",
+  "version": "1.9.2",
+  "title": "jCarousel Lite",
+  "description": "A jQuery carousel plugin based on jCarouselLite by Ganeshji Marwaha",
+  "author": {
+    "name": "Karl Swedberg",
+    "email": "kswedberg@gmail.com",
+    "url": "http://www.learningjquery.com/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT"
+    }
+  ],
   "dependencies": {
     "jquery": ">=1.4"
   },
@@ -11,7 +24,7 @@
     "test/",
     "src/",
     "Gruntfile.js",
-    "*.json",
-    "readme.md"
+    "package.json",
+    "jcarousellite.jquery.json"
   ]
 }

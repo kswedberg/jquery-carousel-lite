@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.9.1 - 2014-08-07
+ * jCarousel Lite - v1.9.2 - 2014-08-18
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2014 Karl Swedberg
  * based on the original by Ganeshji Marwaha (gmarwaha.com)
@@ -9,7 +9,7 @@
 
 (function($) {
   $.jCarouselLite = {
-    version: '1.9.1',
+    version: '1.9.2',
     curr: 0
   };
 
@@ -104,8 +104,12 @@
         activeBtnTypes.go = 1;
       }
 
-      var setActiveBtn = function(i, types) {
+      var setActive = function(i, types) {
         i = ceil(i);
+
+        // Set active class on the appropriate carousel item
+        li.filter('.' + o.activeClass).removeClass(o.activeClass);
+        li.eq(i).addClass(o.activeClass);
 
         var activeBtnIndex = (i - activeBtnOffset) % tl,
             visEnd = activeBtnIndex + visibleFloor;
@@ -279,7 +283,7 @@
       }
 
       // set the active class on the btn corresponding to the "start" li
-      setActiveBtn(start, activeBtnTypes);
+      setActive(start, activeBtnTypes);
 
       if (o.mouseWheel && div.mousewheel) {
         div.bind('mousewheel.jc', function(e, d) {
@@ -317,8 +321,6 @@
         if (o.beforeStart) {
           o.beforeStart.call(div, vis(), direction);
         }
-
-        li.removeClass(o.activeClass);
 
         // If circular and we are in first or last, then go to the other end
         if (o.circular) {
@@ -368,7 +370,7 @@
 
         // if btnGo, set the active class on the btnGo element corresponding to the first visible carousel li
         // if autoPager, set active class on the appropriate autopager element
-        setActiveBtn(curr, activeBtnTypes);
+        setActive(curr, activeBtnTypes);
 
         $.jCarouselLite.curr = curr;
 
@@ -388,8 +390,6 @@
           }
           running = false;
         });
-
-        li.eq(curr).addClass(o.activeClass);
 
         return curr;
       } // end go function
