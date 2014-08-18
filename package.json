@@ -23,15 +23,14 @@
     "jquery": ">=1.4"
   },
   "devDependencies": {
-    "grunt-cli": "~0.1.0",
-    "grunt-contrib-jshint": "~0.1.1rc6",
-    "grunt-contrib-uglify": "~0.1.1rc6",
-    "grunt-shell": "~0.2",
-    "grunt-contrib-concat": "~0.1.2rc6",
-    "grunt-version": "~0.2.1",
-    "node-syntaxhighlighter": "~0.8.1",
-    "grunt-contrib-watch": "~0.4.4",
-    "marked": "~0.3.2"
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-version": "^0.3.0",
+    "marked": "^0.3.2",
+    "node-syntaxhighlighter": "^0.8.1"
   },
   "licenses": [
     {

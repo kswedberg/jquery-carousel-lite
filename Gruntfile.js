@@ -63,19 +63,6 @@ module.exports = function(grunt) {
         tasks: ['docs']
       }
     },
-    shell: {
-      rsync: {
-        // command gets modified by rsync task.
-        command: 'rsync',
-        stdout: true
-      }
-    },
-    setshell: {
-      rsync: {
-        file: 'gitignore/settings.json',
-        cmdAppend: '<%= pkg.name %>/'
-      }
-    },
     jshint: {
       all: ['Gruntfile.js', 'src/**/*.js'],
       options: {
@@ -97,25 +84,13 @@ module.exports = function(grunt) {
       }
     },
     version: {
-      same: {
+      all: {
         src: ['src/*.js', '*.json']
       },
-      patch: {
-        src: [
-          '<%= pkg.name %>.jquery.json',
-          'package.json',
-          'src/jquery.<%= pkg.name %>.js',
-          '<%= pkg.name %>.js'
-        ],
-        options: {
-          release: 'patch'
-        }
-      },
-      bannerPatch: {
+      banner: {
         src: ['<%= pkg.name %>.js'],
         options: {
-          prefix: 'Lite - v',
-          release: 'patch'
+          prefix: 'Lite - v'
         }
       }
     }
@@ -150,7 +125,7 @@ module.exports = function(grunt) {
         pkg = grunt.file.readJSON('jcarousellite.jquery.json'),
         json = {};
 
-    ['name', 'version', 'dependencies'].forEach(function(el) {
+    ['name', 'version', 'title', 'description', 'author', 'licenses', 'dependencies'].forEach(function(el) {
       json[el] = pkg[el];
     });
 
@@ -162,8 +137,8 @@ module.exports = function(grunt) {
         'test/',
         'src/',
         'Gruntfile.js',
-        '*.json',
-        'readme.md'
+        'package.json',
+        'jcarousellite.jquery.json'
       ]
     });
     json.name = 'jquery.' + json.name;
@@ -172,32 +147,12 @@ module.exports = function(grunt) {
     grunt.log.writeln( 'File "' + comp + ' updated."' );
   });
 
-  grunt.registerTask( 'rsync', 'deploy site', function() {
-    var file, cmd,
-        path = 'gitignore/settings.json';
-
-    if ( grunt.file.exists(path) ) {
-      file = grunt.file.readJSON(path);
-      cmd = file.command + grunt.config('pkg.name') + '/';
-      grunt.config('shell.rsync.command', cmd);
-      grunt.log.writeln(cmd);
-    } else {
-
-      grunt.log
-      .subhead('Oops!')
-      .writeln('no command property found in ' + path);
-    }
-  });
-
   grunt.registerTask('docs', function() {
     var doc,
         readme = grunt.file.read('readme.md'),
         head = grunt.template.process(grunt.file.read('lib/tpl/header.tpl')),
         foot = grunt.file.read('lib/tpl/footer.tpl');
 
-    // Stupid hack putting function foo() {} into each js code block
-    // because otherwise the highlight.js script isn't highlighting them.
-    // readme = readme.replace(/(```javascript\s*)/g, '$1function foo() {}');
     // Convert to markdown (with the highlight.js processing in setOptions.highlight)
     doc = marked(readme);
     // Remove function foo() {} after processing
@@ -207,15 +162,12 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask( 'deploy', ['setshell:rsync', 'shell:rsync']);
-
-  grunt.registerTask('build', ['jshint', 'concat', 'version:same', 'bower', 'uglify', 'docs']);
-  grunt.registerTask('patch', ['jshint', 'concat', 'version:bannerPatch', 'version:patch', 'bower', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'version', 'concat', 'bower', 'uglify', 'docs']);
+  grunt.registerTask('patch', ['jshint', 'version::patch', 'concat', 'bower', 'uglify']);
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-version');
-  grunt.loadNpmTasks('grunt-shell');
 };
