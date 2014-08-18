@@ -1,4 +1,4 @@
-/*global module:false,test:false,equal:false,deepEqual:false,asyncTest:false,start:false,stop:false */
+/*global module:false,test:false,equal:false,deepEqual:false,asyncTest:false,start:false */
 jQuery(document).ready(function($) {
 
   module('carousels', {
@@ -118,7 +118,7 @@ jQuery(document).ready(function($) {
   });
 
 
-  module('activeClass and visClsas options', {
+  module('activeClass and visClass options', {
     setup: function() {
       this.slideshow = $('div.slideshow').eq(0);
       this.slides = this.slideshow.find('ul.slides');
@@ -133,23 +133,31 @@ jQuery(document).ready(function($) {
 
       this.slideshow.jCarouselLite({
         auto: true,
+        circular: false,
         visible: 2,
         speed: 2,
         timeout: 200,
         directional: true,
         btnGo: $('a.go')
       });
+    },
+    teardown: function() {
+      this.slideshow.trigger('endCarousel');
     }
   });
 
   asyncTest('active and vis classes correct when carousel auto-transitions', function() {
-    equal($('a.go.active').index(), 0, 'first "go button" is initially active');
+    var slides = this.slides;
     var vis = $('a.go.vis').map(function() {
       return $(this).index();
     }).get();
+
+    equal(slides.find('li.active').index(), 0, 'first slide is initially active');
+    equal($('a.go.active').index(), 0, 'first "go button" is initially active');
     deepEqual(vis, [0, 1], '2 "go buttons" represent initially visible items');
 
     setTimeout(function() {
+      equal(slides.find('li.active').index(), 1, 'second slide active after autoscrolling forward once');
       equal($('a.go.active').index(), 1, 'second "go button" active after autoscrolling forward once');
       vis = $('a.go.vis').map(function() {
         return $(this).index();
