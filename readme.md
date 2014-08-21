@@ -484,7 +484,7 @@ Updates the dimensions of the carousel and, optionally (as of 1.9.1), the plugin
 $('div.carousel').trigger('refreshCarousel', '[all]')
 ```
 
-To get a better sense of dynamically adding slides to a carousel, see this <a href="http://plugins.learningjquery.com/demo/refresh.html">example of `refreshCarousel`</a>
+To get a better sense of dynamically adding slides to a carousel, see this <a href="http://plugins.learningjquery.com/jcarousellite/demo/refresh.html">example of `refreshCarousel`</a>
 
 ```javascript
 $('div.carousel').trigger('endCarousel')
