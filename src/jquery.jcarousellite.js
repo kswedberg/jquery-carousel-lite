@@ -1,7 +1,7 @@
 
 (function($) {
   $.jCarouselLite = {
-    version: '1.9.2',
+    version: '1.9.3',
     curr: 0
   };
 
@@ -90,7 +90,11 @@
         $btnsGo.each(function(i) {
           $(this).bind('click.jc', function(event) {
             event.preventDefault();
-            return go(o.circular ? visibleNum + i : i);
+            var btnInfo = {
+              btnGo: this,
+              btnGoIndex: i
+            };
+            return go(o.circular ? visibleNum + i : i, btnInfo);
           });
         });
         activeBtnTypes.go = 1;
@@ -311,7 +315,7 @@
             offset = settings.offset || 0;
 
         if (o.beforeStart) {
-          o.beforeStart.call(div, vis(), direction);
+          o.beforeStart.call(div, vis(), direction, settings);
         }
 
         // If circular and we are in first or last, then go to the other end
@@ -368,7 +372,7 @@
 
         if (prev === curr && !settings.force) {
           if (o.afterEnd) {
-            o.afterEnd.call(div, vis(), direction);
+            o.afterEnd.call(div, vis(), direction, settings);
           }
           return curr;
         }
@@ -378,7 +382,7 @@
         aniProps[animCss] = -(curr * styles.liSize);
         ul.anim(aniProps, speed, o.easing, function() {
           if (o.afterEnd) {
-            o.afterEnd.call(div, vis(), direction);
+            o.afterEnd.call(div, vis(), direction, settings);
           }
           running = false;
         });

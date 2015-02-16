@@ -2,7 +2,7 @@
 
 By [Karl Swedberg](http://www.learningjquery.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
 
-This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup. Check out a [bare-bones demo](http://plugins.learningjquery.com/jcarousellite/demo/).
+This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup. 
 
 ## Getting Started
 
@@ -424,10 +424,11 @@ $('div.carousel').jCarouselLite({
 If you want to do some logic before the slide starts and after the slide ends,
 you can register these 2 callbacks. Inside the functions, `this` is the
 div on which the .jCarouselLite() method is called.
-The functions will be passed two arguments:
+The functions will be passed three arguments:
 
 1. Array of elements that are visible at the time of callback.
 2. Boolean indicating whether the direction is forward (`true`) or backward (`false`);
+3. Object containing information that differs depending on what triggered the advance. If triggered by clicking one of the `btnGo` elements, for example, the object has two properties: `btnGo`, which references the clicked DOM element, and `btnGoIndex`, presenting the index of the clicked DOM element in relation to the other "btnGo" buttons.
 
 ```javascript
 $('div.carousel').jCarouselLite({
