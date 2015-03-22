@@ -39,7 +39,8 @@
     }
   ],
   "keywords": [
-    "jQuery",
+    "jquery-plugin",
+    "ecosystem:jquery",
     "carousel",
     "slideshow"
   ]
