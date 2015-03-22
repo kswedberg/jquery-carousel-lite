@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jCarousel Lite Plugin Tests</title>
+  <link rel="stylesheet" href="qunit/qunit.css" media="screen">
+  <style type="text/css">
+  body {
+    font-size: 13px;
+    font-family: Helvetica, Arial, Verdana, sans-serif;
+    line-height: 1.3em;
+  }
+  .container {
+    width: 840px;
+    margin: 0 auto;
+  }
+  .slideshow {
+    width: 800px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 5px solid #999;
+  }
+  .slides {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  .slide {
+    float: left;
+    width: 360px;
+    height: 150px;
+    padding: 20px;
+  }
+  #qunit-fixture {
+/*    position: static;
+    top: 0;
+    left: 0;
+*/
+  }
+  </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script>!window.jQuery && document.write(unescape('%3Cscript src="../lib/jquery/jquery.js"%3E%3C/script%3E'));</script>
+
+  <script src="qunit/qunit.js"></script>
+  <script src="../jcarousellite.js"></script>
+  <script src="tests.js"></script>
+
+</head>
+<body>
+  <h1 id="qunit-header">jCarousel Lite Plugin Tests</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture">
+    <div class="slideshow">
+      <ul class="slides">
+
+        <li class="slide">
+          <div class="img-wrapper">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>Green Roof</span></span>
+          </div>
+        </li>
+
+
+        <li class="slide">
+          <div class="img-wrapper"> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>Zeeland</span></span>
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">
+            In culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>CityFlats Hotel</span></span>
+
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+        </li>
+
+      </ul>
+      <a href="#" class="prev">&lt;</a>
+      <a href="#" class="next">&gt;</a>
+    </div>
+
+    <div class="slideshow">
+      <ul class="slides">
+
+        <li class="slide">
+          <div class="img-wrapper">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>GRCC Green Roof</span></span>
+          </div>
+        </li>
+
+
+        <li class="slide">
+          <div class="img-wrapper"> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>Zeeland Natatorium</span></span>
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">
+            In culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>CityFlats Hotel</span></span>
+
+          </div>
+        </li>
+
+        <li class="slide">
+          <div class="img-wrapper">                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <span class="description"><span>Calvin College</span></span>
+          </div>
+        </li>
+
+      </ul>
+      <a href="#" class="prev">&lt;</a>
+      <a href="#" class="next">&gt;</a>
+    </div>
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "jcarousellite",
+  "title": "jCarousel Lite",
+  "description": "A jQuery carousel plugin based on jCarouselLite by Ganeshji Marwaha",
+  "version": "1.9.3",
+  "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
+  "author": {
+    "name": "Karl Swedberg",
+    "email": "kswedberg@gmail.com",
+    "url": "http://www.learningjquery.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kswedberg/jquery-carousel-lite.git"
+  },
+  "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
+  "bugs": {
+    "url": "https://github.com/kswedberg/jquery-carousel-lite/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.4"
+  },
+  "keywords": []
+}
