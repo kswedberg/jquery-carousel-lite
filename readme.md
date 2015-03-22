@@ -64,6 +64,10 @@ There are quite a few other settings that you can use to customize it. Each will
 * [Events](#events)
 * [Responsive Carousels](#responsive-carousels)
 
+## Demo
+
+You can view a bare-bones demo at [kswedberg.github.io/jquery-carousel-lite/demo/](https://kswedberg.github.io/jquery-carousel-lite/demo/)
+
 ## Options <a id="options">
 
 You can specify all the options shown below as object properties.
