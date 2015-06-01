@@ -102,6 +102,13 @@ code {
 
       $slideshows.eq(0).jCarouselLite(carousel1Options);
 
+      $('.pause').on('click', function() {
+        $slideshows.eq(0).trigger('pauseCarousel');
+      });
+      $('.resume').on('click', function() {
+        $slideshows.eq(0).trigger('resumeCarousel');
+      });
+
       $slideshows.eq(1).jCarouselLite(carousel2Options);
 
       $slideshows.eq(2).jCarouselLite(carousel3Options);
@@ -152,7 +159,10 @@ code {
     <a href="#" class="prev">&lt;</a>
     <a href="#" class="next">&gt;</a>
   </div>
-
+  <p>
+    <button class="pause">Pause</button>
+    <button class="resume">Resume</button>
+  </p>
   <div class="slideshow">
     <h2>Example using numbered navigation:</h2>
     <ul class="slides">
