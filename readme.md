@@ -248,6 +248,10 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
+### `pause`: Boolean - default is true
+
+When both `pause` and `auto` are `true`, scrolling will pause when the mouse enters the carousel and resume when the mouse leaves the carousel.
+
 ### `directional`: Boolean - default is false
 
 If the `directional` option is set to `true`, autoscrolling changes direction  when the user clicks the "previous" or "next" button
@@ -262,6 +266,10 @@ $('div.carousel').jCarouselLite({
   timeout: 8000
 });
 ```
+
+### `autoStop` : Number - default is Infinity
+
+The number of iterations before an auto carousel will stop automatically advancing. If the `circular` option is set to `false`, the carousel will not continue advancing after the last item has been reached, even if the number of iterations has not yet reached the `autoStop` value.
 
 ### `speed` : Number - default is 200
 
