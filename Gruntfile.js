@@ -1,14 +1,16 @@
-/*global module:false*/
+/* global module:false*/
 module.exports = function(grunt) {
 
   var _ = grunt.util._;
   var marked = require('marked');
   // var hl = require('highlight').Highlight;
   var hl = require('node-syntaxhighlighter');
+
   marked.setOptions({
     highlight: function(code, lang) {
 
       lang = hl.getLanguage(lang);
+
       return hl.highlight(code, lang);
     },
     gfm: true
@@ -63,6 +65,12 @@ module.exports = function(grunt) {
         tasks: ['docs']
       }
     },
+    eslint: {
+      all: ['Gruntfile.js', 'src/**/*.js'],
+      options: {
+        configFile: '.eslintrc.js'
+      }
+    },
     jshint: {
       all: ['Gruntfile.js', 'src/**/*.js'],
       options: {
@@ -96,34 +104,35 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerMultiTask( 'setshell', 'Set grunt shell commands', function() {
-    var settings, cmd,
-        tgt = this.target,
-        cmdLabel = 'shell.' + tgt + '.command',
-        file = this.data.file,
-        append = this.data.cmdAppend || '';
+  grunt.registerMultiTask('setshell', 'Set grunt shell commands', function() {
+    var settings, cmd;
+    var tgt = this.target;
+    var cmdLabel = 'shell.' + tgt + '.command';
+    var file = this.data.file;
+    var append = this.data.cmdAppend || '';
 
-    if ( !grunt.file.exists(file) ) {
+    if (!grunt.file.exists(file)) {
       grunt.warn('File does not exist: ' + file);
     }
 
     settings = grunt.file.readJSON(file);
+
     if (!settings[tgt]) {
       grunt.warn('No ' + tgt + ' property found in ' + file);
     }
 
     cmd = settings[tgt] + append;
     grunt.config(cmdLabel, cmd);
-    grunt.log.writeln( ('Setting ' + cmdLabel + ' to:').cyan );
+    grunt.log.writeln(('Setting ' + cmdLabel + ' to:').cyan);
 
     grunt.log.writeln(cmd);
 
   });
 
-  grunt.registerTask( 'bower', 'update bower.json', function() {
-    var comp = grunt.config('bowerjson'),
-        pkg = grunt.file.readJSON('jcarousellite.jquery.json'),
-        json = {};
+  grunt.registerTask('bower', 'update bower.json', function() {
+    var comp = grunt.config('bowerjson');
+    var pkg = grunt.file.readJSON('jcarousellite.jquery.json');
+    var json = {};
 
     ['name', 'version', 'title', 'description', 'author', 'licenses', 'dependencies'].forEach(function(el) {
       json[el] = pkg[el];
@@ -143,15 +152,15 @@ module.exports = function(grunt) {
     });
     json.name = 'jquery.' + json.name;
 
-    grunt.file.write( comp, JSON.stringify(json, null, 2) );
-    grunt.log.writeln( 'File "' + comp + ' updated."' );
+    grunt.file.write(comp, JSON.stringify(json, null, 2));
+    grunt.log.writeln('File "' + comp + ' updated."');
   });
 
   grunt.registerTask('docs', function() {
-    var doc,
-        readme = grunt.file.read('readme.md'),
-        head = grunt.template.process(grunt.file.read('lib/tpl/header.tpl')),
-        foot = grunt.file.read('lib/tpl/footer.tpl');
+    var doc;
+    var readme = grunt.file.read('readme.md');
+    var head = grunt.template.process(grunt.file.read('lib/tpl/header.tpl'));
+    var foot = grunt.file.read('lib/tpl/footer.tpl');
 
     // Convert to markdown (with the highlight.js processing in setOptions.highlight)
     doc = marked(readme);
@@ -162,12 +171,13 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.registerTask('build', ['jshint', 'version', 'concat', 'bower', 'uglify', 'docs']);
-  grunt.registerTask('patch', ['jshint', 'version::patch', 'concat', 'bower', 'uglify']);
+  grunt.registerTask('build', ['eslint', 'version', 'concat', 'bower', 'uglify', 'docs']);
+  grunt.registerTask('patch', ['eslint', 'version::patch', 'concat', 'bower', 'uglify']);
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-version');
 };

@@ -8,47 +8,51 @@
   $.fn.anim = typeof $.fn.velocity !== 'undefined' ? $.fn.velocity : $.fn.animate;
 
   $.fn.jCarouselLite = function(options) {
-    var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options),
-        ceil = Math.ceil,
-        mabs = Math.abs;
+    var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options);
+    var ceil = Math.ceil;
+    var mabs = Math.abs;
 
     this.each(function() {
 
       var beforeCirc, afterCirc, pageNav, pageNavCount, resize,
-          li, itemLength, curr,
-          prepResize, touchEvents, $btnsGo,
-          isTouch = 'ontouchend' in document,
-          styles = { div: {}, ul: {}, li: {} },
-          // firstCss = true,
-          running = false,
-          animCss = o.vertical ? 'top': 'left',
-          aniProps = {},
-          sizeProp = o.vertical ? 'height': 'width',
-          outerMethod = o.vertical ? 'outerHeight': 'outerWidth',
-          self = this,
-          div = $(this),
-          ul = div.find(o.containerSelector).eq(0),
-          tLi = ul.children(o.itemSelector),
-          tl = tLi.length,
-          visibleNum = o.visible,
-          // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
-          visibleCeil = ceil(visibleNum),
-          visibleFloor = Math.floor(visibleNum),
-          start = Math.min(o.start, tl - 1),
-          direction = 1,
-          activeBtnOffset = 0,
-          activeBtnTypes = {},
-          startTouch = {},
-          endTouch = {},
-          axisPrimary = o.vertical ? 'y' : 'x',
-          axisSecondary = o.vertical ? 'x' : 'y';
-
-
+        li, itemLength, curr,
+        prepResize, touchEvents, $btnsGo;
+      var isTouch = 'ontouchend' in document;
+      var styles = {div: {}, ul: {}, li: {}};
+      var running = false;
+      var animCss = o.vertical ? 'top' : 'left';
+      var aniProps = {};
+      var sizeProp = o.vertical ? 'height' : 'width';
+      var outerMethod = o.vertical ? 'outerHeight' : 'outerWidth';
+      var self = this;
+      var div = $(this);
+      var ul = div.find(o.containerSelector).eq(0);
+      var tLi = ul.children(o.itemSelector);
+      var tl = tLi.length;
+      var visibleNum = o.visible;
+      // need visibleCeil and visibleFloor in case we want a fractional number of visible items at a time
+      var visibleCeil = ceil(visibleNum);
+      var visibleFloor = Math.floor(visibleNum);
+      var start = Math.min(o.start, tl - 1);
+      var direction = 1;
+      var activeBtnOffset = 0;
+      var activeBtnTypes = {};
+      var startTouch = {};
+      var endTouch = {};
+      var axisPrimary = o.vertical ? 'y' : 'x';
+      var axisSecondary = o.vertical ? 'x' : 'y';
       var init = o.init.call(this, o, tLi);
+
       // bail out for this carousel if the o.init() callback returns `false`
-      if ( init === false ) {
+      if (init === false) {
         return;
       }
+
+      var fixIds = function(i) {
+        if (this.id) {
+          this.id += i;
+        }
+      };
 
       var makeCircular = function() {
         if (beforeCirc && beforeCirc.length) {
@@ -57,12 +61,16 @@
         }
         tLi = ul.children(o.liSelector);
         tl = tLi.length;
-        beforeCirc = tLi.slice( tl - visibleCeil ).clone(true).each(fixIds);
-        afterCirc = tLi.slice( 0, visibleCeil ).clone(true).each(fixIds);
-        ul.prepend( beforeCirc )
-          .append( afterCirc );
+        beforeCirc = tLi.slice(tl - visibleCeil).clone(true).each(fixIds);
+        afterCirc = tLi.slice(0, visibleCeil).clone(true).each(fixIds);
+        ul.prepend(beforeCirc)
+          .append(afterCirc);
         li = ul.children(o.liSelector);
         itemLength = li.length;
+      };
+
+      var iterations = function(itemLength, options) {
+        return options.autoStop && (options.circular ? options.autoStop : Math.min(itemLength, options.autoStop));
       };
 
       div.data('dirjc', direction);
@@ -79,27 +87,6 @@
         itemLength = li.length;
       }
 
-      if (o.btnGo && o.btnGo.length) {
-
-        if ( $.isArray(o.btnGo) && typeof o.btnGo[0] === 'string' ) {
-          $btnsGo = $( o.btnGo.join() );
-        } else {
-          $btnsGo = $(o.btnGo);
-        }
-
-        $btnsGo.each(function(i) {
-          $(this).bind('click.jc', function(event) {
-            event.preventDefault();
-            var btnInfo = {
-              btnGo: this,
-              btnGoIndex: i
-            };
-            return go(o.circular ? visibleNum + i : i, btnInfo);
-          });
-        });
-        activeBtnTypes.go = 1;
-      }
-
       var setActive = function(i, types) {
         i = ceil(i);
 
@@ -107,10 +94,10 @@
         li.filter('.' + o.activeClass).removeClass(o.activeClass);
         li.eq(i).addClass(o.activeClass);
 
-        var activeBtnIndex = (i - activeBtnOffset) % tl,
-            visEnd = activeBtnIndex + visibleFloor;
+        var activeBtnIndex = (i - activeBtnOffset) % tl;
+        var visEnd = activeBtnIndex + visibleFloor;
 
-        if ( types.go ) {
+        if (types.go) {
           // remove active and visible classes from all the go buttons
           $btnsGo.removeClass(o.activeClass).removeClass(o.visibleClass);
           // add active class to the go button corresponding to the first visible slide
@@ -118,15 +105,16 @@
           // add visible class to go buttons corresponding to all visible slides
           $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
 
-          if ( visEnd > $btnsGo.length ) {
+          if (visEnd > $btnsGo.length) {
             $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
           }
         }
 
-        if ( types.pager ) {
+        if (types.pager) {
           pageNav.removeClass(o.activeClass);
-          pageNav.eq( ceil(activeBtnIndex / visibleNum) ).addClass(o.activeClass);
+          pageNav.eq(ceil(activeBtnIndex / visibleNum)).addClass(o.activeClass);
         }
+
         return activeBtnIndex;
       };
 
@@ -144,6 +132,7 @@
             width: '',
             height: ''
           };
+
           // bail out with the reset styles
           return styles;
         }
@@ -165,9 +154,9 @@
           height: li.height()
         };
         styles.liSize = liSize;
+
         return styles;
       };
-
 
       var setDimensions = function(reset) {
         var css, tmpDivSize;
@@ -211,17 +200,134 @@
 
       setDimensions();
 
+      var vis = function vis() {
+        return li.slice(curr).slice(0, visibleCeil);
+      };
+
+      $.jCarouselLite.vis = vis;
+
+      var go = function(to, settings) {
+        if (running) {
+          return false;
+        }
+        settings = settings || {};
+        var prev = curr;
+        var direction = to > curr;
+        var speed = typeof settings.speed !== 'undefined' ? settings.speed : o.speed;
+        // offset appears if touch moves slide;
+        var offset = settings.offset || 0;
+
+        if (o.beforeStart) {
+          o.beforeStart.call(div, vis(), direction, settings);
+        }
+
+        // If circular and we are in first or last, then go to the other end
+        if (o.circular) {
+          if (to > curr && to > itemLength - visibleCeil) {
+
+            // temporarily set "to" as the difference
+            to = to - curr;
+            curr = curr % tl;
+
+            // use the difference to make "to" correct relative to curr
+            to = curr + to;
+            ul.css(animCss, (-curr * styles.liSize) - offset);
+          } else if (to < curr && to < 0) {
+            curr += tl;
+            to += tl;
+            ul.css(animCss, (-curr * styles.liSize) - offset);
+          }
+
+          curr = to + (to % 1);
+
+        // If non-circular and "to" points beyond first or last, we change to first or last.
+        } else {
+          if (to < 0) {
+            to = 0;
+          } else if (to > itemLength - visibleFloor) {
+            to = itemLength - visibleFloor;
+          }
+
+          curr = to;
+
+          if (curr === 0 && o.first) {
+            o.first.call(this, vis(), direction);
+          }
+
+          if (curr === itemLength - visibleFloor && o.last) {
+            o.last.call(this, vis(), direction);
+          }
+
+          // Disable buttons when the carousel reaches the last/first, and enable when not
+          if (o.btnPrev) {
+            o.$btnPrev.toggleClass(o.btnDisabledClass, curr === 0);
+          }
+
+          if (o.btnNext) {
+            o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
+          }
+        }
+
+        // if btnGo, set the active class on the btnGo element corresponding to the first visible carousel li
+        // if autoPager, set active class on the appropriate autopager element
+        setActive(curr, activeBtnTypes);
+
+        $.jCarouselLite.curr = curr;
+
+        if (prev === curr && !settings.force) {
+          if (o.afterEnd) {
+            o.afterEnd.call(div, vis(), direction, settings);
+          }
+
+          return curr;
+        }
+
+        running = true;
+
+        aniProps[animCss] = -(curr * styles.liSize);
+        ul.anim(aniProps, speed, o.easing, function() {
+          if (o.afterEnd) {
+            o.afterEnd.call(div, vis(), direction, settings);
+          }
+          running = false;
+        });
+
+        return curr;
+      }; // end go function
+
+      if (o.btnGo && o.btnGo.length) {
+
+        if ($.isArray(o.btnGo) && typeof o.btnGo[0] === 'string') {
+          $btnsGo = $(o.btnGo.join());
+        } else {
+          $btnsGo = $(o.btnGo);
+        }
+
+        $btnsGo.each(function(i) {
+          $(this).bind('click.jc', function(event) {
+            event.preventDefault();
+            var btnInfo = {
+              btnGo: this,
+              btnGoIndex: i
+            };
+
+            return go(o.circular ? visibleNum + i : i, btnInfo);
+          });
+        });
+        activeBtnTypes.go = 1;
+      }
+
       // set up timed advancer
-      var advanceCounter = 0,
-          autoStop = iterations(tl, o),
-          autoScrollBy = typeof o.auto === 'number' ? o.auto : o.scroll;
+      var advanceCounter = 0;
+      var autoStop = iterations(tl, o);
+      var autoScrollBy = typeof o.auto === 'number' ? o.auto : o.scroll;
 
       var advancer = function() {
         self.setAutoAdvance = setTimeout(function() {
 
           if (!autoStop || autoStop > advanceCounter) {
             direction = div.data('dirjc');
-            go( curr + (direction * autoScrollBy), {auto: true} );
+            go(curr + (direction * autoScrollBy), {auto: true});
             advanceCounter++;
             advancer();
           }
@@ -229,19 +335,21 @@
       };
 
       // bind click handlers to prev and next buttons, if set
-      $.each([ 'btnPrev', 'btnNext' ], function(index, btn) {
-        if ( o[btn] ) {
-          o['$' + btn] = $.isFunction( o[btn] ) ? o[btn].call( div[0] ) : $( o[btn] );
+      $.each(['btnPrev', 'btnNext'], function(index, btn) {
+        if (o[btn]) {
+          o['$' + btn] = $.isFunction(o[btn]) ? o[btn].call(div[0]) : $(o[btn]);
           o['$' + btn].bind('click.jc', function(event) {
             event.preventDefault();
             var step = index === 0 ? curr - o.scroll : curr + o.scroll;
+
             if (o.directional) {
               // set direction of subsequent scrolls to:
               //  1 if "btnNext" clicked
               // -1 if "btnPrev" clicked
-              div.data( 'dirjc', (index ? 1 : -1) );
+              div.data('dirjc', (index ? 1 : -1));
             }
-            return go( step );
+
+            return go(step);
           });
         }
       });
@@ -251,7 +359,7 @@
           o.$btnPrev.addClass(o.btnDisabledClass);
         }
 
-        if ( o.btnNext && start + visibleFloor >= itemLength ) {
+        if (o.btnNext && start + visibleFloor >= itemLength) {
           o.$btnNext.addClass(o.btnDisabledClass);
         }
       }
@@ -259,18 +367,22 @@
       if (o.autoPager) {
         pageNavCount = ceil(tl / visibleNum);
         pageNav = [];
-        for (var i=0; i < pageNavCount; i++) {
-          pageNav.push('<li><a href="#">' + (i+1) + '</a></li>');
+
+        for (var i = 0; i < pageNavCount; i++) {
+          pageNav.push('<li><a href="#">' + (i + 1) + '</a></li>');
         }
+
         if (pageNav.length > 1) {
           pageNav = $('<ul>' + pageNav.join('') + '</ul>').appendTo(o.autoPager).find('li');
           pageNav.find('a').each(function(i) {
             $(this).bind('click.jc', function(event) {
               event.preventDefault();
               var slide = i * visibleNum;
+
               if (o.circular) {
                 slide += visibleNum;
               }
+
               return go(slide);
             });
           });
@@ -299,97 +411,6 @@
         advancer();
       }
 
-      function vis() {
-        return li.slice(curr).slice(0, visibleCeil);
-      }
-
-      $.jCarouselLite.vis = vis;
-
-      function go(to, settings) {
-        if (running) { return false; }
-        settings = settings || {};
-        var prev = curr,
-            direction = to > curr,
-            speed = typeof settings.speed !== 'undefined' ? settings.speed : o.speed,
-            // offset appears if touch moves slides
-            offset = settings.offset || 0;
-
-        if (o.beforeStart) {
-          o.beforeStart.call(div, vis(), direction, settings);
-        }
-
-        // If circular and we are in first or last, then go to the other end
-        if (o.circular) {
-          if (to > curr && to > itemLength - visibleCeil) {
-
-            // temporarily set "to" as the difference
-            to = to - curr;
-            curr = curr % tl;
-
-            // use the difference to make "to" correct relative to curr
-            to = curr + to;
-            ul.css(animCss, (-curr * styles.liSize) - offset);
-          } else if ( to < curr && to < 0) {
-            curr += tl;
-            to += tl;
-            ul.css(animCss, (-curr * styles.liSize) - offset);
-          }
-
-          curr = to + (to % 1);
-
-        // If non-circular and "to" points beyond first or last, we change to first or last.
-        } else {
-          if (to < 0) {
-            to = 0;
-          } else if  (to > itemLength - visibleFloor) {
-            to = itemLength - visibleFloor;
-          }
-
-          curr = to;
-
-          if (curr === 0 && o.first) {
-            o.first.call(this, vis(), direction);
-          }
-
-          if (curr === itemLength - visibleFloor && o.last) {
-            o.last.call(this, vis(), direction);
-          }
-
-          // Disable buttons when the carousel reaches the last/first, and enable when not
-          if (o.btnPrev) {
-            o.$btnPrev.toggleClass(o.btnDisabledClass, curr === 0);
-          }
-          if (o.btnNext) {
-            o.$btnNext.toggleClass(o.btnDisabledClass, curr === itemLength - visibleFloor);
-          }
-        }
-
-        // if btnGo, set the active class on the btnGo element corresponding to the first visible carousel li
-        // if autoPager, set active class on the appropriate autopager element
-        setActive(curr, activeBtnTypes);
-
-        $.jCarouselLite.curr = curr;
-
-        if (prev === curr && !settings.force) {
-          if (o.afterEnd) {
-            o.afterEnd.call(div, vis(), direction, settings);
-          }
-          return curr;
-        }
-
-        running = true;
-
-        aniProps[animCss] = -(curr * styles.liSize);
-        ul.anim(aniProps, speed, o.easing, function() {
-          if (o.afterEnd) {
-            o.afterEnd.call(div, vis(), direction, settings);
-          }
-          running = false;
-        });
-
-        return curr;
-      } // end go function
-
       // bind custom events so they can be triggered by user
       div
       .bind('go.jc', function(e, to, settings) {
@@ -400,7 +421,7 @@
 
         var todir = typeof to === 'string' && /(\+=|-=)(\d+)/.exec(to);
 
-        if ( todir ) {
+        if (todir) {
           to = todir[1] === '-=' ? curr - todir[2] * 1 : curr + todir[2] * 1;
         } else {
           to += start;
@@ -415,14 +436,18 @@
         div.removeData('pausedjc').removeData('stoppedjc');
       })
       .bind('resumeCarousel.jc', function(event, forceRun) {
-        if (self.setAutoAdvance) { return; }
+        if (self.setAutoAdvance) {
+          return;
+        }
         clearTimeout(self.setAutoAdvance);
         self.setAutoAdvance = undefined;
 
         var stopped = div.data('stoppedjc');
-        if ( forceRun || !stopped ) {
+
+        if (forceRun || !stopped) {
           advancer();
           div.removeData('pausedjc');
+
           if (stopped) {
             div.removeData('stoppedjc');
           }
@@ -453,12 +478,15 @@
           clearTimeout(self.setAutoAdvance);
           self.setAutoAdvance = undefined;
         }
+
         if (o.btnPrev) {
           o.$btnPrev.addClass(o.btnDisabledClass).unbind('.jc');
         }
+
         if (o.btnNext) {
           o.$btnNext.addClass(o.btnDisabledClass).unbind('.jc');
         }
+
         if (o.btnGo) {
           $.each(o.btnGo, function(i, val) {
             $(val).unbind('.jc');
@@ -483,7 +511,7 @@
           endTouch.y = 0;
           startTouch.x = event.targetTouches[0].pageX;
           startTouch.y = event.targetTouches[0].pageY;
-          startTouch[animCss] = parseFloat( ul.css(animCss) );
+          startTouch[animCss] = parseFloat(ul.css(animCss));
           startTouch.time = +new Date();
         },
 
@@ -495,6 +523,7 @@
             endTouch.y = event.targetTouches[0].pageY;
             aniProps[animCss] = startTouch[animCss] + (endTouch[axisPrimary] - startTouch[axisPrimary]);
             ul.css(aniProps);
+
             if (o.preventTouchWindowScroll) {
               event.preventDefault();
             }
@@ -510,35 +539,33 @@
             return;
           }
 
-          var pxDelta = startTouch[axisPrimary] - endTouch[axisPrimary],
-              pxAbsDelta = mabs( pxDelta ),
-              primaryAxisGood = pxAbsDelta > o.swipeThresholds[axisPrimary],
-              secondaryAxisGood =  mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary],
-              timeDelta = +new Date() - startTouch.time,
-              quickSwipe = timeDelta < o.swipeThresholds.time,
-              operator = pxDelta > 0 ? '+=' : '-=',
-              to = operator + o.scroll,
-              swipeInfo  = { force: true };
+          var pxDelta = startTouch[axisPrimary] - endTouch[axisPrimary];
+          var pxAbsDelta = mabs(pxDelta);
+          var primaryAxisGood = pxAbsDelta > o.swipeThresholds[axisPrimary];
+          var secondaryAxisGood =  mabs(startTouch[axisSecondary] - endTouch[axisSecondary]) < o.swipeThresholds[axisSecondary];
+          var timeDelta = +new Date() - startTouch.time;
+          var quickSwipe = timeDelta < o.swipeThresholds.time;
+          var operator = pxDelta > 0 ? '+=' : '-=';
+          var to = operator + o.scroll;
+          var swipeInfo  = {force: true};
 
           // quick, clean swipe
-          if ( quickSwipe && primaryAxisGood && secondaryAxisGood ) {
+          if (quickSwipe && primaryAxisGood && secondaryAxisGood) {
             // set animation speed to twice as fast as that set in speed option
             swipeInfo.speed = o.speed / 2;
-          }
-          else
+          } else
           // slow swipe < 1/2 slide width, OR
           // not enough movement for swipe, OR
           // too much movement on secondary axis when quick swipe
-          if ( (!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
+          if ((!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
             !primaryAxisGood ||
             (quickSwipe && !secondaryAxisGood)
             ) {
             // revert to same slide
             to = '+=0';
-          }
-          else
+          } else
           // slow swipe > 1/2 slide width
-          if ( !quickSwipe && pxAbsDelta > styles.liSize / 2 ) {
+          if (!quickSwipe && pxAbsDelta > styles.liSize / 2) {
             to = Math.round(pxAbsDelta / styles.liSize);
             to = operator + (to > o.visible ? o.visible : to);
 
@@ -556,7 +583,7 @@
         }
       };
 
-      if ( isTouch && o.swipe ) {
+      if (isTouch && o.swipe) {
         div.bind('touchstart.jc touchmove.jc touchend.jc', touchEvents.handle);
       } // end swipe events
 
@@ -566,7 +593,7 @@
         prepResize = o.autoCSS;
         $(window).bind('resize', function() {
           if (prepResize) {
-            ul.width( ul.width() * 2 );
+            ul.width(ul.width() * 2);
             prepResize = false;
           }
 
@@ -616,7 +643,6 @@
     // true to enable auto scrolling; number to auto-scroll by different number at a time than that of scroll option
     auto: false,
 
-
     // true to enable changing direction of auto scrolling when user clicks prev or next button
     directional: false,
 
@@ -662,8 +688,8 @@
     // Function to be called for each matched carousel when .jCaourselLite() is called.
     // Inside the function, `this` is the carousel div.
     // The function can take 2 arguments:
-        // 1. The merged options object
-        // 2. A jQuery object containing the <li> items in the carousel
+    // 1. The merged options object
+    // 2. A jQuery object containing the <li> items in the carousel
     // If the function returns `false`, the plugin will skip all the carousel magic for that carousel div
     init: function() {},
 
@@ -680,13 +706,4 @@
     afterEnd: null
   };
 
-  function iterations(itemLength, options) {
-    return options.autoStop && (options.circular ? options.autoStop : Math.min(itemLength, options.autoStop));
-  }
-
-  function fixIds(i) {
-    if ( this.id ) {
-      this.id += i;
-    }
-  }
 })(jQuery);
