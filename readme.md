@@ -1,8 +1,26 @@
 # jCarouselLite
 
-By [Karl Swedberg](http://www.learningjquery.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
+By [Karl Swedberg](https://karlswedberg.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
 
-This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup. 
+This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup.
+
+## Related Projects
+
+Because jCarouselLite is relatively "light," it doesn't include a number of features that you might want for your project.
+Also, the responsive feature is a little hacky. If the plugin doesn't suit your needs, please consider one of the following:
+
+* [Cycle2](http://jquery.malsup.com/cycle2/) by Mike Alsup
+* [Slick Carousel](http://kenwheeler.github.io/slick/) by Ken Wheeler
+
+## Installation
+
+Choose one of the following ways to put the plugin in your project:
+
+* Via bower: `bower install jquery-carousel-lite`
+* Via npm: `npm install jcarousellite`
+* Via github: Download https://github.com/kswedberg/jquery-carousel-lite/blob/master/jcarousellite.js and place it somewhere in your project
+* Via rawgit: Directly reference the file with `<script src="https://rawgit.com/kswedberg/jquery-carousel-lite/master/jcarousellite.js">`
+
 
 ## Getting Started
 
@@ -72,9 +90,9 @@ You can view a bare-bones demo at [kswedberg.github.io/jquery-carousel-lite/demo
 
 You can specify all the options shown below as object properties.
 
-### `containerSelector` : string - default is "ul" 
+### `containerSelector` : string - default is "ul"
 
-*New as of jCarouselLite 1.9.* Allows the "ul" container to be customized using any valid selector expression to match elements against. The plugin will use the *first* element within the carousel div that matches the selector. 
+*New as of jCarouselLite 1.9.* Allows the "ul" container to be customized using any valid selector expression to match elements against. The plugin will use the *first* element within the carousel div that matches the selector.
 
 ```javascript
 $('div.carousel').jCarouselLite({
@@ -82,7 +100,7 @@ $('div.carousel').jCarouselLite({
 });
 ```
 
-### `itemSelector` : string - default is "li" 
+### `itemSelector` : string - default is "li"
 
 *New as of jCarouselLite 1.9.* Allows the "li" slides to be customized using any valid selector expression to match elements against. The plugin will use elements that match the `itemSelector` string **and** are direct children of the `containerSelector`.
 
