@@ -12,6 +12,16 @@ Also, the responsive feature is a little hacky. If the plugin doesn't suit your 
 * [Cycle2](http://jquery.malsup.com/cycle2/) by Mike Alsup
 * [Slick Carousel](http://kenwheeler.github.io/slick/) by Ken Wheeler
 
+## Installation
+
+Choose one of the following ways to put the plugin in your project:
+
+* Via bower: `bower install jquery-carousel-lite`
+* Via npm: `npm install jcarousellite`
+* Via github: Download https://github.com/kswedberg/jquery-carousel-lite/blob/master/jcarousellite.js and place it somewhere in your project
+* Via rawgit: Directly reference the file with `<script src="https://rawgit.com/kswedberg/jquery-carousel-lite/master/jcarousellite.js">`
+
+
 ## Getting Started
 
 ### HTML
