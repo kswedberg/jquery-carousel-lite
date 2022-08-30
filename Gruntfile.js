@@ -2,7 +2,8 @@
 module.exports = function(grunt) {
 
   var _ = grunt.util._;
-  var marked = require('marked');
+  var m = require('marked');
+  var marked = m.marked;
   // var hl = require('highlight').Highlight;
   var hl = require('node-syntaxhighlighter');
 
