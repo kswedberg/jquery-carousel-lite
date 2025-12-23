@@ -28,8 +28,8 @@
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^24.0.0",
-    "grunt-version": "^3.0.0",
+    "grunt-eslint": "^26.0.0",
+    "grunt-version": "^3.0.2",
     "marked": "^4.1.0",
     "node-syntaxhighlighter": "^0.8.1"
   },
