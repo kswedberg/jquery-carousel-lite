@@ -87,12 +87,37 @@
         itemLength = li.length;
       }
 
+      var toggleDisabled = function(toggleLis, disabled) {
+        var props = {disabled: disabled, hidden: disabled};
+
+        toggleLis.find('a, button, input, [tabindex]').not('[data-disabled]').prop(props);
+      };
+
+      var vis = function vis() {
+        return li.slice(curr).slice(0, visibleCeil);
+      };
+
+      $.jCarouselLite.vis = vis;
+
       var setActive = function(i, types) {
         i = ceil(i);
 
         // Set active class on the appropriate carousel item
-        li.filter('.' + o.activeClass).removeClass(o.activeClass);
-        li.eq(i).addClass(o.activeClass);
+        li
+        .filter('.' + o.activeClass)
+        .removeClass(o.activeClass)
+        .removeAttr('tabindex');
+
+        li
+        .eq(i)
+        .addClass(o.activeClass)
+        .attr('tabindex', '0');
+
+        var visibleItems = vis();
+
+        visibleItems.prop({disabled: false}).removeAttr('aria-hidden');
+        toggleDisabled(visibleItems, false);
+        toggleDisabled(li.not(visibleItems), true);
 
         var activeBtnIndex = (i - activeBtnOffset) % tl;
         var visEnd = activeBtnIndex + visibleFloor;
@@ -106,7 +131,9 @@
           $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
 
           if (visEnd > $btnsGo.length) {
-            $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
+            $btnsGo
+            .slice(0, visEnd - $btnsGo.length)
+            .addClass(o.visibleClass);
           }
         }
 
@@ -121,6 +148,8 @@
       curr = start;
 
       $.jCarouselLite.curr = curr;
+      // li.filter(':disabled').attr('data-disabled', 'disabled');
+      // li.find(':disabled').attr('data-disabled', 'disabled');
 
       var getDimensions = function(reset) {
         var liSize, ulSize, divSize;
@@ -199,12 +228,6 @@
       };
 
       setDimensions();
-
-      var vis = function vis() {
-        return li.slice(curr).slice(0, visibleCeil);
-      };
-
-      $.jCarouselLite.vis = vis;
 
       var go = function(to, settings) {
         if (running) {
