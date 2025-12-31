@@ -1,4 +1,3 @@
-
 (function($) {
   $.jCarouselLite = {
     version: '1.9.3',
@@ -64,7 +63,7 @@
         beforeCirc = tLi.slice(tl - visibleCeil).clone(true).each(fixIds);
         afterCirc = tLi.slice(0, visibleCeil).clone(true).each(fixIds);
         ul.prepend(beforeCirc)
-          .append(afterCirc);
+        .append(afterCirc);
         li = ul.children(o.liSelector);
         itemLength = li.length;
       };
@@ -87,12 +86,37 @@
         itemLength = li.length;
       }
 
+      var toggleDisabled = function(toggleLis, disabled) {
+        var props = {disabled: disabled, hidden: disabled};
+
+        toggleLis.find('a, button, input, [tabindex]').not('[data-disabled]').prop(props);
+      };
+
+      var vis = function vis() {
+        return li.slice(curr).slice(0, visibleCeil);
+      };
+
+      $.jCarouselLite.vis = vis;
+
       var setActive = function(i, types) {
         i = ceil(i);
 
         // Set active class on the appropriate carousel item
-        li.filter('.' + o.activeClass).removeClass(o.activeClass);
-        li.eq(i).addClass(o.activeClass);
+        li
+        .filter('.' + o.activeClass)
+        .removeClass(o.activeClass)
+        .removeAttr('tabindex');
+
+        li
+        .eq(i)
+        .addClass(o.activeClass)
+        .attr('tabindex', '0');
+
+        var visibleItems = vis();
+
+        visibleItems.prop({disabled: false}).removeAttr('aria-hidden');
+        toggleDisabled(visibleItems, false);
+        toggleDisabled(li.not(visibleItems), true);
 
         var activeBtnIndex = (i - activeBtnOffset) % tl;
         var visEnd = activeBtnIndex + visibleFloor;
@@ -106,7 +130,9 @@
           $btnsGo.slice(activeBtnIndex, activeBtnIndex + visibleFloor).addClass(o.visibleClass);
 
           if (visEnd > $btnsGo.length) {
-            $btnsGo.slice(0, visEnd - $btnsGo.length).addClass(o.visibleClass);
+            $btnsGo
+            .slice(0, visEnd - $btnsGo.length)
+            .addClass(o.visibleClass);
           }
         }
 
@@ -121,6 +147,8 @@
       curr = start;
 
       $.jCarouselLite.curr = curr;
+      // li.filter(':disabled').attr('data-disabled', 'disabled');
+      // li.find(':disabled').attr('data-disabled', 'disabled');
 
       var getDimensions = function(reset) {
         var liSize, ulSize, divSize;
@@ -163,7 +191,7 @@
         var prelimCss = {
           div: {visibility: 'visible', position: 'relative', zIndex: 2, left: '0'},
           ul: {margin: '0', padding: '0', position: 'relative', listStyleType: 'none', zIndex: 1},
-          li: {overflow: o.vertical ? 'hidden' : 'visible', 'float': o.vertical ? 'none' : 'left'}
+          li: {overflow: o.vertical ? 'hidden' : 'visible', float: o.vertical ? 'none' : 'left'}
         };
 
         if (reset) {
@@ -199,12 +227,6 @@
       };
 
       setDimensions();
-
-      var vis = function vis() {
-        return li.slice(curr).slice(0, visibleCeil);
-      };
-
-      $.jCarouselLite.vis = vis;
 
       var go = function(to, settings) {
         if (running) {
@@ -346,7 +368,7 @@
               // set direction of subsequent scrolls to:
               //  1 if "btnNext" clicked
               // -1 if "btnPrev" clicked
-              div.data('dirjc', (index ? 1 : -1));
+              div.data('dirjc', index ? 1 : -1);
             }
 
             return go(step);
@@ -557,21 +579,21 @@
           // slow swipe < 1/2 slide width, OR
           // not enough movement for swipe, OR
           // too much movement on secondary axis when quick swipe
-          if ((!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
+            if ((!quickSwipe && pxAbsDelta < styles.liSize / 2) ||
             !primaryAxisGood ||
             (quickSwipe && !secondaryAxisGood)
             ) {
             // revert to same slide
-            to = '+=0';
-          } else
+              to = '+=0';
+            } else
           // slow swipe > 1/2 slide width
-          if (!quickSwipe && pxAbsDelta > styles.liSize / 2) {
-            to = Math.round(pxAbsDelta / styles.liSize);
-            to = operator + (to > o.visible ? o.visible : to);
+              if (!quickSwipe && pxAbsDelta > styles.liSize / 2) {
+                to = Math.round(pxAbsDelta / styles.liSize);
+                to = operator + (to > o.visible ? o.visible : to);
 
             // send pxDelta along as offset in case carousel is circular and needs to reset
-            swipeInfo.offset = pxDelta;
-          }
+                swipeInfo.offset = pxDelta;
+              }
 
           div.trigger('go.jc', [to, swipeInfo]);
           endTouch = {};
@@ -691,7 +713,7 @@
     // 1. The merged options object
     // 2. A jQuery object containing the <li> items in the carousel
     // If the function returns `false`, the plugin will skip all the carousel magic for that carousel div
-    init: function() {},
+    init: function() {/* no-op */},
 
     // function to be called once the first slide is hit
     first: null,
