@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>demo</title>
     <style type="text/css">
       body {
-        font-size: 13px;
-        font-family: Helvetica, Arial, Verdana, sans-serif;
-        line-height: 1.3em;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        line-height: 1.3;
+      }
+      h2 {
+        text-wrap: balance;
+      }
+      a {
+        color: #2431c1;
+        font-weight: 500;
       }
       .container {
         width: 840px;
@@ -17,8 +24,12 @@
         width: 800px;
         overflow: hidden;
         padding: 0 20px;
-        margin-bottom: 20px;
-        border: 5px solid #999;
+        margin-bottom: 10px;
+        border: 5px solid #00a3cb;
+        border-radius: 10px;
+      }
+      .slideshow ~ .slideshow {
+        margin-top: 20px;
       }
       .slides {
         margin: 0;
@@ -89,7 +100,7 @@
       $(document).ready(function () {
         var carousel1Options = {
           auto: true,
-          visible: 2,
+          visible: 1,
           speed: 300,
           pause: true,
           btnPrev: function () {
@@ -139,8 +150,12 @@
   </head>
   <body>
     <div class="container">
-      <p><a href="../">Instructions</a></p>
-      <p><a href="responsive.html">"Responsive" demo</a></p>
+      <p>
+        <a href="../">Instructions</a>
+      </p>
+      <p>
+        <a href="responsive.html">"Responsive" demo</a>
+      </p>
       <div class="slideshow">
         <h2>Example using "Previous"/"Next" navigation:</h2>
         <ul class="slides">
@@ -152,33 +167,34 @@
               fugiat nulla pariatur.
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
               consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
               pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
               id est laborum.
-
-              <a href="#" class="description"><span>Green Roof</span></a>
+              <a href="#" class="description">
+                <span>Green Roof</span>
+              </a>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
               laborum.
-              <span class="description"><span>Zeeland</span></span>
+              <span class="description">
+                <span>Zeeland</span>
+              </span>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               4 In culpa qui officia deserunt mollit anim id est laborum.
-              <span class="description"><span>CityFlats Hotel</span></span>
+              <span class="description">
+                <span>CityFlats Hotel</span>
+              </span>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               5 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -189,12 +205,12 @@
             </div>
           </li>
         </ul>
-        <button type="button" class="prev">&lt;</button>
-        <button type="button" class="next">&gt;</button>
+        <button type="button" aria-label="Previous" class="prev">&lt;</button>
+        <button type="button" aria-label="Next" class="next">&gt;</button>
       </div>
       <p>
-        <button class="pause">Pause</button>
-        <button class="resume">Resume</button>
+        <button type="button" class="pause">Pause</button>
+        <button type="button" class="resume">Resume</button>
       </p>
       <div class="slideshow">
         <h2>Example using numbered navigation:</h2>
@@ -207,32 +223,34 @@
               fugiat nulla pariatur.
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
               consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
               pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
               id est laborum.
-              <a href="#" class="description"><span>GRCC Green Roof</span></a>
+              <a href="#" class="description">
+                <span>GRCC Green Roof</span>
+              </a>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
               laborum.
-              <span class="description"><span>Zeeland Natatorium</span></span>
+              <span class="description">
+                <span>Zeeland Natatorium</span>
+              </span>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               4 In culpa qui officia deserunt mollit anim id est laborum.
-              <span class="description"><span>CityFlats Hotel</span></span>
+              <span class="description">
+                <span>CityFlats Hotel</span>
+              </span>
             </div>
           </li>
-
           <li class="slide">
             <div class="img-wrapper">
               5 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -240,7 +258,9 @@
               ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
               fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
               mollit anim id est laborum.
-              <span class="description"><span>Calvin College</span></span>
+              <span class="description">
+                <span>Calvin College</span>
+              </span>
             </div>
           </li>
         </ul>
@@ -252,9 +272,14 @@
           <button type="button">5</button>
         </div>
       </div>
-
       <div class="slideshow">
-        <h2>Example using custom HTML5 selectors <code>section</code> and <code>article</code>:</h2>
+        <h2>
+          Example using custom HTML5 selectors
+          <code>section</code>
+          and
+          <code>article</code>
+          :
+        </h2>
         <section class="slides">
           <article class="slide">
             <div class="img-wrapper">
@@ -264,32 +289,34 @@
               fugiat nulla pariatur.
             </div>
           </article>
-
           <article class="slide">
             <div class="img-wrapper">
               2 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
               consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
               pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
               id est laborum.
-              <a href="#" class="description"><span>GRCC Green Roof</span></a>
+              <a href="#" class="description">
+                <span>GRCC Green Roof</span>
+              </a>
             </div>
           </article>
-
           <article class="slide">
             <div class="img-wrapper">
               3 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
               laborum.
-              <span class="description"><span>Zeeland</span></span>
+              <span class="description">
+                <span>Zeeland</span>
+              </span>
             </div>
           </article>
-
           <article class="slide">
             <div class="img-wrapper">
               4 In culpa qui officia deserunt mollit anim id est laborum.
-              <span class="description"><span>CityFlats Hotel</span></span>
+              <span class="description">
+                <span>CityFlats Hotel</span>
+              </span>
             </div>
           </article>
-
           <article class="slide">
             <div class="img-wrapper">
               5 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
@@ -300,8 +327,8 @@
             </div>
           </article>
         </section>
-        <button type="button" class="prev">&lt;</button>
-        <button type="button" class="next">&gt;</button>
+        <button type="button" aria-label="Previous" class="prev">&lt;</button>
+        <button type="button" aria-label="Next" class="next">&gt;</button>
       </div>
     </div>
   </body>
