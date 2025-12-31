@@ -7,6 +7,13 @@
     "name": "Karl Swedberg",
     "email": "kswedberg@gmail.com"
   },
+  "scripts": {
+    "docs": "node lib/docs.mjs",
+    "build": "node lib/build.mjs",
+    "release:major": "node lib/release.mjs major",
+    "release:minor": "node lib/release.mjs minor",
+    "release:patch": "node lib/release.mjs patch"
+  },
   "contributors": [
     {
       "name": "Ganeshji Marwaha",
@@ -22,16 +29,17 @@
     "jquery": ">=1.4"
   },
   "devDependencies": {
+    "eslint": "8",
     "eslint-config-kswedberg": "^5.1.1",
-    "grunt": "^1.5.3",
-    "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-jshint": "^3.2.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^26.0.0",
-    "grunt-version": "^3.0.2",
-    "marked": "^4.1.0",
-    "node-syntaxhighlighter": "^0.8.1"
+    "highlight.js": "^11.11.1",
+    "lodash": "^4.17.21",
+    "marked": "^17.0.1",
+    "marked-highlight": "^2.2.3",
+    "terser": "^5.44.1",
+    "ump": "^3.5.7"
+  },
+  "bugs": {
+    "url": "https://github.com/kswedberg/jquery-carousel-lite/issues"
   },
   "licenses": [
     {

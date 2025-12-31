@@ -1,0 +1,4 @@
+*.min.js
+test/*
+lib/*
+gitignore/**
