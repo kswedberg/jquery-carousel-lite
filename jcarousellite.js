@@ -1,5 +1,5 @@
 /*!
- * jCarousel Lite - v1.9.4 - 2026-1-24
+ * jCarousel Lite - v1.9.5 - 2026-1-24
  * http://kswedberg.github.com/jquery-carousel-lite/
  * Copyright (c) 2026 Karl Swedberg
  * based on the original by Ganeshji Marwaha (gmarwaha.com)
@@ -7,7 +7,7 @@
  */
 (function($) {
   $.jCarouselLite = {
-    version: '1.9.3',
+    version: '1.9.5',
     curr: 0
   };
 
