@@ -1,17 +1,25 @@
 /*!
- * jCarousel Lite - v1.9.4 - 2025-12-30
+ * jCarousel Lite - v1.9.4 - 2026-1-24
  * http://kswedberg.github.com/jquery-carousel-lite/
- * Copyright (c) 2025 Karl Swedberg
+ * Copyright (c) 2026 Karl Swedberg
  * based on the original by Ganeshji Marwaha (gmarwaha.com)
  * Licensed MIT (http://kswedberg.github.com/jquery-carousel-lite/blob/master/LICENSE-MIT)
  */
 (function($) {
   $.jCarouselLite = {
-    version: '1.9.4',
+    version: '1.9.3',
     curr: 0
   };
 
   $.fn.anim = typeof $.fn.velocity !== 'undefined' ? $.fn.velocity : $.fn.animate;
+
+  var isArray = function(arr) {
+    if (Array && Array.isArray) {
+      return Array.isArray(arr);
+    }
+
+    return typeof arr === 'object' && Object.prototype.toString.call(arr) === '[object Array]';
+  };
 
   $.fn.jCarouselLite = function(options) {
     var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options);
@@ -326,7 +334,7 @@
 
       if (o.btnGo && o.btnGo.length) {
 
-        if ($.isArray(o.btnGo) && typeof o.btnGo[0] === 'string') {
+        if (isArray(o.btnGo) && typeof o.btnGo[0] === 'string') {
           $btnsGo = $(o.btnGo.join());
         } else {
           $btnsGo = $(o.btnGo);
@@ -366,7 +374,7 @@
       // bind click handlers to prev and next buttons, if set
       $.each(['btnPrev', 'btnNext'], function(index, btn) {
         if (o[btn]) {
-          o['$' + btn] = $.isFunction(o[btn]) ? o[btn].call(div[0]) : $(o[btn]);
+          o['$' + btn] = typeof o[btn] === 'function' ? o[btn].call(div[0]) : $(o[btn]);
           o['$' + btn].bind('click.jc', function(event) {
             event.preventDefault();
             var step = index === 0 ? curr - o.scroll : curr + o.scroll;
