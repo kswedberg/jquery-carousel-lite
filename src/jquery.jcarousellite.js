@@ -6,6 +6,14 @@
 
   $.fn.anim = typeof $.fn.velocity !== 'undefined' ? $.fn.velocity : $.fn.animate;
 
+  var isArray = function(arr) {
+    if (Array && Array.isArray) {
+      return Array.isArray(arr);
+    }
+
+    return typeof arr === 'object' && Object.prototype.toString.call(arr) === '[object Array]';
+  };
+
   $.fn.jCarouselLite = function(options) {
     var o = $.extend(true, {}, $.fn.jCarouselLite.defaults, options);
     var ceil = Math.ceil;
@@ -319,7 +327,7 @@
 
       if (o.btnGo && o.btnGo.length) {
 
-        if ($.isArray(o.btnGo) && typeof o.btnGo[0] === 'string') {
+        if (isArray(o.btnGo) && typeof o.btnGo[0] === 'string') {
           $btnsGo = $(o.btnGo.join());
         } else {
           $btnsGo = $(o.btnGo);
@@ -359,7 +367,7 @@
       // bind click handlers to prev and next buttons, if set
       $.each(['btnPrev', 'btnNext'], function(index, btn) {
         if (o[btn]) {
-          o['$' + btn] = $.isFunction(o[btn]) ? o[btn].call(div[0]) : $(o[btn]);
+          o['$' + btn] = typeof o[btn] === 'function' ? o[btn].call(div[0]) : $(o[btn]);
           o['$' + btn].bind('click.jc', function(event) {
             event.preventDefault();
             var step = index === 0 ? curr - o.scroll : curr + o.scroll;
