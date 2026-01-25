@@ -1,6 +1,6 @@
 # jCarouselLite
 
-By [Karl Swedberg](https://karlswedberg.com/), based on the original by [Ganeshji Marwaha](gmarwaha.com).
+By [Karl Swedberg](https://karlswedberg.com/), based on the original by [Ganeshji Marwaha](https://www.gmarwaha.com).
 
 This jQuery plugin creates a carousel-style navigation widget for images, or any content, from simple HTML markup.
 
