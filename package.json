@@ -8,7 +8,7 @@
     "email": "kswedberg@gmail.com"
   },
   "scripts": {
-    "docs": "node lib/docs.mjs",
+    "build:docs": "node lib/docs.mjs",
     "build": "node lib/build.mjs",
     "release:major": "node lib/release.mjs major",
     "release:minor": "node lib/release.mjs minor",

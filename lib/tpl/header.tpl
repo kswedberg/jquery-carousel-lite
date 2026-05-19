@@ -4,7 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>jQuery <%= pkg.title %> Plugin</title>
+  <title>jQuery {{ title }} Plugin</title>
+  <link rel="stylesheet" href="/stylesheets/hljs.css">
+
   <style>
     html,
     body {
