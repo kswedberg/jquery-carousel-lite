@@ -30,13 +30,13 @@
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
-    "eslint": "10.2.0",
-    "eslint-config-kswedberg": "^7.2.3",
+    "eslint": "10.6.0",
+    "eslint-config-kswedberg": "^7.4.3",
     "highlight.js": "^11.11.1",
     "lodash": "^4.17.21",
-    "marked": "^18.0.0",
+    "marked": "^18.0.5",
     "marked-highlight": "^2.2.3",
-    "terser": "^5.44.1",
+    "terser": "^5.48.0",
     "ump": "^4.0.1"
   },
   "bugs": {
