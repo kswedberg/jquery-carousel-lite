@@ -26,7 +26,7 @@
   },
   "homepage": "http://kswedberg.github.com/jquery-carousel-lite/",
   "dependencies": {
-    "jquery": ">=1.4"
+    "jquery": ">=3.5.0"
   },
   "devDependencies": {
     "dotenv": "^18.0.1",
