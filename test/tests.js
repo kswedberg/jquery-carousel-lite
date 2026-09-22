@@ -1,4 +1,4 @@
-/*global module:false,test:false,equal:false,deepEqual:false,asyncTest:false,start:false */
+/* global module:false,test:false,equal:false,deepEqual:false,asyncTest:false,start:false */
 jQuery(document).ready(function($) {
 
   module('carousels', {
@@ -21,6 +21,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('go', function() {
     var s = this.slides;
+
     s.eq(1).trigger('go', 1);
 
     setTimeout(function() {
@@ -31,6 +32,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('go to 0', function() {
     var s = this.slides;
+
     this.slideshow.eq(1).trigger('go', 0);
 
     setTimeout(function() {
@@ -59,6 +61,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('go foward 2 (wrap around)', function() {
     var slides = this.slides;
+
     this.slideshow.trigger('go', '+=2');
 
     setTimeout(function() {
@@ -69,6 +72,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('reset and go forward 4 (wrap around)', function() {
     var slides = this.slides;
+
     this.slideshow.trigger('go', '+=4');
 
     setTimeout(function() {
@@ -102,6 +106,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('change directions on prevBtn click', function() {
     var s = this.slides;
+
     this.slideshow.eq(1).find('.prev').trigger('click');
 
     setTimeout(function() {
@@ -126,7 +131,7 @@ jQuery(document).ready(function($) {
       var l = this.slides.children().length;
 
       for (var i = 0; i < l; i++) {
-        btns += '<a class="go" href="#">' + (i+1) + '</a>';
+        btns += '<a class="go" href="#">' + (i + 1) + '</a>';
       }
 
       this.slideshow.append('<div class="gonav">' + btns + '</div>');
@@ -176,7 +181,7 @@ jQuery(document).ready(function($) {
       var l = this.slides.children().length;
 
       for (var i = 0; i < l; i++) {
-        btns += '<a class="go" href="#">' + (i+1) + '</a>';
+        btns += '<a class="go" href="#">' + (i + 1) + '</a>';
       }
 
       this.slideshow.append('<div class="gonav">' + btns + '</div>');
@@ -186,6 +191,7 @@ jQuery(document).ready(function($) {
 
   asyncTest('correct carousel position after go button clicked', function() {
     var s = this.slides;
+
     this.slideshow.jCarouselLite({
       auto: true,
       visible: 2,
@@ -209,6 +215,7 @@ jQuery(document).ready(function($) {
   asyncTest('correct carousel position after autoPager nav button clicked', function() {
     var pagernav = this.slideshow.find('div.pagernav');
     var s = this.slides;
+
     this.slideshow.trigger('endCarousel');
     this.slideshow.jCarouselLite({
       auto: false,
@@ -225,7 +232,4 @@ jQuery(document).ready(function($) {
       start();
     }, 100);
   });
-
-
-
 });
