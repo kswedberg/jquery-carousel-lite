@@ -29,14 +29,14 @@
     "jquery": ">=1.4"
   },
   "devDependencies": {
-    "dotenv": "^17.2.3",
-    "eslint": "10.6.0",
-    "eslint-config-kswedberg": "^7.4.3",
-    "highlight.js": "^11.11.1",
+    "dotenv": "^18.0.1",
+    "eslint": "10.11.0",
+    "eslint-config-kswedberg": "^7.4.4",
+    "highlight.js": "^11.12.0",
     "lodash": "^4.17.21",
-    "marked": "^18.0.5",
+    "marked": "^18.0.13",
     "marked-highlight": "^2.2.3",
-    "terser": "^5.48.0",
+    "terser": "^5.51.2",
     "ump": "^4.0.1"
   },
   "bugs": {
